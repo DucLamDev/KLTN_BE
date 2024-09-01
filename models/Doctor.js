@@ -20,6 +20,8 @@ const doctorSchema = new mongoose.Schema({
   email: String,
   schedule: [scheduleSchema],
   appointments: [appointmentSchema],
-});
+});  
+
+
 
 module.exports = mongoose.model('Doctor', doctorSchema);
