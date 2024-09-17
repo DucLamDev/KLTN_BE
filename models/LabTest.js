@@ -13,4 +13,8 @@ const labTestSchema = new mongoose.Schema({
     result: resultSchema,
 });
 
-module.exports = mongoose.model('LabTest', labTestSchema);
+// module.exports = mongoose.model('LabTest', labTestSchema);
+
+
+const LabTest = mongoose.model('LabTest', labTestSchema);
+export default LabTest;

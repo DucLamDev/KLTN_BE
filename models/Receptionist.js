@@ -22,4 +22,7 @@ const receptionistSchema = new mongoose.Schema({
     // appointmentsManaged: [appointmentSchema],
 });
 
-module.exports = mongoose.model('Receptionist', receptionistSchema);
+// module.exports = mongoose.model('Receptionist', receptionistSchema);
+
+const Receptionist = mongoose.model('Receptionist', receptionistSchema);
+export default Receptionist;

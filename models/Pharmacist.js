@@ -28,4 +28,8 @@ const pharmacistSchema = new mongoose.Schema({
   prescriptionsHandled: [prescriptionSchema],
 });
 
-module.exports = mongoose.model('Pharmacist', pharmacistSchema);
+// module.exports = mongoose.model('Pharmacist', pharmacistSchema);
+
+
+const Pharmacist = mongoose.model('Pharmacist', pharmacistSchema);
+export default Pharmacist;

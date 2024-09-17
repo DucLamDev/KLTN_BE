@@ -24,4 +24,5 @@ const patientSchema = new mongoose.Schema({
   appointments: [appointmentSchema],
 });
 
-module.exports = mongoose.model('Patient', patientSchema);
+const Patient = mongoose.model('Patient', patientSchema);
+export default Patient;
