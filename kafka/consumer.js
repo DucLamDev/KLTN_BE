@@ -81,7 +81,7 @@ const patient = await Patient.find({id: patientId})
     });
     await selectedDoctor.save();
     
-    console.log(`Appointment assigned to Doctor ID: ${selectedDoctor._id}`);
+    console.log(`Appointment assigned to Doctor ID: ${selectedDoctor._id}, ${appointmentCount}`);
   } else {
     console.log('No available doctors to assign');
   }

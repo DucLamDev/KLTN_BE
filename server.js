@@ -9,6 +9,8 @@ import receptionistRoutes from './routes/receptionist.js';
 import appointmentRoutes from './routes/appointment.js';
 import prescriptionRoutes from './routes/prescription.js';
 import invoiceRoutes from './routes/invoice.js';
+import { connectProducer } from './kafka/producer.js';
+import { runConsumer } from './kafka/consumer.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,6 +31,8 @@ app.use('/receptionists', receptionistRoutes);
 app.use('/appointments', appointmentRoutes);
 app.use('/prescriptions', prescriptionRoutes);
 app.use('/invoices', invoiceRoutes);
-app.listen(port, () => {
+app.listen(port,async  () => {
     console.log(`Server running on port ${port}`);
+    await connectProducer();
 });
+runConsumer();
