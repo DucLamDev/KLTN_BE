@@ -1,15 +1,27 @@
 
 import express from 'express';
 import Appointment from '../models/Appointment.js';
+import { sendMessage } from '../kafka/producer.js';
 const router = express.Router();
 // Tạo cuộc hẹn mới
 router.post('/', async (req, res) => {
+    const { patientId, appointmentDate, reason } = req.body;
+    
+    if (!patientId || !appointmentDate) {
+        return res.status(400).json({ message: 'patientId and appointmentDate are required' });
+    }
+
+    const appointmentRequest = {
+        patientId,
+        appointmentDate,
+        reason,
+    };
+
     try {
-        const appointment = new Appointment(req.body);
-        await appointment.save();
-        res.status(201).send(appointment);
-    } catch (error) {
-        res.status(400).send(error);
+        await sendMessage('appointment-requests', appointmentRequest);
+        res.status(202).json({ message: 'Appointment request received and is being processed' });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to process appointment request', error: err.message });
     }
 });
 
