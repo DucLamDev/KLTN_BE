@@ -31,8 +31,24 @@ app.use('/receptionists', receptionistRoutes);
 app.use('/appointments', appointmentRoutes);
 app.use('/prescriptions', prescriptionRoutes);
 app.use('/invoices', invoiceRoutes);
+
 app.listen(port,async  () => {
     console.log(`Server running on port ${port}`);
-    await connectProducer();
+    // await connectProducer();
 });
-runConsumer();
+
+
+const startApp = async () => {
+    // await connectToMongoDB();
+    await connectProducer();
+    await runConsumer();
+  
+    // Ví dụ: Gửi một message (có thể loại bỏ nếu không cần)
+    // await sendMessage('appointment-requests', {
+    //   patientId: '60d5ec49f8d4e12b4c8f9a1b',
+    //   appointmentDate: new Date(),
+    //   reason: 'Routine check-up',
+    // });
+  };
+  startApp();
+// runConsumer();

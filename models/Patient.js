@@ -1,28 +1,37 @@
+// models/Patient.js
 import mongoose from 'mongoose';
 
 const medicalHistorySchema = new mongoose.Schema({
-  disease: String,
-  diagnosisDate: Date,
-  treatment: String,
+  disease: { type: String, required: true },
+  diagnosisDate: { type: Date, required: true },
+  treatment: { type: String, required: true },
 });
 
-const appointmentSchema = new mongoose.Schema({
-  appointmentId: mongoose.Schema.Types.ObjectId,
-  doctorId: mongoose.Schema.Types.ObjectId,
-  appointmentDate: Date,
-  reason: String,
-});
+const patientSchema = new mongoose.Schema(
+  {
+    fullName: { type: String, required: true },
+    dateOfBirth: { type: Date, required: true },
+    gender: { type: String, enum: ['Male', 'Female', 'Other'], required: true },
+    address: { type: String, required: true },
+    phone: {
+      type: String,
+      required: true,
+      match: [/^\+?[1-9]\d{1,14}$/, 'Please use a valid phone number.'],
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address.'],
+    },
+    medicalHistory: [medicalHistorySchema],
+  },
+  { timestamps: true }
+);
 
-const patientSchema = new mongoose.Schema({
-  fullName: { type: String, required: true },
-  dateOfBirth: Date,
-  gender: String,
-  address: String,
-  phone: String,
-  email: String,
-  medicalHistory: [medicalHistorySchema],
-  appointments: [appointmentSchema],
-});
+// Thêm chỉ số để tăng tốc truy vấn
+patientSchema.index({ email: 1 }, { unique: true });
+patientSchema.index({ phone: 1 });
 
 const Patient = mongoose.model('Patient', patientSchema);
 export default Patient;
