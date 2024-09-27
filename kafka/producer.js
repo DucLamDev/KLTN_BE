@@ -7,9 +7,7 @@ dotenv.config();
 const kafka = new Kafka({
   clientId: process.env.CLIENT_ID || 'clinic-management',
   brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
-  // Tắt SSL và SASL nếu không cần thiết
   ssl: false,
-  // Loại bỏ phần sasl nếu không sử dụng
 });
 
 const producer = kafka.producer();
@@ -58,4 +56,4 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-export { connectProducer, sendMessage };
+export { connectProducer, sendMessage }; // Xuất sendMessage

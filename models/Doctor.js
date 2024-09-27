@@ -1,4 +1,3 @@
-// models/Doctor.js
 import mongoose from 'mongoose';
 
 const scheduleSchema = new mongoose.Schema({
@@ -35,11 +34,13 @@ const doctorSchema = new mongoose.Schema(
       match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address.'],
     },
     schedule: [scheduleSchema],
+    isOnline: { type: Boolean, default: false },
+    // examRoomId: { type: String },
+    roomNumber: { type: String },
   },
   { timestamps: true }
 );
 
-// Thêm chỉ số để tăng tốc truy vấn
 doctorSchema.index({ email: 1 }, { unique: true });
 
 const Doctor = mongoose.model('Doctor', doctorSchema);

@@ -1,4 +1,3 @@
-// models/Patient.js
 import mongoose from 'mongoose';
 
 const medicalHistorySchema = new mongoose.Schema({
@@ -29,7 +28,6 @@ const patientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Thêm chỉ số để tăng tốc truy vấn
 patientSchema.index({ email: 1 }, { unique: true });
 patientSchema.index({ phone: 1 });
 

@@ -1,27 +1,30 @@
-
 import express from 'express';
 import Appointment from '../models/Appointment.js';
-import { sendMessage } from '../kafka/producer.js';
+import { sendMessage } from '../kafka/producer.js'; // Kafka producer để gửi thông tin cuộc hẹn đến hàng đợi chuyên khoa
+
 const router = express.Router();
+
 // Tạo cuộc hẹn mới
 router.post('/', async (req, res) => {
-    const { patientId, appointmentDate, reason } = req.body;
+    const { patientId, appointmentDate, reason, specialization } = req.body;
     
-    if (!patientId || !appointmentDate) {
-        return res.status(400).json({ message: 'patientId and appointmentDate are required' });
+    if (!patientId || !appointmentDate || !specialization) {
+        return res.status(400).json({ message: 'patientId, appointmentDate và specialization là bắt buộc' });
     }
 
     const appointmentRequest = {
         patientId,
         appointmentDate,
         reason,
+        specialization,  // Khoa mà bệnh nhân muốn khám
     };
 
     try {
-        await sendMessage('appointment-requests', appointmentRequest);
-        res.status(202).json({ message: 'Appointment request received and is being processed' });
+        // Gửi yêu cầu cuộc hẹn vào hàng đợi chuyên khoa tương ứng
+        await sendMessage(`department-${specialization}-queue`, appointmentRequest);
+        res.status(202).json({ message: 'Yêu cầu cuộc hẹn đã được tiếp nhận và đang xử lý' });
     } catch (err) {
-        res.status(500).json({ message: 'Failed to process appointment request', error: err.message });
+        res.status(500).json({ message: 'Không thể xử lý yêu cầu cuộc hẹn', error: err.message });
     }
 });
 

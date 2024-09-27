@@ -9,13 +9,14 @@ import receptionistRoutes from './routes/receptionist.js';
 import appointmentRoutes from './routes/appointment.js';
 import prescriptionRoutes from './routes/prescription.js';
 import invoiceRoutes from './routes/invoice.js';
-import { connectProducer } from './kafka/producer.js';
-import { runConsumer } from './kafka/consumer.js';
+import { connectProducer as connectAppointmentProducer } from './kafka/producer.js';
+import { connectProducer as connectExamRoomProducer } from './kafka/examRoomProducer.js'; // Kết nối producer cho buồng khám
+import { runConsumer } from './kafka/departmentConsumer.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Connect to MongoDB
+// Kết nối đến MongoDB
 mongoose.connect("mongodb+srv://DucLam:kr7i8EBTmZqwuiRX@clinic-management.hmcis.mongodb.net/?retryWrites=true&w=majority&appName=clinic-management", { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected successfully'))
     .catch(err => console.log('MongoDB connection error:', err));
@@ -32,23 +33,15 @@ app.use('/appointments', appointmentRoutes);
 app.use('/prescriptions', prescriptionRoutes);
 app.use('/invoices', invoiceRoutes);
 
-app.listen(port,async  () => {
-    console.log(`Server running on port ${port}`);
-    // await connectProducer();
-});
-
-
+// Hàm khởi động ứng dụng
 const startApp = async () => {
-    // await connectToMongoDB();
-    await connectProducer();
-    await runConsumer();
-  
-    // Ví dụ: Gửi một message (có thể loại bỏ nếu không cần)
-    // await sendMessage('appointment-requests', {
-    //   patientId: '60d5ec49f8d4e12b4c8f9a1b',
-    //   appointmentDate: new Date(),
-    //   reason: 'Routine check-up',
-    // });
-  };
-  startApp();
-// runConsumer();
+    await connectAppointmentProducer(); // Kết nối producer cho lịch hẹn
+    await connectExamRoomProducer(); // Kết nối producer cho buồng khám
+    await runConsumer(); // Chạy consumer
+};
+
+// Khởi động server
+app.listen(port, async () => {
+    console.log(`Server running on port ${port}`);
+    await startApp(); // Khởi động ứng dụng
+});

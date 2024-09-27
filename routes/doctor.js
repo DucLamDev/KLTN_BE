@@ -1,7 +1,8 @@
-
 import express from 'express';
 import Doctor from '../models/Doctor.js';
+
 const router = express.Router();
+
 // Tạo bác sĩ mới
 router.post('/', async (req, res) => {
     try {
@@ -57,3 +58,5 @@ router.delete('/:id', async (req, res) => {
 });
 
 export default router;
+
+// const doctors = await Doctor.find({ department, isOnline: true });
