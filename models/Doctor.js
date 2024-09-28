@@ -18,6 +18,11 @@ const scheduleSchema = new mongoose.Schema({
   },
 });
 
+const roomSchema = new mongoose.Schema({
+  roomNumber: { type: String },
+  numPatients: Number,
+})
+
 const doctorSchema = new mongoose.Schema(
   {
     fullName: { type: String, required: true },
@@ -37,6 +42,7 @@ const doctorSchema = new mongoose.Schema(
     isOnline: { type: Boolean, default: false },
     // examRoomId: { type: String },
     roomNumber: { type: String },
+    // room: roomSchema
   },
   { timestamps: true }
 );

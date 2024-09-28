@@ -15,7 +15,8 @@ const kafka = new Kafka({
 
 const consumer = kafka.consumer({ groupId: process.env.GROUP_ID || 'appointment-group' });
 
-const roomPatientCounts = {}; // { roomNumber: patientCount }
+// Khởi tạo bộ đếm để theo dõi lần lượt việc phân bệnh nhân cho các bác sĩ trong mỗi chuyên khoa
+const roundRobinCounters = {}; // { specialization: currentIndex }
 
 // Kết nối với Kafka
 const connectConsumer = async () => {
@@ -45,6 +46,7 @@ const processDepartmentQueueMessage = async (message) => {
   const { patientId, specialization } = patientData;
 
   try {
+    // Lấy danh sách các bác sĩ theo chuyên khoa và đang online
     const doctors = await Doctor.find({ specialization, isOnline: true });
 
     if (doctors.length === 0) {
@@ -52,28 +54,26 @@ const processDepartmentQueueMessage = async (message) => {
       return;
     }
 
-    let selectedRoom = null;
-    let minPatients = Infinity;
-
-    for (const doctor of doctors) {
-      const roomNumber = doctor.roomNumber;
-      const count = roomPatientCounts[roomNumber] || 0;
-
-      if (count < minPatients) {
-        minPatients = count;
-        selectedRoom = roomNumber;
-      }
+    // Khởi tạo bộ đếm cho chuyên khoa nếu chưa có
+    if (!roundRobinCounters[specialization]) {
+      roundRobinCounters[specialization] = 0;
     }
 
-    if (selectedRoom === null) {
-      console.log(`No suitable exam room found for department ${specialization}`);
+    // Sử dụng chỉ số round robin để phân bệnh nhân cho bác sĩ tiếp theo
+    const selectedIndex = roundRobinCounters[specialization];
+    const selectedDoctor = doctors[selectedIndex];
+
+    if (!selectedDoctor) {
+      console.log(`No suitable doctor found in department ${specialization}`);
       return;
     }
 
-    // Tăng số lượng bệnh nhân cho buồng đã chọn
-    roomPatientCounts[selectedRoom] = (roomPatientCounts[selectedRoom] || 0) + 1;
+    const selectedRoom = selectedDoctor.roomNumber;
 
-    // Phân bệnh nhân vào buồng khám tương ứng
+    // Tăng bộ đếm, quay về 0 nếu đã phân hết tất cả các bác sĩ
+    roundRobinCounters[specialization] = (selectedIndex + 1) % doctors.length;
+
+    // Gửi bệnh nhân đến buồng khám tương ứng
     await sendToExamRoomQueue(selectedRoom, patientData);
 
     console.log(`Patient ${patientId} assigned to exam room ${selectedRoom} in department ${specialization}`);
@@ -84,13 +84,7 @@ const processDepartmentQueueMessage = async (message) => {
 
 // Xử lý khi bệnh nhân đã khám xong
 const processPatientFinished = async (roomNumber) => {
-  if (roomPatientCounts[roomNumber]) {
-    roomPatientCounts[roomNumber] -= 1; // Giảm số lượng bệnh nhân
-    if (roomPatientCounts[roomNumber] < 0) {
-      roomPatientCounts[roomNumber] = 0; // Đảm bảo không âm
-    }
-    console.log(`Patient finished in exam room ${roomNumber}. Current count: ${roomPatientCounts[roomNumber]}`);
-  }
+  console.log(`Patient finished in exam room ${roomNumber}`);
 };
 
 // Chạy consumer
