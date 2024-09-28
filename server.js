@@ -9,6 +9,7 @@ import receptionistRoutes from './routes/receptionist.js';
 import appointmentRoutes from './routes/appointment.js';
 import prescriptionRoutes from './routes/prescription.js';
 import invoiceRoutes from './routes/invoice.js';
+import kafkaRouter from './routes/kafkaRoutes.js';
 import { connectProducer as connectAppointmentProducer } from './kafka/producer.js';
 import { connectProducer as connectExamRoomProducer } from './kafka/examRoomProducer.js'; // Kết nối producer cho buồng khám
 import { runConsumer } from './kafka/departmentConsumer.js';
@@ -17,7 +18,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Kết nối đến MongoDB
-mongoose.connect("mongodb+srv://DucLam:kr7i8EBTmZqwuiRX@clinic-management.hmcis.mongodb.net/?retryWrites=true&w=majority&appName=clinic-management", { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected successfully'))
     .catch(err => console.log('MongoDB connection error:', err));
 
@@ -32,7 +33,7 @@ app.use('/receptionists', receptionistRoutes);
 app.use('/appointments', appointmentRoutes);
 app.use('/prescriptions', prescriptionRoutes);
 app.use('/invoices', invoiceRoutes);
-
+app.use('/kafka', kafkaRouter);
 // Hàm khởi động ứng dụng
 const startApp = async () => {
     await connectAppointmentProducer(); // Kết nối producer cho lịch hẹn
