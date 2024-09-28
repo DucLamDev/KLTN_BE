@@ -11,6 +11,7 @@ const patientSchema = new mongoose.Schema(
     fullName: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
     numberId: { type: String, required: true },
+    accountId: { type: String, required: true },
     gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
     address: { type: String, required: true },
     phone: {

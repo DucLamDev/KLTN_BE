@@ -9,8 +9,10 @@ import receptionistRoutes from "./routes/receptionist.js";
 import appointmentRoutes from "./routes/appointment.js";
 import prescriptionRoutes from "./routes/prescription.js";
 import invoiceRoutes from "./routes/invoice.js";
-import { connectProducer } from "./kafka/producer.js";
-import { runConsumer } from "./kafka/consumer.js";
+import { connectProducer as connectAppointmentProducer } from "./kafka/producer.js";
+import { connectProducer as connectExamRoomProducer } from "./kafka/examRoomProducer.js"; // Kết nối producer cho buồng khám
+import { runConsumer } from "./kafka/departmentConsumer.js";
+import cors from "cors";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -45,20 +47,10 @@ app.use("/invoices", invoiceRoutes);
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  // await connectProducer();
+  // await startApp();
 });
-
 const startApp = async () => {
-  // await connectToMongoDB();
-  await connectProducer();
-  await runConsumer();
-
-  // Ví dụ: Gửi một message (có thể loại bỏ nếu không cần)
-  // await sendMessage('appointment-requests', {
-  //   patientId: '60d5ec49f8d4e12b4c8f9a1b',
-  //   appointmentDate: new Date(),
-  //   reason: 'Routine check-up',
-  // });
+  await connectAppointmentProducer(); // Kết nối producer cho lịch hẹn
+  await connectExamRoomProducer(); // Kết nối producer cho buồng khám
+  await runConsumer(); // Chạy consumer
 };
-startApp();
-// runConsumer();
