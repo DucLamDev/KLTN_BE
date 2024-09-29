@@ -3,7 +3,7 @@ import { Kafka } from 'kafkajs';
 import dotenv from 'dotenv';
 import Doctor from '../models/Doctor.js';
 import Appointment from '../models/Appointment.js';
-import { sendToExamRoomQueue } from './examRoomProducer.js'; // Producer để gửi tới buồng khám
+import { sendToExamRoomQueue } from './roomProducer.js'; // Producer để gửi tới buồng khám
 
 dotenv.config();
 
@@ -88,7 +88,7 @@ const processPatientFinished = async (roomNumber) => {
 };
 
 // Chạy consumer
-const runConsumer = async () => {
+const runConsumerDepartment = async () => {
   await connectConsumer();
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
@@ -97,4 +97,4 @@ const runConsumer = async () => {
   });
 };
 
-export { runConsumer, processPatientFinished }; // Xuất hàm để xử lý khi bệnh nhân khám xong
+export { runConsumerDepartment, processPatientFinished }; // Xuất hàm để xử lý khi bệnh nhân khám xong

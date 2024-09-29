@@ -7,7 +7,6 @@ import pharmacistRoutes from "./routes/pharmacist.js";
 import labTestRoutes from "./routes/labTest.js";
 import receptionistRoutes from "./routes/receptionist.js";
 import appointmentRoutes from "./routes/appointment.js";
-import appointmentByPatientRoutes from "./routes/appointmentByPatient.js";
 import prescriptionRoutes from "./routes/prescription.js";
 import invoiceRoutes from "./routes/invoice.js";
 import kafkaRouter from "./routes/kafkaRoutes.js";
@@ -39,7 +38,6 @@ app.use("/pharmacists", pharmacistRoutes);
 app.use("/labTests", labTestRoutes);
 app.use("/receptionists", receptionistRoutes);
 app.use("/appointments", appointmentRoutes);
-app.use("/appointmentByPatient", appointmentByPatientRoutes);
 app.use("/prescriptions", prescriptionRoutes);
 app.use("/invoices", invoiceRoutes);
 app.use("/kafka", kafkaRouter);
@@ -47,10 +45,11 @@ app.use("/kafka", kafkaRouter);
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  // await startApp();
+  await startApp();
 });
 const startApp = async () => {
   await connectAppointmentProducer(); // Kết nối producer cho lịch hẹn
+  await connectConsumer();
   await connectExamRoomProducer(); // Kết nối producer cho buồng khám
-  await runConsumer(); // Chạy consumer
+  await runConsumerDepartment(); // Chạy consumer
 };
