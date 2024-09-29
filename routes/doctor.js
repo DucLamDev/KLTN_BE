@@ -17,10 +17,25 @@ router.post("/", async (req, res) => {
 // Lấy danh sách bác sĩ
 router.get("/", async (req, res) => {
   try {
-    const doctors = await Doctor.find();
-    res.status(200).send(doctors);
+    const { specialization } = req.query;
+    let query = {};
+
+    if (specialization) {
+      query.specialization = specialization;
+    }
+
+    const doctors = await Doctor.find(query);
+
+    if (doctors.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy bác sĩ nào với chuyên khoa này" });
+    }
+
+    res.status(200).json(doctors);
   } catch (error) {
-    res.status(500).send(error);
+    console.error("Lỗi khi lấy danh sách bác sĩ:", error);
+    res.status(500).json({ message: "Lỗi server nội bộ" });
   }
 });
 
