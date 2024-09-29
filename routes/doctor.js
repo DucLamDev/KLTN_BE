@@ -14,25 +14,27 @@ router.post("/", async (req, res) => {
   }
 });
 //tạo 1 danh sách bác sĩ
-router.post('/add-list', async (req, res) => {
+router.post("/add-list", async (req, res) => {
   try {
     const doctorsData = req.body; // Lấy dữ liệu bác sĩ từ body
 
     // Kiểm tra xem dữ liệu có phải là một mảng hay không
     if (!Array.isArray(doctorsData)) {
-      return res.status(400).json({ message: 'Data must be an array of doctors.' });
+      return res
+        .status(400)
+        .json({ message: "Data must be an array of doctors." });
     }
 
     // Thêm danh sách bác sĩ vào MongoDB
     const addedDoctors = await Doctor.insertMany(doctorsData);
 
     return res.status(201).json({
-      message: 'Doctors added successfully',
+      message: "Doctors added successfully",
       data: addedDoctors,
     });
   } catch (error) {
-    console.error('Error adding doctors:', error);
-    return res.status(500).json({ message: 'Error adding doctors', error });
+    console.error("Error adding doctors:", error);
+    return res.status(500).json({ message: "Error adding doctors", error });
   }
 });
 
