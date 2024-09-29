@@ -15,7 +15,7 @@ const producer = kafka.producer();
 const connectProducer = async () => {
   try {
     await producer.connect();
-    console.log('Kafka Producer connected for exam rooms');
+    console.log('Kafka Producer connected for rooms');
   } catch (err) {
     console.error('Failed to connect Kafka Producer', err);
     process.exit(1);

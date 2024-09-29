@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-
 const scheduleSchema = new mongoose.Schema({
   dayOfWeek: {
     type: String,
@@ -22,7 +21,13 @@ const roomSchema = new mongoose.Schema({
   roomNumber: { type: String },
   numPatients: Number,
 })
-
+const appointmentSchema = new mongoose.Schema({
+  patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
+  doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor', required: true },
+  appointmentDate: { type: Date, required: true },
+  reason: { type: String, required: true },
+  status: { type: String, enum: ['Scheduled', 'Completed', 'Cancelled'], default: 'Scheduled' },
+})
 const doctorSchema = new mongoose.Schema(
   {
     fullName: { type: String, required: true },
@@ -42,7 +47,7 @@ const doctorSchema = new mongoose.Schema(
     isOnline: { type: Boolean, default: false },
     // examRoomId: { type: String },
     roomNumber: { type: String },
-    // room: roomSchema
+    appointmentList: [appointmentSchema] // list cách cuộc hẹn mà bác sĩ đã làm trong ngày
   },
   { timestamps: true }
 );

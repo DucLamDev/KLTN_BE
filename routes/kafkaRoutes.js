@@ -24,12 +24,6 @@ router.post('/create-topic', async (req, res) => {
 router.post('/publish', async (req, res) => {
   try {
      const {topicName, message} = req.body;
-    //  const {patientId, department} = message;
-
-    //  const messages = [{
-    //   value: JSON.stringify({ patientId, department})
-    // }];
-
     const messages = [{
       key: message?.key,
       value: message?.value

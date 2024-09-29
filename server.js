@@ -12,8 +12,11 @@ import prescriptionRoutes from './routes/prescription.js';
 import invoiceRoutes from './routes/invoice.js';
 import kafkaRouter from './routes/kafkaRoutes.js';
 import { connectProducer as connectAppointmentProducer } from './kafka/producer.js';
-import { connectProducer as connectExamRoomProducer } from './kafka/examRoomProducer.js'; // Kết nối producer cho buồng khám
-import { runConsumer } from './kafka/departmentConsumer.js';
+import { connectProducer as connectExamRoomProducer } from './kafka/roomProducer.js'; // Kết nối producer cho buồng khám
+import { runConsumerDepartment } from './kafka/departmentConsumer.js';
+import {connectConsumer} from './kafka/roomConsumer.js'
+import examRoomRoutes from './routes/roomData.js'; // Đường dẫn tới API phòng khám
+// import { runConsumer } from './kafka/roomConsumer.js'; // Kafka Consumer cho phòng khám
 import cors from "cors";
 const app = express();
 const port = process.env.PORT || 3000;
@@ -42,15 +45,19 @@ app.use('/appointments', appointmentRoutes);
 app.use('/prescriptions', prescriptionRoutes);
 app.use('/invoices', invoiceRoutes);
 app.use('/kafka', kafkaRouter);
+app.use('/room', examRoomRoutes);
 // Hàm khởi động ứng dụng
-
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
   await startApp();
+  // await connectConsumer();
+  // await runConsumerDepartment();
+  // // await runConsumerRoom();
 });
 const startApp = async () => {
   await connectAppointmentProducer(); // Kết nối producer cho lịch hẹn
+  await connectConsumer();
   await connectExamRoomProducer(); // Kết nối producer cho buồng khám
-  await runConsumer(); // Chạy consumer
+  await runConsumerDepartment(); // Chạy consumer
 };
