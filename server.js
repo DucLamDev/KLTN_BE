@@ -16,6 +16,8 @@ import { connectProducer as connectExamRoomProducer } from "./kafka/roomProducer
 import { runConsumerDepartment } from "./kafka/departmentConsumer.js";
 import { connectConsumer } from "./kafka/roomConsumer.js";
 import examRoomRoutes from "./routes/roomData.js"; // Đường dẫn tới API phòng khám
+import { connectRedis } from './redis/redisClient.js';
+import queueRoutes  from "./routes/redis.js"
 // import { runConsumer } from './kafka/roomConsumer.js'; // Kafka Consumer cho phòng khám
 import cors from "cors";
 const app = express();
@@ -47,16 +49,15 @@ app.use("/prescriptions", prescriptionRoutes);
 app.use("/invoices", invoiceRoutes);
 app.use("/kafka", kafkaRouter);
 app.use("/room", examRoomRoutes);
+app.use("/queue", queueRoutes); 
 // Hàm khởi động ứng dụng
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  // await startApp();
-  // await connectConsumer();
-  // await runConsumerDepartment();
-  // // await runConsumerRoom();
+  startApp();
 });
 const startApp = async () => {
+  await connectRedis();
   await connectAppointmentProducer(); // Kết nối producer cho lịch hẹn
   await connectConsumer();
   await connectExamRoomProducer(); // Kết nối producer cho buồng khám

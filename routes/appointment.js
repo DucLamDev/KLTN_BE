@@ -20,7 +20,8 @@ router.post("/", async (req, res) => {
     reason,
     specialization, // Khoa mà bệnh nhân muốn khám
   };
-
+  // const appointment = new Appointment(appointmentRequest);
+  // await appointment.save();
   try {
     // Gửi yêu cầu cuộc hẹn vào hàng đợi chuyên khoa tương ứng
     await sendMessage(`department-${specialization}-queue`, appointmentRequest);
@@ -35,6 +36,15 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.post("/api", async (req, res) => {
+  try {
+    const appointment = new Appointment(req.body);
+    await appointment.save();
+    res.status(201).send(appointment);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
 // Lấy danh sách cuộc hẹn
 router.get("/", async (req, res) => {
   try {

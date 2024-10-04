@@ -2,8 +2,10 @@
 import { Kafka } from 'kafkajs';
 import dotenv from 'dotenv';
 import Doctor from '../models/Doctor.js';
-import Appointment from '../models/Appointment.js';
-import { sendToExamRoomQueue } from './roomProducer.js'; // Producer để gửi tới buồng khám
+// import Appointment from '../models/Appointment.js';
+// import { sendToExamRoomQueue } from './roomProducer.js'; // Producer để gửi tới buồng khám
+// import { createClient } from 'redis';
+import {addAppointmentToQueue} from "../redis/queueManager.js"
 
 dotenv.config();
 
@@ -14,7 +16,7 @@ const kafka = new Kafka({
 });
 
 const consumer = kafka.consumer({ groupId: process.env.GROUP_ID || 'appointment-group' });
-
+// const redisClient = createClient();
 // Khởi tạo bộ đếm để theo dõi lần lượt việc phân bệnh nhân cho các bác sĩ trong mỗi chuyên khoa
 const roundRobinCounters = {}; // { specialization: currentIndex }
 
@@ -32,6 +34,7 @@ const connectConsumer = async () => {
 
 // Ngắt kết nối với Kafka
 const disconnectConsumer = async () => {
+  
   try {
     await consumer.disconnect();
     console.log('Kafka Consumer disconnected');
@@ -74,7 +77,11 @@ const processDepartmentQueueMessage = async (message) => {
     roundRobinCounters[specialization] = (selectedIndex + 1) % doctors.length;
 
     // Gửi bệnh nhân đến buồng khám tương ứng
-    await sendToExamRoomQueue(selectedRoom, patientData);
+    // await sendToExamRoomQueue(selectedRoom, patientData);
+
+    // const queueKey = `queue:${selectedRoom}`;
+    await addAppointmentToQueue(selectedRoom, patientData);
+  console.log(`Patient ${patientId} added to queue of doctor ${selectedDoctor._id}`);
 
     console.log(`Patient ${patientId} assigned to exam room ${selectedRoom} in department ${specialization}`);
   } catch (err) {
