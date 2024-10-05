@@ -1,4 +1,3 @@
-// middleware/authMiddleware.js
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import Doctor from '../models/Doctor.js';
@@ -15,16 +14,33 @@ export const protect = async (req, res, next) => {
     }
 
     // Giải mã token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({
+        status: 'fail',
+        message: 'Token không hợp lệ hoặc đã hết hạn',
+      });
+    }
 
+    // Kiểm tra xem token có chứa thông tin id và role hay không
+    if (!decoded.id || !decoded.role) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Token không chứa thông tin hợp lệ',
+      });
+    }
+
+    // Khởi tạo biến user
     let user;
 
-    // Kiểm tra role của người dùng, tìm trong bảng User hoặc Doctor
+    // Kiểm tra role của người dùng, tìm trong bảng Doctor hoặc User
     if (decoded.role === 'doctor') {
       // Nếu role là 'doctor', tìm trong bảng Doctor
       user = await Doctor.findById(decoded.id);
     } else {
-      // Nếu role là user, tìm trong bảng User
+      // Nếu role khác, tìm trong bảng User
       user = await User.findById(decoded.id);
     }
 
@@ -36,13 +52,13 @@ export const protect = async (req, res, next) => {
       });
     }
 
-    // Gắn thông tin người dùng vào request
+    // Gắn thông tin người dùng vào request để sử dụng ở các middleware khác
     req.user = user;
     next();
   } catch (err) {
-    res.status(401).json({
-      status: 'fail',
-      message: 'Xác thực không hợp lệ',
+    return res.status(500).json({
+      status: 'error',
+      message: 'Có lỗi xảy ra, vui lòng thử lại',
     });
   }
 };

@@ -1,6 +1,7 @@
 // routes/auth.js
 import express from 'express';
 import { register, loginUser, logout } from '../controllers/authController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -11,6 +12,6 @@ router.post('/register', register);
 router.post('/login', loginUser);
 
 // Đăng xuất
-router.get('/logout', logout);
+router.get('/logout', protect, logout);
 
 export default router;

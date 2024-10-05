@@ -107,6 +107,15 @@ export const logout = async (req, res) => {
     // Xác định user từ request
     const user = req.user;
 
+
+    // Nếu user không tồn tại, trả về lỗi
+    if (!user) {
+      return res.status(401).json({
+        status: 'fail',
+        message: 'Không thể tìm thấy người dùng để logout',
+      });
+    }
+
     // Nếu là bác sĩ, đặt lại isOnline = false
     if (user.role === 'doctor') {
       user.isOnline = false;
