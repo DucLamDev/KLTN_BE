@@ -32,7 +32,7 @@ const appointmentSchema = new mongoose.Schema({
 const doctorSchema = new mongoose.Schema(
   {
     fullName: { type: String},
-    specialization: { type: String},
+    specialization: { type: String,  required: true},
     role: {type: String, required: true},
     phone: {
       type: String,
@@ -52,7 +52,7 @@ const doctorSchema = new mongoose.Schema(
     },
     schedule: [scheduleSchema],
     isOnline: { type: Boolean, default: false },
-    roomNumber: { type: String },
+    roomNumber: { type: String, default: "002" },
     appointmentList: [appointmentSchema] // list cách cuộc hẹn mà bác sĩ đã làm trong ngày
   },
   { timestamps: true }

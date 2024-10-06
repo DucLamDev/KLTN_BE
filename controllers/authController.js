@@ -14,7 +14,7 @@ const createToken = (user) => {
 // Đăng ký tài khoản
 export const register = async (req, res) => {
   try {
-    const { email, password, role} = req.body;
+    const { email, password, role, specialization, roomNumber} = req.body;
 
     let user;
 
@@ -23,7 +23,9 @@ export const register = async (req, res) => {
       user = await Doctor.create({
         email,
         password,
-        role,  // Lưu số phòng cho bác sĩ
+        role,
+        specialization,
+        roomNumber// Lưu số phòng cho bác sĩ
       });
     } else {
       // Nếu không, tạo tài khoản người dùng bình thường
@@ -119,11 +121,12 @@ export const logout = async (req, res) => {
     // Nếu là bác sĩ, đặt lại isOnline = false
     if (user.role === 'doctor') {
       user.isOnline = false;
-      await user.save();
-
-      // Xóa queue của bác sĩ trong Redis
       const queueKey = `queue:${user.roomNumber}`;
       await redisClient.del(queueKey); // Xóa queue khi bác sĩ offline
+      user.roomNumber = "000";
+      // Xóa queue của bác sĩ trong Redis
+      await user.save();
+
     }
 
     // Xóa cookie chứa token JWT

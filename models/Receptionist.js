@@ -7,9 +7,10 @@ const shiftScheduleSchema = new mongoose.Schema({
 });
 
 const receptionistSchema = new mongoose.Schema({
-    fullName: { type: String, required: true },
+    fullName: { type: String},
     phone: String,
     email: String,
+    password: String,
     shiftSchedule: [shiftScheduleSchema],
 });
 
