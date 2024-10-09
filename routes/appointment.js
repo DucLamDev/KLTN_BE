@@ -18,12 +18,9 @@ router.post("/", async (req, res) => {
     patientId,
     appointmentDate,
     reason,
-    specialization, // Khoa mà bệnh nhân muốn khám
+    specialization, 
   };
-  // const appointment = new Appointment(appointmentRequest);
-  // await appointment.save();
   try {
-    // Gửi yêu cầu cuộc hẹn vào hàng đợi chuyên khoa tương ứng
     await sendMessage(`department-${specialization}-queue`, appointmentRequest);
     res
       .status(202)

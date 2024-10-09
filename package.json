@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "SET debug=node-kafka:* && nodemon server.js"
+    "start": "debug=node-kafka:* && nodemon server.js"
   },
   "author": "",
   "license": "ISC",

@@ -55,7 +55,7 @@ export const register = async (req, res) => {
 // Đăng nhập
 export const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password} = req.body;
 
     // Kiểm tra xem user có phải bác sĩ hay không
     const user = await Doctor.findOne({ email }) ? await Doctor.findOne({ email }) : await User.findOne({ email });
