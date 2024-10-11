@@ -18,10 +18,6 @@ const scheduleSchema = new mongoose.Schema({
   },
 });
 
-const roomSchema = new mongoose.Schema({
-  roomNumber: { type: String },
-  numPatients: Number,
-})
 const appointmentSchema = new mongoose.Schema({
   patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
   // doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor', required: true },
