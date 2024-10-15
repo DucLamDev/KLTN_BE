@@ -1,33 +1,31 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import scheduleSchema from './Schedule.js';
+import scheduleSchema from '../models/Schedule.js'; // Đảm bảo đường dẫn là chính xác
 
 const appointmentSchema = new mongoose.Schema({
   patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
-  // doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor', required: true },
   appointmentDate: { type: Date, required: true },
   reason: { type: String, required: true },
   status: { type: String, enum: ['Scheduled', 'Completed', 'Cancelled'], default: 'Scheduled' },
-})
+});
 
 function generateUniqueId() {
   const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
   return `BS-${randomString}`;
 }
+
 const doctorSchema = new mongoose.Schema(
   {
-    fullName: { type: String},
-    specialization: { type: String,  required: true},
-    role: {type: String, required: true},
+    fullName: { type: String },
+    specialization: { type: String, required: true },
+    role: { type: String, required: true },
     gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
     phone: {
       type: String,
-      // required: true,
       match: [/^\+?[1-9]\d{1,14}$/, 'Please use a valid phone number.'],
     },
     email: {
       type: String,
-      // required: true,
       unique: true,
       match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address.'],
     },
@@ -36,10 +34,10 @@ const doctorSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    schedule: [scheduleSchema],
+    schedule: [scheduleSchema], // Sử dụng đúng cách schema cho lịch trình
     isOnline: { type: Boolean, default: false },
     roomNumber: { type: String, default: "000" },
-    appointmentList: [appointmentSchema] // list cách cuộc hẹn mà bác sĩ đã làm trong ngày
+    appointmentList: [appointmentSchema] // danh sách các cuộc hẹn mà bác sĩ đã làm trong ngày
   },
   { timestamps: true }
 );
@@ -75,5 +73,6 @@ doctorSchema.pre('save', async function (next) {
 doctorSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
+
 const Doctor = mongoose.model('Doctor', doctorSchema);
 export default Doctor;

@@ -11,6 +11,7 @@ import appointmentByPatientRoutes from "./routes/appointmentByPatient.js";
 import prescriptionRoutes from "./routes/prescription.js";
 import invoiceRoutes from "./routes/invoice.js";
 import kafkaRouter from "./routes/kafkaRoutes.js";
+import cashierRoutes from "./routes/cashier.js";
 import { connectProducer as connectAppointmentProducer } from "./kafka/producer.js";
 import { connectProducer as connectExamRoomProducer } from "./kafka/roomProducer.js"; // Kết nối producer cho buồng khám
 import { runConsumerDepartment } from "./kafka/departmentConsumer.js";
@@ -56,6 +57,7 @@ app.use("/room", examRoomRoutes);
 app.use("/queue", queueRoutes);
 app.use('/auth', authRoutes);
 app.use('/user', userRouter);
+app.use('/cashier', cashierRoutes);
 // Hàm khởi động ứng dụng
 
 app.listen(port, async () => {

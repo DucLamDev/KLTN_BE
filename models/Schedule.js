@@ -1,4 +1,4 @@
-// models/Appointment.js
+// models/Schedule.js
 import mongoose from "mongoose";
 
 const scheduleSchema = new mongoose.Schema({
@@ -19,5 +19,5 @@ const scheduleSchema = new mongoose.Schema({
   },
 });
 
-const Schedule = mongoose.model("Schedule", scheduleSchema);
-export default Schedule;
+// Chỉ xuất schema, không cần tạo mô hình
+export default scheduleSchema; 
