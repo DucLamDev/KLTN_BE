@@ -4,12 +4,11 @@ import bcrypt from 'bcryptjs';
 
 function generateUniqueId() {
   const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
-  return `DS-${randomString}`;
+  return `TN-${randomString}`;
 }
-const pharmacistSchema = new mongoose.Schema({
+const cashierSchema = new mongoose.Schema({
   fullName: { type: String},
   role: {type: String, required: true},
-  gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
   phone: {
     type: String,
     // required: true,
@@ -32,9 +31,9 @@ const pharmacistSchema = new mongoose.Schema({
 { timestamps: true }
 );
 
-pharmacistSchema.index({ email: 1 }, { unique: true });
+cashierSchema.index({ email: 1 }, { unique: true });
 
-pharmacistSchema.pre('save', async function (next) {
+cashierSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -42,7 +41,7 @@ pharmacistSchema.pre('save', async function (next) {
   next();
 });
 
-pharmacistSchema.pre('save', async function (next) {
+cashierSchema.pre('save', async function (next) {
   if (this.isNew) {
     let uniqueId;
     let isUnique = false;
@@ -60,8 +59,8 @@ pharmacistSchema.pre('save', async function (next) {
 });
 
 // Phương thức để so sánh mật khẩu
-pharmacistSchema.methods.comparePassword = async function (candidatePassword) {
+cashierSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
-const Pharmacist = mongoose.model('Pharmacist', pharmacistSchema);
-export default Pharmacist;
+const Cashier = mongoose.model('Cashier', cashierSchema);
+export default Cashier;

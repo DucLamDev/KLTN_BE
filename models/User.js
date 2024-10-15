@@ -3,10 +3,17 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
+  fullName: { type: String},
+  phone: {
+    type: String,
+    // required: true,
+    match: [/^\+?[1-9]\d{1,14}$/, 'Please use a valid phone number.'],
+  },
   email: {
     type: String,
     required: true,
     unique: true,
+    match: [/^\S+@\S+\.\S+$/, "Please use a valid email address."],
   },
   password: {
     type: String,

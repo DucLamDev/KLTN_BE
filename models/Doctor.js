@@ -1,22 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-const scheduleSchema = new mongoose.Schema({
-  dayOfWeek: {
-    type: String,
-    required: true,
-    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-  },
-  startTime: {
-    type: String,
-    required: true,
-    match: [/^\d{2}:\d{2}$/, 'Please use a valid time format (HH:mm).'],
-  },
-  endTime: {
-    type: String,
-    required: true,
-    match: [/^\d{2}:\d{2}$/, 'Please use a valid time format (HH:mm).'],
-  },
-});
+import scheduleSchema from './Schedule.js';
 
 const appointmentSchema = new mongoose.Schema({
   patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
@@ -25,11 +9,17 @@ const appointmentSchema = new mongoose.Schema({
   reason: { type: String, required: true },
   status: { type: String, enum: ['Scheduled', 'Completed', 'Cancelled'], default: 'Scheduled' },
 })
+
+function generateUniqueId() {
+  const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
+  return `BS-${randomString}`;
+}
 const doctorSchema = new mongoose.Schema(
   {
     fullName: { type: String},
     specialization: { type: String,  required: true},
     role: {type: String, required: true},
+    gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
     phone: {
       type: String,
       // required: true,
@@ -48,7 +38,7 @@ const doctorSchema = new mongoose.Schema(
     },
     schedule: [scheduleSchema],
     isOnline: { type: Boolean, default: false },
-    roomNumber: { type: String, default: "002" },
+    roomNumber: { type: String, default: "000" },
     appointmentList: [appointmentSchema] // list cách cuộc hẹn mà bác sĩ đã làm trong ngày
   },
   { timestamps: true }
@@ -61,6 +51,23 @@ doctorSchema.pre('save', async function (next) {
     return next();
   }
   this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+
+doctorSchema.pre('save', async function (next) {
+  if (this.isNew) {
+    let uniqueId;
+    let isUnique = false;
+
+    // Kiểm tra tính duy nhất của ID
+    while (!isUnique) {
+      uniqueId = generateUniqueId();
+      const existingPatient = await mongoose.models.Patient.findOne({ _id: uniqueId });
+      isUnique = !existingPatient; // Kiểm tra xem ID có tồn tại không
+    }
+
+    this._id = uniqueId; // Gán ID duy nhất
+  }
   next();
 });
 

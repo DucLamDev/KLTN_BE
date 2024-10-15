@@ -20,6 +20,9 @@ router.post("/", async (req, res) => {
     reason,
     specialization, 
   };
+  const appointment = new Appointment(appointmentRequest);
+  await appointment.save();
+
   try {
     await sendMessage(`department-${specialization}-queue`, appointmentRequest);
     res

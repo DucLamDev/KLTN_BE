@@ -55,11 +55,12 @@ export const register = async (req, res) => {
 // Đăng nhập
 export const loginUser = async (req, res) => {
   try {
-    const { email, password} = req.body;
+    const { email, password } = req.body;
 
-    // Kiểm tra xem user có phải bác sĩ hay không
-    const user = await Doctor.findOne({ email }) ? await Doctor.findOne({ email }) : await User.findOne({ email });
-    
+    // Tìm kiếm người dùng theo email
+    const user = await User.findOne({ email });
+
+    // Nếu không tìm thấy người dùng hoặc mật khẩu không chính xác
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({
         status: 'fail',
@@ -67,7 +68,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // Nếu là bác sĩ, đặt lại isOnline = true
+    // Nếu người dùng là bác sĩ, đặt trạng thái isOnline = true và xử lý hàng đợi trong Redis
     if (user.role === 'doctor') {
       user.isOnline = true;
       await user.save();
@@ -78,21 +79,41 @@ export const loginUser = async (req, res) => {
       await redisClient.lPush(queueKey, 'Queue for doctor created');
     }
 
+    // Các hành động cụ thể khác tùy thuộc vào role của user
+    // Ví dụ: Bạn có thể thêm hành động đặc biệt cho các vai trò khác như receptionist, admin, etc.
+    if (user.role === 'receptionist') {
+      // Hành động dành cho lễ tân
+      console.log('Receptionist logged in');
+    }
+
+    if (user.role === 'pharmacist') {
+      // Hành động dành cho dược sĩ
+      console.log('Pharmacist logged in');
+    }
+
+    if (user.role === 'admin') {
+      // Hành động dành cho quản trị viên
+      console.log('Admin logged in');
+    }
+
     // Tạo JWT và lưu vào cookie
     const token = createToken(user);
 
     res.cookie('jwt', token, {
-      httpOnly: true, 
-      expires: new Date(Date.now() + 600 * 600 * 1000), 
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Chỉ sử dụng cờ secure khi chạy trên production (HTTPS)
+      sameSite: 'Lax', // Cài đặt SameSite là 'Lax' để cookie được gửi với các yêu cầu điều hướng liên kết
+      expires: new Date(Date.now() + 600 * 600 * 1000), // Cookie expires in 10 hours
     });
 
+    // Trả về thông tin người dùng và vai trò của họ
     res.status(200).json({
       status: 'success',
       message: 'Đăng nhập thành công',
       data: {
         id: user._id,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
   } catch (err) {
     res.status(500).json({
@@ -101,6 +122,7 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
 
 
 // authController.js
@@ -130,9 +152,11 @@ export const logout = async (req, res) => {
     }
 
     // Xóa cookie chứa token JWT
-    res.cookie('jwt', '', {
+    res.cookie('jwt', token, {
       httpOnly: true,
-      expires: new Date(0),
+      secure: process.env.NODE_ENV === 'production', // Chỉ sử dụng cờ secure khi chạy trên production (HTTPS)
+      sameSite: 'Lax', // Cài đặt SameSite là 'Lax' để cookie được gửi với các yêu cầu điều hướng liên kết
+      expires: new Date(Date.now() + 600 * 600 * 1000), // Cookie expires in 10 hours
     });
 
     res.status(200).json({
