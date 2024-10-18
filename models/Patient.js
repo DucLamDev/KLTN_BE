@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import bcrypt from 'bcryptjs';
 // Schema lịch sử bệnh
 const medicalHistorySchema = new mongoose.Schema({
   disease: { type: String, required: true },
@@ -16,13 +16,18 @@ function generateUniqueId() {
 // Schema bệnh nhân
 const patientSchema = new mongoose.Schema(
   {
-    _id: { type: String, required: true }, // Trường ID theo định dạng BN-X
-    fullName: { type: String, required: true },
-    dateOfBirth: { type: Date, required: true },
-    numberId: { type: String, required: true }, // Căn cước công dân
-    accountId: { type: String, required: true },
-    gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
-    address: { type: String, required: true },
+    _id: { type: String, auto: false }, // Trường ID theo định dạng BN-X
+    fullName: { type: String},
+    dateOfBirth: { type: Date},
+    numberId: { type: String}, // Căn cước công dân
+    accountId: { type: String},
+    gender: { type: String, enum: ["Male", "Female", "Other"]},
+    address: { type: String},
+    password: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     phone: {
       type: String,
       required: true,
@@ -39,6 +44,7 @@ const patientSchema = new mongoose.Schema(
   { timestamps: true, _id: false } // Tắt tự động tạo ObjectId
 );
 
+patientSchema.index({ email: 1 }, { unique: true });
 // Middleware để tạo ID trước khi lưu
 patientSchema.pre('save', async function (next) {
   if (this.isNew) {

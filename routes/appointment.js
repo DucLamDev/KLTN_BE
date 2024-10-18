@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
     reason,
     specialization, 
   };
-  const appointment = new Appointment(appointmentRequest);
+  const appointment = await Appointment.create({ patientId, appointmentDate, reason, specialization });
   await appointment.save();
 
   try {

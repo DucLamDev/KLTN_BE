@@ -38,10 +38,10 @@ export const protect = async (req, res, next) => {
     // Kiểm tra role của người dùng, tìm trong bảng Doctor hoặc User
     if (decoded.role === 'doctor') {
       // Nếu role là 'doctor', tìm trong bảng Doctor
-      user = await Doctor.findById(decoded.id);
+      user = await Doctor.findOne({email: decoded.email});
     } else {
       // Nếu role khác, tìm trong bảng User
-      user = await User.findById(decoded.id);
+      user = await User.findOne({email: decoded.email});
     }
 
     // Kiểm tra người dùng có tồn tại không

@@ -7,6 +7,7 @@ function generateUniqueId() {
   return `DS-${randomString}`;
 }
 const pharmacistSchema = new mongoose.Schema({
+  _id: { type: String, auto: false },
   fullName: { type: String},
   role: {type: String, required: true},
   gender: { type: String, enum: ["Male", "Female", "Other"], required: true },

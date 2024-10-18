@@ -1,12 +1,17 @@
 // controllers/authController.js
 import Doctor from '../models/Doctor.js';
 import User from '../models/User.js';
+import Patient from '../models/Patient.js';
+import Pharmacist from '../models/Pharmacist.js';
+import Cashier from '../models/Cashier.js';
+import Receptionist from '../models/Receptionist.js'
+
 import jwt from 'jsonwebtoken';
 import {redisClient} from '../redis/redisClient.js';
 
 // Tạo token JWT
 const createToken = (user) => {
-  return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+  return jwt.sign({ id: user._id, role: user.role, email: user.email }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
@@ -14,24 +19,35 @@ const createToken = (user) => {
 // Đăng ký tài khoản
 export const register = async (req, res) => {
   try {
-    const { email, password, role, specialization, roomNumber} = req.body;
+    const { email, password, role, fullName, phone, gender} = req.body;
 
     let user;
-
-    // Nếu vai trò là bác sĩ, tạo tài khoản bác sĩ
-    if (role === 'doctor') {
-      user = await Doctor.create({
-        email,
-        password,
-        role,
-        specialization,
-        roomNumber// Lưu số phòng cho bác sĩ
-      });
-    } else {
-      // Nếu không, tạo tài khoản người dùng bình thường
-      user = await User.create({ email, password, role });
+    user = await User.create({ email, password, role, fullName, phone, gender });
+    
+    if(role == 'doctor'){
+     const doctor = await Doctor.create({email, password, role, fullName, phone, gender});
+     await doctor.save();
     }
-
+    else if (role == 'patient'){
+      const patient = await Patient.create({email, password, role, fullName, phone, gender});
+     await patient.save();
+    }
+    else if (role == 'receptionist'){
+      const receptionist = await Receptionist.create({email, password, role, fullName, phone, gender});
+     await receptionist.save();
+    }
+    else if (role == 'pharmacist'){
+      const pharmacist = await Pharmacist.create({email, password, role, fullName, phone, gender});
+     await pharmacist.save();
+    }
+    else if (role == 'pharmacist'){
+      const pharmacist = await Pharmacist.create({email, password, role, fullName, phone, gender});
+     await pharmacist.save();
+    }
+    else if (role == 'cashier'){
+      const cashier = await Cashier.create({email, password, role, fullName, phone, gender});
+     await cashier.save();
+    }
     // Tạo token JWT và trả về cho người dùng
     const token = createToken(user);
 
@@ -70,11 +86,12 @@ export const loginUser = async (req, res) => {
 
     // Nếu người dùng là bác sĩ, đặt trạng thái isOnline = true và xử lý hàng đợi trong Redis
     if (user.role === 'doctor') {
-      user.isOnline = true;
-      await user.save();
+      const doctor =  await Doctor.findOne({email});
+      doctor.isOnline = true;
+      await doctor.save();
 
       // Tạo queue cho phòng của bác sĩ trong Redis
-      const queueKey = `queue:${user.roomNumber}`;
+      const queueKey = `queue:${doctor.roomNumber}`;
       await redisClient.del(queueKey); // Xóa queue cũ (nếu có)
       await redisClient.lPush(queueKey, 'Queue for doctor created');
     }
@@ -152,11 +169,11 @@ export const logout = async (req, res) => {
     }
 
     // Xóa cookie chứa token JWT
-    res.cookie('jwt', token, {
+    res.cookie('jwt', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Chỉ sử dụng cờ secure khi chạy trên production (HTTPS)
       sameSite: 'Lax', // Cài đặt SameSite là 'Lax' để cookie được gửi với các yêu cầu điều hướng liên kết
-      expires: new Date(Date.now() + 600 * 600 * 1000), // Cookie expires in 10 hours
+      expires: new Date(Date.now() - 1)
     });
 
     res.status(200).json({

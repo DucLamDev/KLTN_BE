@@ -4,12 +4,13 @@ import bcrypt from 'bcryptjs';
 
 function generateUniqueId() {
   const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
-  return `TN-${randomString}`;
+  return `LT-${randomString}`;
 }
 const receptionistSchema = new mongoose.Schema({
+  _id: { type: String, auto: false },
   fullName: { type: String},
   role: {type: String, required: true},
-  gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
+  gender: { type: String, enum: ["Male", "Female", "Other"]},
   phone: {
     type: String,
     // required: true,

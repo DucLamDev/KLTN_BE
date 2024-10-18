@@ -7,6 +7,7 @@ function generateUniqueId() {
   return `TN-${randomString}`;
 }
 const cashierSchema = new mongoose.Schema({
+  _id: { type: String, auto: false },
   fullName: { type: String},
   role: {type: String, required: true},
   phone: {

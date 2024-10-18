@@ -1,11 +1,11 @@
   // kafka/departmentConsumer.js
   import { Kafka } from 'kafkajs';
   import dotenv from 'dotenv';
-  import Doctor from '../models/Doctor.js';
+  // import Doctor from '../models/Doctor.js';
   // import Appointment from '../models/Appointment.js';
   // import { sendToExamRoomQueue } from './roomProducer.js'; // Producer để gửi tới buồng khám
   // import { createClient } from 'redis';
-  import {addAppointmentToQueue} from "../redis/queueManager.js"
+  import {addPrescriptionToQueue} from "../redis/queueManager.js"
 
   dotenv.config();
 
@@ -44,43 +44,12 @@
   };
 
   // Xử lý tin nhắn từ hàng đợi chuyên khoa
-  const processDepartmentQueueMessage = async (message) => {
+  const processPharmacistQueueMessage = async (message) => {
     const patientData = JSON.parse(message.value);
     const { patientId, specialization } = patientData;
 
     try {
-      // Lấy danh sách các bác sĩ theo chuyên khoa và đang online
-      const doctors = await Doctor.find({ specialization, isOnline: true });
-
-      if (doctors.length === 0) {
-        console.log(`No doctors available in department ${specialization}`);
-        return;
-      }
-
-      // Khởi tạo bộ đếm cho chuyên khoa nếu chưa có
-      if (!roundRobinCounters[specialization]) {
-        roundRobinCounters[specialization] = 0;
-      }
-
-      // Sử dụng chỉ số round robin để phân bệnh nhân cho bác sĩ tiếp theo
-      const selectedIndex = roundRobinCounters[specialization];
-      const selectedDoctor = doctors[selectedIndex];
-
-      if (!selectedDoctor) {
-        console.log(`No suitable doctor found in department ${specialization}`);
-        return;
-      }
-
-      const selectedRoom = selectedDoctor.roomNumber;
-
-      // Tăng bộ đếm, quay về 0 nếu đã phân hết tất cả các bác sĩ
-      roundRobinCounters[specialization] = (selectedIndex + 1) % doctors.length;
-
-      // Gửi bệnh nhân đến buồng khám tương ứng
-      // await sendToExamRoomQueue(selectedRoom, patientData);
-
-      // const queueKey = `queue:${selectedRoom}`;
-      await addAppointmentToQueue(selectedRoom, patientData);
+      await addPrescriptionToQueue(patientData);
     console.log(`Patient ${patientId} added to queue of doctor ${selectedDoctor._id}`);
 
       console.log(`Patient ${patientId} assigned to exam room ${selectedRoom} in department ${specialization}`);
@@ -95,13 +64,13 @@
   };
 
   // Chạy consumer
-  const runConsumerDepartment = async () => {
+  const runConsumerPharmacist = async () => {
     await connectConsumer();
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
-        await processDepartmentQueueMessage(message);
+        await processPharmacistQueueMessage(message);
       },
     });
   };
 
-  export { runConsumerDepartment, processPatientFinished }; // Xuất hàm để xử lý khi bệnh nhân khám xong
+  export { runConsumerPharmacist, processPatientFinished }; // Xuất hàm để xử lý khi bệnh nhân khám xong

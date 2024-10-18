@@ -2,6 +2,8 @@
   import { Kafka } from 'kafkajs';
   import dotenv from 'dotenv';
   import Doctor from '../models/Doctor.js';
+  import Appointment from "../models/Appointment.js";
+
   // import Appointment from '../models/Appointment.js';
   // import { sendToExamRoomQueue } from './roomProducer.js'; // Producer để gửi tới buồng khám
   // import { createClient } from 'redis';
@@ -82,7 +84,12 @@
       // const queueKey = `queue:${selectedRoom}`;
       await addAppointmentToQueue(selectedRoom, patientData);
     console.log(`Patient ${patientId} added to queue of doctor ${selectedDoctor._id}`);
+      const appointment = await Appointment.findOne({patientId:patientId });
+      if(appointment) {
+        await appointment.updateOne({doctorId: selectedDoctor._id});
+      }
 
+      const doctor = await Doctor.findOne({})
       console.log(`Patient ${patientId} assigned to exam room ${selectedRoom} in department ${specialization}`);
     } catch (err) {
       console.error('Error processing department queue message', err);

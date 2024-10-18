@@ -12,6 +12,6 @@ router.post('/register', register);
 router.post('/login', loginUser);
 
 // Đăng xuất
-router.get('/logout', protect, logout);
+router.post('/logout', protect, logout);
 
 export default router;

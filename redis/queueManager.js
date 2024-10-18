@@ -11,6 +11,15 @@ const addAppointmentToQueue = async (roomNumber, patientData) => {
   }
 };
 
+const addPrescriptionToQueue = async (prescriptionData) => {
+  const queueKey = `queue:Pharmacist`;
+  try {
+    await redisClient.lPush(queueKey, JSON.stringify(prescriptionData)); // Sử dụng lPush
+  } catch (err) {
+    console.error('Error adding to queue:', err);
+  }
+};
+
 // Hàm lấy bệnh nhân tiếp theo từ hàng đợi Redis
 const getNextPatientFromQueue = async (roomNumber) => {
   const queueKey = `queue:${roomNumber}`;
@@ -19,7 +28,6 @@ const getNextPatientFromQueue = async (roomNumber) => {
     if (patientData) {
       const parsedPatientData = JSON.parse(patientData);
       console.log(`Processing patient ${parsedPatientData.patientId} in room ${roomNumber}`);
-      // Gọi logic xử lý tiếp nhận bệnh nhân ở đây
     } else {
       console.log(`No patients in queue for room ${roomNumber}`);
     }
@@ -28,5 +36,5 @@ const getNextPatientFromQueue = async (roomNumber) => {
   }
 };
 
-export {addAppointmentToQueue};
+export {addAppointmentToQueue, addPrescriptionToQueue};
 

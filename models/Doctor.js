@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import scheduleSchema from '../models/Schedule.js'; // Đảm bảo đường dẫn là chính xác
 
+
 const appointmentSchema = new mongoose.Schema({
   patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
   appointmentDate: { type: Date, required: true },
@@ -16,10 +17,13 @@ function generateUniqueId() {
 
 const doctorSchema = new mongoose.Schema(
   {
+    _id: { type: String, auto: false },
     fullName: { type: String },
-    specialization: { type: String, required: true },
+    specialization: { type: String},
+    dateOfBirth: { type: Date},
+    numberId: { type: String},
     role: { type: String, required: true },
-    gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
+    gender: { type: String, enum: ["Male", "Female", "Other"]},
     phone: {
       type: String,
       match: [/^\+?[1-9]\d{1,14}$/, 'Please use a valid phone number.'],
