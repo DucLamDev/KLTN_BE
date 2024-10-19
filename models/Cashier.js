@@ -50,8 +50,8 @@ cashierSchema.pre('save', async function (next) {
     // Kiểm tra tính duy nhất của ID
     while (!isUnique) {
       uniqueId = generateUniqueId();
-      const existingPatient = await mongoose.models.Patient.findOne({ _id: uniqueId });
-      isUnique = !existingPatient; // Kiểm tra xem ID có tồn tại không
+      const existingCashier = await mongoose.models.Cashier.findOne({ _id: uniqueId });
+      isUnique = !existingCashier; // Kiểm tra xem ID có tồn tại không
     }
 
     this._id = uniqueId; // Gán ID duy nhất

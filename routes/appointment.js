@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Tạo cuộc hẹn mới
 router.post("/", async (req, res) => {
-  const { patientId, appointmentDate, reason, specialization } = req.body;
+  const { patientId, appointmentDate, reason, specialization, priority } = req.body;
 
   if (!patientId || !appointmentDate || !specialization) {
     return res.status(400).json({
@@ -18,9 +18,10 @@ router.post("/", async (req, res) => {
     patientId,
     appointmentDate,
     reason,
-    specialization, 
+    specialization,
+    priority
   };
-  const appointment = await Appointment.create({ patientId, appointmentDate, reason, specialization });
+  const appointment = await Appointment.create({ patientId, appointmentDate, reason, specialization, priority });
   await appointment.save();
 
   try {

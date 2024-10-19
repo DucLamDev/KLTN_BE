@@ -3,6 +3,7 @@ import ServiceList from '../models/ServiceList.js'; // Model ServiceList
 import Invoice from '../models/Invoice.js'; // Model Invoice
 import Patient from '../models/Patient.js'; // Model Patient
 import Doctor from '../models/Doctor.js'; // Model Doctor
+import Cashier from '../models/Cashier.js';
 
 const router = express.Router();
 
@@ -74,5 +75,17 @@ router.put('/update-invoice-status/:invoiceId', async (req, res) => {
   }
 });
 
+router.patch("/:id", async (req, res) => {
+    try {
+      const cashier = await Cashier.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+      });
+      if (!cashier) return res.status(404).send();
+      res.status(200).send(cashier);
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  });
 
 export default router;

@@ -2,6 +2,8 @@ import express from "express";
 import ServiceList from '../models/ServiceList.js'; // Import model ServiceList
 import Doctor from '../models/Doctor.js'; // Import model Doctor
 import Patient from '../models/Patient.js'; // Import model Patient
+import Prescription from "../models/Prescription.js";
+import { sendMessage } from "../kafka/producer.js";
 
 const router = express.Router();
 
@@ -13,6 +15,38 @@ router.post("/", async (req, res) => {
     res.status(201).send(doctor);
   } catch (error) {
     res.status(400).send(error);
+  }
+});
+
+router.post("/create-prescription", async (req, res) => {
+  const { patientId, doctorId, medications, dateIssued} = req.body;
+  
+
+  if (!patientId || !doctorId || !medications || !dateIssued) {
+    return res.status(400).json({
+      message: "patientId, doctorId và medications, dateIssued  là bắt buộc",
+    });
+  }
+
+  const prescriptionRequest = {
+    patientId,
+    doctorId,
+    medications,
+    dateIssued 
+  };
+  const prescription = await Prescription.create(prescriptionRequest);
+  await prescription.save();
+
+  try {
+    await sendMessage(`Pharmacist-Queue`, prescription);
+    res
+      .status(202)
+      .json({ message: "Tao thuốc đã được tiếp nhận và đang xử lý" });
+  } catch (err) {
+    res.status(500).json({
+      message: "Không thể xử lý yêu cầu cuộc hẹn",
+      error: err.message,
+    });
   }
 });
 

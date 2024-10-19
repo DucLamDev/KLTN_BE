@@ -24,6 +24,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.js'
 // import { runConsumer } from './kafka/roomConsumer.js'; // Kafka Consumer cho phòng khám
 import cors from "cors";
+import { runConsumerPharmacist } from "./kafka/pharmacistConsumer.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -35,6 +36,7 @@ mongoose
 const corsOptions = {
   origin: "http://localhost:3001", // Allow requests from your client
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Allowed HTTP methods
+  credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
 };
 
@@ -70,4 +72,5 @@ const startApp = async () => {
   await connectConsumer();
   await connectExamRoomProducer(); // Kết nối producer cho buồng khám
   await runConsumerDepartment(); // Chạy consumer
+  await runConsumerPharmacist();
 };

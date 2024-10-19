@@ -8,8 +8,9 @@ const serviceSchema = new mongoose.Schema({
 
 // Schema hóa đơn
 const invoiceSchema = new mongoose.Schema({
-    patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
-    doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor', required: true },
+    patientId: { type: String, ref: 'Patient', required: true },
+    doctorId: { type: String, ref: 'Doctor', required: true },
+    cashierID: {type: String, ref: 'Cashier', required: true},
     services: [serviceSchema],  // Danh sách các dịch vụ sử dụng
     totalAmount: { type: Number, required: true },  // Tổng chi phí
     invoiceDate: { type: Date, default: Date.now }, // Ngày lập hóa đơn

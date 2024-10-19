@@ -40,10 +40,6 @@ export const register = async (req, res) => {
       const pharmacist = await Pharmacist.create({email, password, role, fullName, phone, gender});
      await pharmacist.save();
     }
-    else if (role == 'pharmacist'){
-      const pharmacist = await Pharmacist.create({email, password, role, fullName, phone, gender});
-     await pharmacist.save();
-    }
     else if (role == 'cashier'){
       const cashier = await Cashier.create({email, password, role, fullName, phone, gender});
      await cashier.save();

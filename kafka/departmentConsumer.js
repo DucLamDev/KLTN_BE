@@ -48,53 +48,41 @@
   // Xử lý tin nhắn từ hàng đợi chuyên khoa
   const processDepartmentQueueMessage = async (message) => {
     const patientData = JSON.parse(message.value);
-    const { patientId, specialization } = patientData;
-
+    const { patientId, specialization, priority } = patientData;
+  
     try {
-      // Lấy danh sách các bác sĩ theo chuyên khoa và đang online
+      // Lấy danh sách bác sĩ và phân công bác sĩ
       const doctors = await Doctor.find({ specialization, isOnline: true });
-
+  
       if (doctors.length === 0) {
-        console.log(`No doctors available in department ${specialization}`);
+        console.log(`Không có bác sĩ nào trong chuyên khoa ${specialization}`);
         return;
       }
-
-      // Khởi tạo bộ đếm cho chuyên khoa nếu chưa có
-      if (!roundRobinCounters[specialization]) {
-        roundRobinCounters[specialization] = 0;
-      }
-
-      // Sử dụng chỉ số round robin để phân bệnh nhân cho bác sĩ tiếp theo
-      const selectedIndex = roundRobinCounters[specialization];
+  
+      // Sử dụng round robin để chọn bác sĩ
+      const selectedIndex = roundRobinCounters[specialization] || 0;
       const selectedDoctor = doctors[selectedIndex];
-
-      if (!selectedDoctor) {
-        console.log(`No suitable doctor found in department ${specialization}`);
-        return;
-      }
-
       const selectedRoom = selectedDoctor.roomNumber;
-
-      // Tăng bộ đếm, quay về 0 nếu đã phân hết tất cả các bác sĩ
+  
+      // Cập nhật bộ đếm round robin
       roundRobinCounters[specialization] = (selectedIndex + 1) % doctors.length;
-
-      // Gửi bệnh nhân đến buồng khám tương ứng
-      // await sendToExamRoomQueue(selectedRoom, patientData);
-
-      // const queueKey = `queue:${selectedRoom}`;
+  
+      // Gọi hàm thêm vào hàng đợi, ưu tiên bệnh nhân nếu cần
       await addAppointmentToQueue(selectedRoom, patientData);
-    console.log(`Patient ${patientId} added to queue of doctor ${selectedDoctor._id}`);
-      const appointment = await Appointment.findOne({patientId:patientId });
-      if(appointment) {
-        await appointment.updateOne({doctorId: selectedDoctor._id});
+      console.log(`Bệnh nhân ${patientId} đã được phân công cho bác sĩ ${selectedDoctor._id}`);
+  
+      // Cập nhật thông tin cuộc hẹn với bác sĩ
+      const appointment = await Appointment.findOne({ patientId });
+      if (appointment) {
+        await appointment.updateOne({ doctorId: selectedDoctor._id });
       }
-
-      const doctor = await Doctor.findOne({})
-      console.log(`Patient ${patientId} assigned to exam room ${selectedRoom} in department ${specialization}`);
+  
+      console.log(`Bệnh nhân ${patientId} đã được thêm vào hàng đợi phòng khám ${selectedRoom}`);
     } catch (err) {
-      console.error('Error processing department queue message', err);
+      console.error('Lỗi khi xử lý tin nhắn từ hàng đợi:', err);
     }
   };
+  
 
   // Xử lý khi bệnh nhân đã khám xong
   const processPatientFinished = async (roomNumber) => {

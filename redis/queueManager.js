@@ -3,11 +3,19 @@ import { redisClient} from '../redis/redisClient.js';
 
 const addAppointmentToQueue = async (roomNumber, patientData) => {
   const queueKey = `queue:${roomNumber}`;
+  
   try {
-    await redisClient.lPush(queueKey, JSON.stringify(patientData)); // Sử dụng lPush
-    console.log(`Added appointment for patient ${patientData.patientId} to queue for room ${roomNumber}`);
+    if (patientData.priority) {
+      // Nếu bệnh nhân có ưu tiên, đẩy lên đầu danh sách
+      await redisClient.lPush(queueKey, JSON.stringify(patientData));
+      console.log(`Bệnh nhân ưu tiên ${patientData.patientId} đã được thêm vào đầu danh sách chờ.`);
+    } else {
+      // Nếu không, đẩy vào cuối danh sách
+      await redisClient.rPush(queueKey, JSON.stringify(patientData));
+      console.log(`Bệnh nhân ${patientData.patientId} đã được thêm vào cuối danh sách chờ.`);
+    }
   } catch (err) {
-    console.error('Error adding to queue:', err);
+    console.error('Lỗi khi thêm bệnh nhân vào hàng đợi:', err);
   }
 };
 

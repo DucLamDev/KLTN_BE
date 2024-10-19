@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema({
   gender: { type: String, enum: ["Male", "Female", "Other"]},
   phone: {
     type: String,
-    // required: true,
     match: [/^\+?[1-9]\d{1,14}$/, 'Please use a valid phone number.'],
   },
   email: {
@@ -22,7 +21,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'doctor', 'receptionist', 'pharmacist', 'patient'],
+    enum: ['admin', 'doctor', 'receptionist', 'pharmacist', 'patient', 'cashier'],
     default: 'patient',
   },
 });

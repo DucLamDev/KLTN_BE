@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const appointmentSchema = new mongoose.Schema(
   {
     patientId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Patient",
       required: true,
     },
@@ -19,6 +19,7 @@ const appointmentSchema = new mongoose.Schema(
       enum: ["Scheduled", "Completed", "Cancelled"],
       default: "Scheduled",
     },
+    priority: {type: Boolean, default: false}
   },
   { timestamps: true }
 );

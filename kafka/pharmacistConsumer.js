@@ -15,7 +15,7 @@
     ssl: false,
   });
 
-  const consumer = kafka.consumer({ groupId: process.env.GROUP_ID || 'appointment-group' });
+  const consumer = kafka.consumer({ groupId: process.env.GROUP_ID || 'pharmacist-group' });
   // const redisClient = createClient();
   // Khởi tạo bộ đếm để theo dõi lần lượt việc phân bệnh nhân cho các bác sĩ trong mỗi chuyên khoa
   const roundRobinCounters = {}; // { specialization: currentIndex }
@@ -25,7 +25,7 @@
     try {
       await consumer.connect();
       console.log('Kafka Consumer connected');
-      await consumer.subscribe({ topic: /department-.*-queue/, fromBeginning: true });
+      await consumer.subscribe({ topic: /Pharmacist-Queue/, fromBeginning: true });
     } catch (err) {
       console.error('Failed to connect Kafka Consumer', err);
       process.exit(1);
@@ -45,16 +45,11 @@
 
   // Xử lý tin nhắn từ hàng đợi chuyên khoa
   const processPharmacistQueueMessage = async (message) => {
-    const patientData = JSON.parse(message.value);
-    const { patientId, specialization } = patientData;
-
+    const prescriptionData = JSON.parse(message.value);
     try {
-      await addPrescriptionToQueue(patientData);
-    console.log(`Patient ${patientId} added to queue of doctor ${selectedDoctor._id}`);
-
-      console.log(`Patient ${patientId} assigned to exam room ${selectedRoom} in department ${specialization}`);
+      await addPrescriptionToQueue(prescriptionData);
     } catch (err) {
-      console.error('Error processing department queue message', err);
+      console.error('Error processing prescription queue message', err);
     }
   };
 
