@@ -22,7 +22,7 @@ const addAppointmentToQueue = async (roomNumber, patientData) => {
 const addPrescriptionToQueue = async (prescriptionData) => {
   const queueKey = `queue:Pharmacist`;
   try {
-    await redisClient.lPush(queueKey, JSON.stringify(prescriptionData)); // Sử dụng lPush
+    await redisClient.rPush(queueKey, JSON.stringify(prescriptionData)); // Sử dụng lPush
   } catch (err) {
     console.error('Error adding to queue:', err);
   }

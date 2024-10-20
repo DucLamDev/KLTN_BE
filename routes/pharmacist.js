@@ -45,14 +45,14 @@ router.get('/prescriptions', async (req, res) => {
   });
 
 // Lấy danh sách dược sĩ
-router.get('/', async (req, res) => {
-    try {
-        const pharmacists = await Pharmacist.find();
-        res.status(200).send(pharmacists);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
+// router.get('/', async (req, res) => {
+//     try {
+//         const pharmacists = await Pharmacist.find();
+//         res.status(200).send(pharmacists);
+//     } catch (error) {
+//         res.status(500).send(error);
+//     }
+// });
 
 // Lấy chi tiết một dược sĩ
 router.get('/:id', async (req, res) => {

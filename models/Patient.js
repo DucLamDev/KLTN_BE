@@ -21,7 +21,7 @@ const patientSchema = new mongoose.Schema(
     dateOfBirth: { type: Date},
     numberId: { type: String}, // Căn cước công dân
     accountId: { type: String},
-    gender: { type: String, enum: ["Male", "Female", "Other"]},
+    gender: { type: String},
     address: { type: String},
     password: {
       type: String,

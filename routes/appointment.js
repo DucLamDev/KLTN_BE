@@ -1,6 +1,7 @@
 import express from "express";
 import Appointment from "../models/Appointment.js";
 import { sendMessage } from "../kafka/producer.js"; // Kafka producer để gửi thông tin cuộc hẹn đến hàng đợi chuyên khoa
+import Patient from "../models/Patient.js";
 
 const router = express.Router();
 
@@ -14,6 +15,12 @@ router.post("/", async (req, res) => {
     });
   }
 
+  //  const patient = await Patient.findById(patientId);
+  //  if(!patient){
+  //   return res.status(400).json({
+  //     message: "bệnh nhân này chưa tồn tại",
+  //   });
+  //  }
   const appointmentRequest = {
     patientId,
     appointmentDate,

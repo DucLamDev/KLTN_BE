@@ -64,8 +64,8 @@ doctorSchema.pre('save', async function (next) {
     // Kiểm tra tính duy nhất của ID
     while (!isUnique) {
       uniqueId = generateUniqueId();
-      const existingPatient = await mongoose.models.Patient.findOne({ _id: uniqueId });
-      isUnique = !existingPatient; // Kiểm tra xem ID có tồn tại không
+      const existingDoctor = await mongoose.models.Doctor.findOne({ _id: uniqueId });
+      isUnique = !existingDoctor; // Kiểm tra xem ID có tồn tại không
     }
 
     this._id = uniqueId; // Gán ID duy nhất
