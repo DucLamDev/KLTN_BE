@@ -16,7 +16,8 @@ function generateUniqueId() {
 // Schema bệnh nhân
 const patientSchema = new mongoose.Schema(
   {
-    _id: { type: String, auto: false }, // Trường ID theo định dạng BN-X
+    _id: { type: String, auto: false },// Trường ID theo định dạng BN-X
+    clerkId: { type: String, required: false }, 
     fullName: { type: String},
     dateOfBirth: { type: Date},
     numberId: { type: String}, // Căn cước công dân

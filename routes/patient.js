@@ -14,10 +14,14 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Lấy danh sách bệnh nhân
+// Lấy danh sách bệnh nhân (truyền vào email hoặc không)
 router.get("/", async (req, res) => {
   try {
-    const patients = await Patient.find();
+    let patients;
+    const { email } = req.query;
+    if (!email) {
+      patients = await Patient.find();
+    } else patients = await Patient.findOne({ email });
     res.status(200).send(patients);
   } catch (error) {
     res.status(500).send(error);
@@ -61,21 +65,13 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Lấy bệnh nhân theo accountId
-router.get("/by-account/:accountId", async (req, res) => {
+router.get("/clerk/:clerkId", async (req, res) => {
   try {
-    const { accountId } = req.params;
-    const patients = await Patient.findOne({ accountId });
-
-    if (patients.length === 0) {
-      return res
-        .status(404)
-        .send({ message: "Không tìm thấy bệnh nhân với accountId này" });
-    }
-
+    const { clerkId } = req.params;
+    const patients = await Patient.findOne({ clerkId });
     res.status(200).send(patients);
   } catch (error) {
-    res.status(500).send({ message: "Lỗi server", error: error.message });
+    res.status(500).send(error);
   }
 });
-
 export default router;

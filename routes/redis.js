@@ -39,12 +39,6 @@ router.get('/api/:roomNumber', async (req, res) => {
   try {
     // Lấy tất cả bệnh nhân từ hàng đợi Redis
       const patientsData = await redisClient.rPop(queueKey); // Sử dụng rPop
-      if (patientsData) {
-        const parsedPatientData = JSON.parse(patientsData);
-        console.log(`Processing patient ${parsedPatientData.patientId} in room ${roomNumber}`);
-      } else {
-        console.log(`No patients in queue for room ${roomNumber}`);
-      }
 
     if (!patientsData.length) {
       return res.status(404).json({ success: false, message: 'No patients in queue' });
