@@ -17,11 +17,11 @@ import { connectProducer as connectExamRoomProducer } from "./kafka/roomProducer
 import { runConsumerDepartment } from "./kafka/departmentConsumer.js";
 import { connectConsumer } from "./kafka/roomConsumer.js";
 import examRoomRoutes from "./routes/roomData.js"; // Đường dẫn tới API phòng khám
-import { connectRedis } from './redis/redisClient.js';
-import queueRoutes  from "./routes/redis.js";
-import authRoutes from './routes/auth.js';
-import cookieParser from 'cookie-parser';
-import userRouter from './routes/user.js'
+import { connectRedis } from "./redis/redisClient.js";
+import queueRoutes from "./routes/redis.js";
+import authRoutes from "./routes/auth.js";
+import cookieParser from "cookie-parser";
+import userRouter from "./routes/user.js";
 // import { runConsumer } from './kafka/roomConsumer.js'; // Kafka Consumer cho phòng khám
 import cors from "cors";
 import { runConsumerPharmacist } from "./kafka/pharmacistConsumer.js";
@@ -57,9 +57,9 @@ app.use("/invoices", invoiceRoutes);
 app.use("/kafka", kafkaRouter);
 app.use("/room", examRoomRoutes);
 app.use("/queue", queueRoutes);
-app.use('/auth', authRoutes);
-app.use('/user', userRouter);
-app.use('/cashier', cashierRoutes);
+app.use("/auth", authRoutes);
+app.use("/user", userRouter);
+app.use("/cashier", cashierRoutes);
 // Hàm khởi động ứng dụng
 
 app.listen(port, async () => {
