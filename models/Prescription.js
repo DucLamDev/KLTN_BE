@@ -18,6 +18,11 @@ const prescriptionSchema = new mongoose.Schema({
   patientId: { type: String, required: true },
   doctorId: { type: String, required: true },
   medications: [medicationSchema],
+  status: {
+    type: String,
+    enum: ["Scheduled", "Completed"],
+    default: "Scheduled",
+  },
   dateIssued: { type: Date, default: Date.now },
 });
 

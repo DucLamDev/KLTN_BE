@@ -10,6 +10,7 @@ const labTestSchema = new mongoose.Schema({
     testDate: Date,
     patientId: mongoose.Schema.Types.ObjectId,
     doctorId: mongoose.Schema.Types.ObjectId,
+    laboratoryTechnicianId: mongoose.Schema.Types.ObjectId,
     result: resultSchema,
 });
 
