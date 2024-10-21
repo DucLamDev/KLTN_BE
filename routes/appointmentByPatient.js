@@ -17,9 +17,7 @@ router.post("/", async (req, res) => {
 // Lấy danh sách cuộc hẹn
 router.get("/", async (req, res) => {
   try {
-    const appointmentByPatientList = await AppointmentByPatient.find().populate(
-      "patientId"
-    );
+    const appointmentByPatientList = await AppointmentByPatient.find();
     res.status(200).send(appointmentByPatientList);
   } catch (error) {
     res.status(500).send(error);

@@ -7,10 +7,6 @@ const medicalHistorySchema = new mongoose.Schema({
   treatment: { type: String, required: true },
 });
 
-function generateUniqueId() {
-  const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
-  return `CHBN-${randomString}`;
-}
 const appointmentByPatientSchema = new mongoose.Schema(
   {
     id: {type: String, auto: false},
@@ -28,22 +24,6 @@ const appointmentByPatientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-appointmentByPatientSchema.pre('save', async function (next) {
-  if (this.isNew) {
-    let uniqueId;
-    let isUnique = false;
-
-    // Kiểm tra tính duy nhất của ID
-    while (!isUnique) {
-      uniqueId = generateUniqueId();
-      const existingDoctor = await mongoose.models.AppointmentByPatient.findOne({ _id: uniqueId });
-      isUnique = !existingDoctor; // Kiểm tra xem ID có tồn tại không
-    }
-
-    this._id = uniqueId; // Gán ID duy nhất
-  }
-  next();
-});
 
 const AppointmentByPatient = mongoose.model(
   "AppointmentByPatient",

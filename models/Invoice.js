@@ -6,7 +6,7 @@ const serviceSchema = new mongoose.Schema({
     cost: { type: Number, required: true },
 });
 
-// Schema hóa đơn
+// Schema hóa đơn dịch vụ
 const invoiceSchema = new mongoose.Schema({
     patientId: { type: String, ref: 'Patient', required: true },
     doctorId: { type: String, ref: 'Doctor', required: true },
