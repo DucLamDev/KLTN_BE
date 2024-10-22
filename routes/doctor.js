@@ -1,7 +1,7 @@
 import express from "express";
-import ServiceList from '../models/ServiceList.js'; // Import model ServiceList
-import Doctor from '../models/Doctor.js'; // Import model Doctor
-import Patient from '../models/Patient.js'; // Import model Patient
+import ServiceList from "../models/ServiceList.js"; // Import model ServiceList
+import Doctor from "../models/Doctor.js"; // Import model Doctor
+import Patient from "../models/Patient.js"; // Import model Patient
 import Prescription from "../models/Prescription.js";
 import { sendMessage } from "../kafka/producer.js";
 
@@ -19,8 +19,7 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/create-prescription", async (req, res) => {
-  const { patientId, doctorId, medications, dateIssued} = req.body;
-  
+  const { patientId, doctorId, medications, dateIssued } = req.body;
 
   if (!patientId || !doctorId || !medications || !dateIssued) {
     return res.status(400).json({
@@ -32,7 +31,7 @@ router.post("/create-prescription", async (req, res) => {
     patientId,
     doctorId,
     medications,
-    dateIssued 
+    dateIssued,
   };
   const prescription = await Prescription.create(prescriptionRequest);
   await prescription.save();
@@ -51,38 +50,44 @@ router.post("/create-prescription", async (req, res) => {
 });
 
 //Yêu cầu tạo dịch vụ khám cho bệnh nhân ( ví dụ như sau khi tư vấn và kiểm tra thì bệnh nhân cần xét nghiệm....)
-router.post('/create-service-list', async (req, res) => {
+router.post("/create-service-list", async (req, res) => {
   try {
-      const { doctorId, patientId, services } = req.body;
+    const { doctorId, patientId, services } = req.body;
 
-      // Kiểm tra xem bác sĩ và bệnh nhân có tồn tại không
-      const doctor = await Doctor.findById(doctorId);
-      const patient = await Patient.findById(patientId);
+    // Kiểm tra xem bác sĩ và bệnh nhân có tồn tại không
+    const doctor = await Doctor.findById(doctorId);
+    const patient = await Patient.findById(patientId);
 
-      if (!doctor || !patient) {
-          return res.status(404).json({ message: "Doctor or patient not found." });
-      }
+    if (!doctor || !patient) {
+      return res.status(404).json({ message: "Doctor or patient not found." });
+    }
 
-      // Tính tổng số tiền từ danh sách dịch vụ
-      let totalAmount = services.reduce((total, service) => total + service.cost, 0);
+    // Tính tổng số tiền từ danh sách dịch vụ
+    let totalAmount = services.reduce(
+      (total, service) => total + service.cost,
+      0
+    );
 
-      // Tạo danh sách dịch vụ mới
-      const newServiceList = new ServiceList({
-          doctorId: doctor._id,
-          patientId: patient._id,
-          services,
-          totalAmount,
-          status: 'Pending',
-          // createdAt: new Date()
-      });
+    // Tạo danh sách dịch vụ mới
+    const newServiceList = new ServiceList({
+      doctorId: doctor._id,
+      patientId: patient._id,
+      services,
+      totalAmount,
+      status: "Pending",
+      // createdAt: new Date()
+    });
 
-      // Lưu danh sách dịch vụ vào cơ sở dữ liệu
-      await newServiceList.save();
+    // Lưu danh sách dịch vụ vào cơ sở dữ liệu
+    await newServiceList.save();
 
-      return res.status(201).json({ message: "Service list created successfully.", serviceList: newServiceList });
+    return res.status(201).json({
+      message: "Service list created successfully.",
+      serviceList: newServiceList,
+    });
   } catch (error) {
-      console.error("Error creating service list:", error);
-      return res.status(500).json({ message: "Internal server error." });
+    console.error("Error creating service list:", error);
+    return res.status(500).json({ message: "Internal server error." });
   }
 });
 //tạo 1 danh sách bác sĩ
@@ -113,11 +118,15 @@ router.post("/add-list", async (req, res) => {
 // Lấy danh sách bác sĩ
 router.get("/", async (req, res) => {
   try {
-    const { specialization } = req.query;
+    const { specialization, email } = req.query;
     let query = {};
 
     if (specialization) {
       query.specialization = specialization;
+    }
+
+    if (email) {
+      query.email = email;
     }
 
     const doctors = await Doctor.find(query);

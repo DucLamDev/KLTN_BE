@@ -20,7 +20,6 @@ const patientSchema = new mongoose.Schema(
     fullName: { type: String },
     dateOfBirth: { type: Date },
     numberId: { type: String }, // Căn cước công dân
-    accountId: { type: String },
     gender: { type: String },
     address: { type: String },
     password: {
