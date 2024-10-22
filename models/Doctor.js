@@ -31,6 +31,7 @@ const doctorSchema = new mongoose.Schema(
     email: {
       type: String,
       unique: true,
+      required: [true, 'Email is required.'],
       match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address.'],
     },
     password: {

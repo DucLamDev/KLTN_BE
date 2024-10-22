@@ -19,31 +19,48 @@ const createToken = (user) => {
 // Đăng ký tài khoản
 export const register = async (req, res) => {
   try {
-    const { email, password, role, fullName, phone, gender} = req.body;
+    const { email, password, role, fullName, phone, gender } = req.body;
 
-    let user;
-    user = await User.create({ email, password, role, fullName, phone, gender });
-    
-    if(role == 'doctor'){
-     const doctor = await Doctor.create({email, password, role, fullName, phone, gender});
-     await doctor.save();
+    // Kiểm tra nếu email bị thiếu hoặc không hợp lệ
+    if (!email || email.trim() === '') {
+      console.log('Email is missing or empty:', email); // Log kiểm tra
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Email is required and cannot be empty.',
+      });
     }
-    else if (role == 'patient'){
-      const patient = await Patient.create({email, password, role, fullName, phone, gender});
-     await patient.save();
+
+    // Kiểm tra xem email đã tồn tại trong bảng User hoặc Doctor chưa
+    const existingUser = await User.findOne({ email });
+    // const existingDoctor = await Doctor.findOne({ email });
+
+    if (existingUser || existingDoctor) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Email already exists.',
+      });
     }
-    else if (role == 'receptionist'){
-      const receptionist = await Receptionist.create({email, password, role, fullName, phone, gender});
-     await receptionist.save();
+
+    // Nếu email chưa tồn tại, tiếp tục tạo tài khoản
+    let user = await User.create({ email, password, role, fullName, phone, gender });
+
+    if (role === 'doctor') {
+      const doctor = await Doctor.create({ email, password, role, fullName, phone, gender });
+      await doctor.save();
+    } else if (role === 'patient') {
+      const patient = await Patient.create({ email, password, role, fullName, phone, gender });
+      await patient.save();
+    } else if (role === 'receptionist') {
+      const receptionist = await Receptionist.create({ email, password, role, fullName, phone, gender });
+      await receptionist.save();
+    } else if (role === 'pharmacist') {
+      const pharmacist = await Pharmacist.create({ email, password, role, fullName, phone, gender });
+      await pharmacist.save();
+    } else if (role === 'cashier') {
+      const cashier = await Cashier.create({ email, password, role, fullName, phone, gender });
+      await cashier.save();
     }
-    else if (role == 'pharmacist'){
-      const pharmacist = await Pharmacist.create({email, password, role, fullName, phone, gender});
-     await pharmacist.save();
-    }
-    else if (role == 'cashier'){
-      const cashier = await Cashier.create({email, password, role, fullName, phone, gender});
-     await cashier.save();
-    }
+
     // Tạo token JWT và trả về cho người dùng
     const token = createToken(user);
 
@@ -52,7 +69,7 @@ export const register = async (req, res) => {
       token,
       data: {
         id: user._id,
-        role: user.role
+        role: user.role,
       },
     });
   } catch (err) {
@@ -62,6 +79,7 @@ export const register = async (req, res) => {
     });
   }
 };
+
 
 
 // Đăng nhập
