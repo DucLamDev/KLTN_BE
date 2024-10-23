@@ -149,9 +149,9 @@ export const loginUser = async (req, res) => {
       await doctor.save();
 
       // Tạo queue cho phòng của bác sĩ trong Redis
-      // const queueKey = `queue:${doctor.roomNumber}`;
-      // await redisClient.del(queueKey); // Xóa queue cũ (nếu có)
-      // await redisClient.lPush(queueKey, 'Queue for doctor created');
+      const queueKey = `queue:${doctor.roomNumber}`;
+      await redisClient.del(queueKey); // Xóa queue cũ (nếu có)
+      await redisClient.lPush(queueKey, 'Queue for doctor created');
     }
 
     // Các hành động cụ thể khác tùy thuộc vào role của user

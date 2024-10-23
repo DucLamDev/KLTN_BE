@@ -15,12 +15,12 @@ router.post("/", async (req, res) => {
     });
   }
 
-  //  const patient = await Patient.findById(patientId);
-  //  if(!patient){
-  //   return res.status(400).json({
-  //     message: "bệnh nhân này chưa tồn tại",
-  //   });
-  //  }
+   const patient = await Patient.findById(patientId);
+   if(!patient){
+    return res.status(400).json({
+      message: "bệnh nhân này chưa tồn tại",
+    });
+   }
   const appointmentRequest = {
     patientId,
     appointmentDate,
