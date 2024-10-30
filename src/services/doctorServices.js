@@ -1,8 +1,9 @@
 import { sendMessage } from "../kafka/producer.js";
-import Doctor from "../models/Doctor.js";
-import Patient from "../models/Patient.js";
-import Prescription from "../models/Prescription.js";
+
+import { getOnePatientById } from "../repositories/patientRepository.js";
+import { createPrescription } from "../repositories/prescriptionRepository.js";
 import ServiceList from "../models/ServiceList.js";
+import {getOneDoctorById} from "../repositories/doctorRepository.js";
 
 export const createPrescription = async (patientId, doctorId, medications, dateIssued
 
@@ -13,8 +14,7 @@ export const createPrescription = async (patientId, doctorId, medications, dateI
   const prescriptionRequest = {
     patientId, doctorId, medications, dateIssued
   };
-  const prescription = await Prescription.create(prescriptionRequest);
-  await prescription.save();
+  const prescription = await createPrescription(prescriptionRequest);
 
   try {
     await sendMessage(`Pharmacist-Queue`, prescription);
@@ -26,8 +26,8 @@ export const createPrescription = async (patientId, doctorId, medications, dateI
 
 
 export const createServiceList = async (doctorId, patientId, services) => {
-  const doctor = await Doctor.findById(doctorId);
-  const patient = await Patient.findById(patientId);
+  const doctor = await getOneDoctorById(doctorId);
+  const patient = await getOnePatientById(patientId);
 
   if (!doctor || !patient) {
     throw new Error("Doctor or patient not found.");
