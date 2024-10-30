@@ -5,18 +5,18 @@ export const createPrescriptionRepo = async (prescriptionData) => {
   return await prescription.save();
 };
 
-export const getListPrescriptions = async () => {
+export const getListPrescriptionsRepo = async () => {
   return await Prescription.find()
 };
 
-export const getOnePrescriptionById = async (id) => {
+export const getOnePrescriptionByIdRepo = async (id) => {
   return await Prescription.findById(id)    
 };
 
-export const updatePrescriptionById = async (id, updateData) => {
+export const updatePrescriptionByIdRepo = async (id, updateData) => {
   return await Prescription.findByIdAndUpdate(id, updateData, { new: true, runValidators: true, });
 };
 
-export const deletePrescriptionById = async (id) => {
+export const deletePrescriptionByIdRepo = async (id) => {
   return await Prescription.findByIdAndDelete(id);
 };

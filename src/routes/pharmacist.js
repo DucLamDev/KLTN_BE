@@ -1,47 +1,16 @@
 // pharmacistRouter.js
 import express from "express";
-import {
-    getPrescriptionsFromQueue,
-    createPrescriptionBill,
-    getPrescriptionBillById
-} from '../services/pharmacistServices.js';
+import { createPrescriptionBillController, listPrescriptionsController, prescriptionByIdController } from "../controllers/pharmacistController.js";
 
-const router = express.Router();
+const routerPharmacist = express.Router();
 
 // Get all prescriptions from the queue
-router.get("/prescriptions", async (req, res) => {
-    try {
-        const prescriptions = await getPrescriptionsFromQueue();
-
-        if (!prescriptions.length) {
-            return res.status(404).json({ success: false, message: "No prescription in queue" });
-        }
-
-        res.status(200).json({ success: true, data: prescriptions });
-    } catch (err) {
-        console.error("Error retrieving patients from queue:", err);
-        res.status(500).json({ success: false, message: "Internal Server Error" });
-    }
-});
+routerPharmacist.get("/get-list-prescriptions", listPrescriptionsController);
 
 // Create a new prescription bill
-router.post('/create', async (req, res) => {
-    try {
-        const savedBill = await createPrescriptionBill(req.body);
-        res.status(200).json(savedBill);
-    } catch (error) {
-        res.status(500).json({ message: 'Error creating prescription bill', error });
-    }
-});
+routerPharmacist.post('/create-prescriptionBill', createPrescriptionBillController);
 
 // Get a specific prescription bill by ID
-router.get('/prescriptionBill/:id', async (req, res) => {
-    try {
-        const bill = await getPrescriptionBillById(req.params.id);
-        res.status(200).json(bill);
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
-});
+routerPharmacist.get('/prescriptionBill/:id', prescriptionByIdController);
 
-export default router;
+export default routerPharmacist;
