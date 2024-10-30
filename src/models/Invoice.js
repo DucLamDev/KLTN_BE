@@ -2,8 +2,10 @@ import mongoose from 'mongoose';
 
 // Schema cho hóa đơn dịch vụ
 const invoiceSchema = new mongoose.Schema({
-    patientId: { type: String, ref: 'Patient', required: true }, // ID bệnh nhân
-    cashierId: { type: String, ref: 'Cashier', required: true }, // ID thu ngân
+    patient: { type: String, ref: 'Patient', required: true }, // ID bệnh nhân
+    cashier: { type: String, ref: 'Cashier', required: true },
+    doctor: { type: String, ref: 'Doctor', required: true },
+     // ID thu ngân
     services: [{ 
         serviceName: { type: String, required: true }, // Tên dịch vụ
         cost: { type: Number, required: true } // Chi phí dịch vụ

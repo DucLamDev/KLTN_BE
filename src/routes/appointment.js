@@ -1,64 +1,32 @@
+// router.js
 import express from "express";
-import Appointment from "../models/Appointment.js";
-import { sendMessage } from "../kafka/producer.js"; // Kafka producer để gửi thông tin cuộc hẹn đến hàng đợi chuyên khoa
-import Patient from "../models/Patient.js";
+import {
+  createAppointment,
+  listAppointments,
+  getAppointmentById,
+  updateAppointment,
+  deleteAppointment,
+} from "../services/appointmentServices.js";
 
-const router = express.Router();
+const routerApointment = express.Router();
 
 // Tạo cuộc hẹn mới
-router.post("/", async (req, res) => {
-  const { patientId, appointmentDate, reason, specialization, priority } = req.body;
-
-  if (!patientId || !appointmentDate || !specialization) {
-    return res.status(400).json({
-      message: "patientId, appointmentDate và specialization là bắt buộc",
-    });
-  }
-
-   const patient = await Patient.findById(patientId);
-   if(!patient){
-    return res.status(400).json({
-      message: "bệnh nhân này chưa tồn tại",
-    });
-   }
-  const appointmentRequest = {
-    patientId,
-    appointmentDate,
-    reason,
-    specialization,
-    priority
-  };
-  const appointment = await Appointment.create(appointmentRequest);
-  await appointment.save();
-
+routerApointment.post("/", async (req, res) => {
   try {
-    await sendMessage(`department-${specialization}-queue`, appointment);
-    res
-      .status(202)
-      .json({ message: "Yêu cầu cuộc hẹn đã được tiếp nhận và đang xử lý" });
+    const appointment = await createAppointment(req.body);
+    res.status(202).json({
+      message: "Yêu cầu cuộc hẹn đã được tiếp nhận và đang xử lý",
+      appointment,
+    });
   } catch (err) {
-    res.status(500).json({
-      message: "Không thể xử lý yêu cầu cuộc hẹn",
-      error: err.message,
-    });
+    res.status(400).json({ message: err.message });
   }
 });
 
-router.post("/api", async (req, res) => {
-  try {
-    const appointment = new Appointment(req.body);
-    await appointment.save();
-    res.status(201).send(appointment);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
 // Lấy danh sách cuộc hẹn
-router.get("/", async (req, res) => {
+routerApointment.get("/", async (req, res) => {
   try {
-    const appointments = await Appointment.find()
-      .populate("patientId")
-      .populate("doctorId");
+    const appointments = await listAppointments();
     res.status(200).send(appointments);
   } catch (error) {
     res.status(500).send(error);
@@ -66,42 +34,33 @@ router.get("/", async (req, res) => {
 });
 
 // Lấy chi tiết một cuộc hẹn
-router.get("/:id", async (req, res) => {
+routerApointment.get("/:id", async (req, res) => {
   try {
-    const appointment = await Appointment.findById(req.params.id)
-      .populate("patientId")
-      .populate("doctorId");
-    if (!appointment) return res.status(404).send();
+    const appointment = await getAppointmentById(req.params.id);
     res.status(200).send(appointment);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(404).send({ message: error.message });
   }
 });
 
 // Cập nhật thông tin cuộc hẹn
-router.patch("/:id", async (req, res) => {
+routerApointment.patch("/:id", async (req, res) => {
   try {
-    const appointment = await Appointment.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    if (!appointment) return res.status(404).send();
+    const appointment = await updateAppointment(req.params.id, req.body);
     res.status(200).send(appointment);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send({ message: error.message });
   }
 });
 
 // Xóa cuộc hẹn
-router.delete("/:id", async (req, res) => {
+routerApointment.delete("/:id", async (req, res) => {
   try {
-    const appointment = await Appointment.findByIdAndDelete(req.params.id);
-    if (!appointment) return res.status(404).send();
+    const appointment = await deleteAppointment(req.params.id);
     res.status(200).send(appointment);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(404).send({ message: error.message });
   }
 });
 
-export default router;
+export default routerApointment;

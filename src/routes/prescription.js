@@ -1,58 +1,62 @@
+// prescriptionRouter.js
 import express from 'express';
-import Prescription from '../models/Prescription.js';
+import {
+    createPrescription,
+    getAllPrescriptions,
+    getPrescriptionById,
+    updatePrescription,
+    deletePrescription
+} from '../services/prescriptionServices.js';
+
 const router = express.Router();
 
-// Tạo đơn thuốc mới
+// Create a new prescription
 router.post('/', async (req, res) => {
     try {
-        const prescription = new Prescription(req.body);
-        await prescription.save();
-        res.status(201).send(prescription);
+        const prescription = await createPrescription(req.body);
+        res.status(200).send(prescription);
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({ message: 'Error creating prescription', error });
     }
 });
 
-// Lấy danh sách đơn thuốc
+// Get all prescriptions
 router.get('/', async (req, res) => {
     try {
-        const prescriptions = await Prescription.find().populate('patientId').populate('doctorId');
+        const prescriptions = await getAllPrescriptions();
         res.status(200).send(prescriptions);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send({ message: 'Error fetching prescriptions', error });
     }
 });
 
-// Lấy chi tiết một đơn thuốc
+// Get a specific prescription by ID
 router.get('/:id', async (req, res) => {
     try {
-        const prescription = await Prescription.findById(req.params.id).populate('patientId').populate('doctorId');
-        if (!prescription) return res.status(404).send();
+        const prescription = await getPrescriptionById(req.params.id);
         res.status(200).send(prescription);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(404).send({ message: error.message });
     }
 });
 
-// Cập nhật thông tin đơn thuốc
+// Update a prescription by ID
 router.patch('/:id', async (req, res) => {
     try {
-        const prescription = await Prescription.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        if (!prescription) return res.status(404).send();
+        const prescription = await updatePrescription(req.params.id, req.body);
         res.status(200).send(prescription);
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({ message: 'Error updating prescription', error });
     }
 });
 
-// Xóa đơn thuốc
+// Delete a prescription by ID
 router.delete('/:id', async (req, res) => {
     try {
-        const prescription = await Prescription.findByIdAndDelete(req.params.id);
-        if (!prescription) return res.status(404).send();
+        const prescription = await deletePrescription(req.params.id);
         res.status(200).send(prescription);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(404).send({ message: error.message });
     }
 });
 

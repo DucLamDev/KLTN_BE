@@ -15,8 +15,8 @@ const medicationSchema = new mongoose.Schema({
 
 const prescriptionSchema = new mongoose.Schema({
   _id: { type: String, auto: false },
-  patientId: { type: String, required: true },
-  doctorId: { type: String, required: true },
+  patientId: { type: String, required: true, ref: "Patient" },
+  doctorId: { type: String, required: true, ref: "Doctor"},
   medications: [medicationSchema],
   status: {
     type: String,

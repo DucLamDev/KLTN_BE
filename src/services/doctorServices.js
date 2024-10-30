@@ -1,8 +1,8 @@
-import { sendMessage } from "../../kafka/producer.js";
-import Doctor from "../../models/Doctor.js";
-import Patient from "../../models/Patient.js";
-import Prescription from "../../models/Prescription.js";
-import ServiceList from "../../models/ServiceList.js";
+import { sendMessage } from "../kafka/producer.js";
+import Doctor from "../models/Doctor.js";
+import Patient from "../models/Patient.js";
+import Prescription from "../models/Prescription.js";
+import ServiceList from "../models/ServiceList.js";
 
 export const createPrescription = async (patientId, doctorId, medications, dateIssued
 
@@ -55,3 +55,30 @@ export const createServiceList = async (doctorId, patientId, services) => {
 
 
 
+//gọi bệnh nhân từ hàng đợi
+export const getPatientToQueue = async (roomNumber) => {
+     const queueKey = `queue:${roomNumber}`;
+
+  try {
+    const patientsData = await redisClient.lRange(queueKey, 0, -1);
+
+    if (!patientsData.length) {
+      return res.status(404).json({ success: false, message: 'No patients in queue' });
+    }
+
+    // Phân tích dữ liệu JSON và bỏ qua các dữ liệu không hợp lệ
+    const parsedPatientsData = patientsData.map(data => {
+      try {
+        return JSON.parse(data);
+      } catch (error) {
+        console.error(`Invalid JSON data: ${data}`);
+        return null; // Trả về null nếu dữ liệu không hợp lệ
+      }
+    }).filter(data => data !== null); // Lọc bỏ những phần tử không hợp lệ
+
+    res.status(200).json({ success: true, data: parsedPatientsData });
+  } catch (err) {
+    console.error('Error retrieving patients from queue:', err);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};

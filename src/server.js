@@ -55,7 +55,6 @@ app.use("/appointmentsByPatient", appointmentByPatientRoutes);
 app.use("/prescriptions", prescriptionRoutes);
 app.use("/invoices", invoiceRoutes);
 app.use("/kafka", kafkaRouter);
-// app.use("/room", examRoomRoutes);
 app.use("/queue", queueRoutes);
 app.use("/auth", authRoutes);
 app.use("/user", userRouter);

@@ -1,5 +1,5 @@
 import express from "express";
-import { createPrescription, createServiceList } from "../services/doctor/doctorServices.js";
+import { createPrescription, createServiceList } from "../services/doctorServices.js";
 
 const routerDoctor = express.Router();
 routerDoctor.post("/create-prescription", async (req, res) => {

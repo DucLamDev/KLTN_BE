@@ -9,7 +9,6 @@ router.get('/:roomNumber', async (req, res) => {
   const queueKey = `queue:${roomNumber}`;
 
   try {
-    // Lấy tất cả bệnh nhân từ hàng đợi Redis
     const patientsData = await redisClient.lRange(queueKey, 0, -1);
 
     if (!patientsData.length) {

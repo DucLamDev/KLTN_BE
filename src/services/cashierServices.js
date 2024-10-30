@@ -1,8 +1,8 @@
 // services/invoiceService.js
-import Doctor from "../../models/Doctor.js";
-import Invoice from "../../models/Invoice.js";
-import Patient from "../../models/Patient.js";
-import ServiceList from "../../models/ServiceList.js";
+import Doctor from "../models/Doctor.js";
+import Invoice from "../models/Invoice.js";
+import Patient from "../models/Patient.js";
+import ServiceList from "../models/ServiceList.js";
 
 export const createInvoice = async (patientId, doctorId) => {
   try {
