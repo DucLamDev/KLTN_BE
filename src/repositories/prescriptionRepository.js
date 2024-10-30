@@ -1,6 +1,6 @@
 import Prescription from '../models/Prescription.js';
 
-export const createPrescription = async (prescriptionData) => {
+export const createPrescriptionRepo = async (prescriptionData) => {
   const prescription = new Prescription(prescriptionData);
   return await prescription.save();
 };

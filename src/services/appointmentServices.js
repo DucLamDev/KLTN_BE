@@ -4,7 +4,7 @@ import { sendMessage } from "../kafka/producer.js";
 import { createAppointment, getListAppointments, getOneAppointmentById, updateAppointmentById, deleteAppointmentById } from "../repositories/appointmentRepository.js";
 
 // Create a new appointment
-export const createAppointment = async (appointmentData) => {
+export const createAppointments = async (appointmentData) => {
   const { patientId, appointmentDate, specialization } = appointmentData;
 
   if (!patientId || !appointmentDate || !specialization) {

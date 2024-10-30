@@ -1,14 +1,17 @@
-import { createAppointment, listAppointments, getAppointmentById, updateAppointment, deleteAppointment} from '../services/appointmentServices.js';
-// import { listAppointments as listServiceAppointments } from '../services/appointmentService.js';
-// import { getAppointmentById as getServiceAppointmentById } from '../services/appointmentService.js';
-// import { updateAppointment as updateServiceAppointment } from '../services/appointmentService.js';
-// import { deleteAppointment as deleteServiceAppointment } from '../services/appointmentService.js';
+import {
+  createAppointments,
+  listAppointments,
+  getAppointmentById,
+  updateAppointment,
+  deleteAppointment
+} from "../services/appointmentServices.js";
 
-export const createAppointment = async (req, res) => {
+// Tạo cuộc hẹn mới
+export const createAppointmentController = async (req, res) => {
   try {
-    const appointment = await createAppointment(req.body);
+    const appointment = await createAppointments(req.body);
     res.status(202).json({
-      message: 'Yêu cầu cuộc hẹn đã được tiếp nhận và đang xử lý',
+      message: "Yêu cầu cuộc hẹn đã được tiếp nhận và đang xử lý",
       appointment,
     });
   } catch (err) {
@@ -16,7 +19,8 @@ export const createAppointment = async (req, res) => {
   }
 };
 
-export const listAppointments = async (req, res) => {
+// Lấy danh sách cuộc hẹn
+export const listAppointmentsController = async (req, res) => {
   try {
     const appointments = await listAppointments();
     res.status(200).json(appointments);
@@ -25,7 +29,8 @@ export const listAppointments = async (req, res) => {
   }
 };
 
-export const getAppointmentById = async (req, res) => {
+// Lấy chi tiết một cuộc hẹn
+export const getAppointmentByIdController = async (req, res) => {
   try {
     const appointment = await getAppointmentById(req.params.id);
     res.status(200).json(appointment);
@@ -34,7 +39,8 @@ export const getAppointmentById = async (req, res) => {
   }
 };
 
-export const updateAppointment = async (req, res) => {
+// Cập nhật thông tin cuộc hẹn
+export const updateAppointmentController = async (req, res) => {
   try {
     const appointment = await updateAppointment(req.params.id, req.body);
     res.status(200).json(appointment);
@@ -43,10 +49,11 @@ export const updateAppointment = async (req, res) => {
   }
 };
 
-export const deleteAppointment = async (req, res) => {
+// Xóa cuộc hẹn
+export const deleteAppointmentController = async (req, res) => {
   try {
     const appointment = await deleteAppointment(req.params.id);
-    res.status(200).json({ message: 'Appointment deleted', appointment });
+    res.status(200).json(appointment);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }

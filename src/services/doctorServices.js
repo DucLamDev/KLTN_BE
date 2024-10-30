@@ -1,20 +1,16 @@
 import { sendMessage } from "../kafka/producer.js";
-
-import { getOnePatientById } from "../repositories/patientRepository.js";
-import { createPrescription } from "../repositories/prescriptionRepository.js";
+import { createPrescriptionRepo } from "../repositories/prescriptionRepository.js";
 import ServiceList from "../models/ServiceList.js";
-import {getOneDoctorById} from "../repositories/doctorRepository.js";
+import { getOnePatientById } from "../repositories/patientRepository.js";
 
-export const createPrescription = async (patientId, doctorId, medications, dateIssued
-
-) => {
+export const createPrescriptions = async (patientId, doctorId, medications, dateIssued) => {
   if (!patientId || !doctorId || !medications || !dateIssued) {
     throw new Error("patientId, doctorId và medications, dateIssued  là bắt buộc");
   }
   const prescriptionRequest = {
     patientId, doctorId, medications, dateIssued
   };
-  const prescription = await createPrescription(prescriptionRequest);
+  const prescription = await createPrescriptionRepo(prescriptionRequest);
 
   try {
     await sendMessage(`Pharmacist-Queue`, prescription);
