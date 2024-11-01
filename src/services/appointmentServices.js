@@ -15,9 +15,9 @@ export const createAppointments = async (appointmentData) => {
   if (!patient) {
     throw new Error("bệnh nhân này chưa tồn tại");
   }
+  const appointment = await createAppointment(appointmentData);
 
   await sendMessage(`department-${specialization}-queue`, appointment);
-  const appointment = await createAppointment(appointmentData);
   return appointment;
 };
 

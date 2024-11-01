@@ -10,7 +10,7 @@ import {
 export const createAppointmentController = async (req, res) => {
   try {
     const appointment = await createAppointments(req.body);
-    res.status(202).json({
+    res.status(200).json({
       message: "Yêu cầu cuộc hẹn đã được tiếp nhận và đang xử lý",
       appointment,
     });

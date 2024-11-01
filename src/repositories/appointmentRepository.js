@@ -8,7 +8,7 @@ export const createAppointment = async (appointmentData) => {
 export const getListAppointments = async () => {
   return await Appointment.find()
   .populate("patientId")
-  .populate("doctorId");;
+  .populate("doctorId");
 };
 
 export const getOneAppointmentById = async (id) => {

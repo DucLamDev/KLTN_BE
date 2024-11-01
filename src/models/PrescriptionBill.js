@@ -1,32 +1,37 @@
 import mongoose from 'mongoose';
 
-// Schema cho các dịch vụ sử dụng
-const prescriptions = new mongoose.Schema({
-    serviceName: { type: String, required: true },
-    cost: { type: Number, required: true },
-});
-
 function generateUniqueId() {
     const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
     return `BTT-${randomString}`;
   }
 // Schema hóa đơn dịch vụ
-const prescriptionBillSchema = new mongoose.Schema({
-    _id: { type: String, auto: false },
-    patientId: { type: String},
-    doctorId: { type: String},
-    pharmacistId: {type: String},
-    services: [prescriptions],  // Danh sách các xét nghiệm đã làm
-    totalAmount: { type: Number, required: true },  // Tổng chi phí
-    invoiceDate: { type: Date, default: Date.now }, // Ngày lập hóa đơn
-    paymentStatus: { 
-        type: String, 
-        enum: ['Pending', 'Paid', 'Canceled'],
-        default: 'Pending' 
+
+const PrescriptionInvoiceSchema = new mongoose.Schema({
+   _id: { type: String, auto: false },
+    patientId: { type: String, ref: 'Patient', required: true },
+    doctorId: { type: String, ref: 'Doctor', required: true },
+    pharmacistId: { type: String, ref: 'Pharmacist', required: true },
+    // cashierId: { type: String, ref: 'Cashier', required: true }, // Trường mới thêm vào
+    prescriptionId: { type: String, ref: 'Prescription', required: true },
+    medications: [
+        {
+            medicationId: { type: String, ref: 'Medication', required: true },
+            quantity: { type: Number, required: true },
+            price: { type: Number, required: true },
+        }
+    ],
+    totalAmount: { 
+        type: Number, 
+        required: true,
+        default: function () {
+            return this.medications.reduce((total, med) => total + (med.price * med.quantity), 0);
+        }
     },
+    invoiceDate: { type: Date, default: Date.now },
+    paymentStatus: { type: String, enum: ['Pending', 'Paid'], default: 'Pending' }
 });
 
-prescriptionBillSchema.pre('save', async function (next) {
+PrescriptionInvoiceSchema.pre('save', async function (next) {
     if (this.isNew) {
       let uniqueId;
       let isUnique = false;
@@ -43,5 +48,5 @@ prescriptionBillSchema.pre('save', async function (next) {
     next();
   });
 
-const PrescriptionBill = mongoose.model('prescriptionBill', prescriptionBillSchema);
+const PrescriptionBill = mongoose.model('prescriptionBill', PrescriptionInvoiceSchema);
 export default PrescriptionBill;
