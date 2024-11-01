@@ -53,7 +53,6 @@ app.use("/api/appointments", appointmentRoutes);
 app.use("/api/appointmentsByPatient", appointmentByPatientRoutes);
 app.use("/api/prescriptions", prescriptionRoutes);
 app.use("/api/invoices", invoiceRoutes);
-// app.use("/api/kafka", kafkaRouter);
 app.use("/api/queue", queueRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRouter);

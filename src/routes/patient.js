@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
     res.status(500).send(error);
   }
 });
-
+  
 // Lấy chi tiết một bệnh nhân
 router.get("/:id", async (req, res) => {
   try {

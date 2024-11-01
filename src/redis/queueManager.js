@@ -28,6 +28,15 @@ const addPrescriptionToQueue = async (prescriptionData) => {
   }
 };
 
+const addRequestTestToQueue = async (requestTestData) => {
+  const queueKey = `queue:LabTest`;
+  try {
+    await redisClient.rPush(queueKey, JSON.stringify(requestTestData)); // Sử dụng lPush
+  } catch (err) {
+    console.error('Error adding to queue:', err);
+  }
+};
+
 // Hàm lấy bệnh nhân tiếp theo từ hàng đợi Redis
 const getNextPatientFromQueue = async (roomNumber) => {
   const queueKey = `queue:${roomNumber}`;
@@ -74,5 +83,5 @@ const removePatientFromQueue = async (roomNumber, patientId) => {
   }
 };
 
-export {addAppointmentToQueue, addPrescriptionToQueue, removePatientFromQueue};
+export {addAppointmentToQueue, addPrescriptionToQueue, removePatientFromQueue, addRequestTestToQueue};
 

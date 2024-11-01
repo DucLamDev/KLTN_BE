@@ -1,11 +1,11 @@
 // pharmacistService.js
 import PrescriptionBill from "../models/PrescriptionBill.js";
-import { redisClient } from "../redis/redisClient.js";
+import { getAppointmentsFromQueue } from "../repositories/queueRepository.js";
 
 // Get all prescriptions from Redis queue
 export const getPrescriptionsFromQueue = async () => {
     const queueKey = `queue:Pharmacist`;
-    const prescriptionsData = await redisClient.lRange(queueKey, 0, -1);
+    const prescriptionsData = await getAppointmentsFromQueue(queueKey);
 
     const parsedData = prescriptionsData
         .map((data) => {

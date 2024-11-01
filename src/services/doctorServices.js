@@ -2,8 +2,10 @@ import { sendMessage } from "../kafka/producer.js";
 import { createPrescriptionRepo } from "../repositories/prescriptionRepository.js";
 import ServiceList from "../models/ServiceList.js";
 import { getOnePatientById } from "../repositories/patientRepository.js";
-import { redisClient } from "../redis/redisClient.js";
+// import { redisClient } from "../redis/redisClient.js";
 import { getAppointmentsFromQueue, removeAppointmentFromQueue } from "../repositories/queueRepository.js";
+import { getSpecializations } from "../repositories/doctorRepository.js";
+import { createRequestTest } from "../repositories/requestTestRepository.js";
 
 export const createPrescriptions = async (patientId, doctorId, medications, dateIssued) => {
   if (!patientId || !doctorId || !medications || !dateIssued) {
@@ -101,9 +103,33 @@ export const getAppointmentToQueue = async (roomNumber) => {
       }
     }).filter(data => data !== null); // Lọc bỏ những phần tử không hợp lệ
 
-    res.status(200).json({ success: true, data: parsedAppointmentsData });
+    return parsedAppointmentsData;
   } catch (err) {
-    console.error('Error retrieving patients from queue:', err);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    throw new Error({ success: false, message: 'Internal Server Error' });
   }
 };
+
+// yêu cầu xét nghiệm 
+
+
+
+export const createRequests = async (requestTest) => {
+  const { patientId, doctorId, testType, reason, requestDate} = requestTest;
+
+  if (!patientId || !doctorId || !testType || !reason || !requestDate) {
+    throw new Error("patientId, doctorId và testType, reason, requestDate là bắt buộc");
+  }
+
+  const patient = await getOnePatientById(patientId);
+  if (!patient) {
+    throw new Error("bệnh nhân này chưa tồn tại");
+  }
+  const requestTest = await createRequestTest(requestTest);
+
+  await sendMessage(`LabTest-${testType}-queue`, appointment);
+  return appointment;
+};
+
+export const getDepartmentName = async () => {
+   return await getSpecializations();
+}

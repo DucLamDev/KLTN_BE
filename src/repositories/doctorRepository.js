@@ -6,7 +6,7 @@ export const createDoctor = async (doctorData) => {
 };
 
 export const getListDoctors = async () => {
-  return await Doctor.find()
+  return await Doctor.find().populate('department');
 };
 
 export const getOneDoctorById = async (id) => {
@@ -20,3 +20,7 @@ export const updateDoctorById = async (id, updateData) => {
 export const deleteDoctorById = async (id) => {
   return await Doctor.findByIdAndDelete(id);
 };
+
+export const getSpecializations = async () => {
+  return await Doctor.distinct("specialization");
+}
