@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-
 const DepartmentSchema = new mongoose.Schema({
     _id: { type: String, auto: false },
     name: { type: String, required: true },
@@ -10,4 +9,6 @@ const DepartmentSchema = new mongoose.Schema({
     clinic: { type: String, ref: 'Clinic', required: true }
 });
 
-module.exports = mongoose.model('Department', DepartmentSchema);
+const Department = mongoose.model('Department', DepartmentSchema);
+
+export default Department;

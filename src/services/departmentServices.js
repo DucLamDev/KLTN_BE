@@ -1,20 +1,33 @@
-// kafkaService.js
-import KafkaController from '../controllers/kafkaController.js';
+import {
+    createDepartment,
+    getListDepartments,
+    getOneDepartmentById,
+    updateDepartmentById,
+    deleteDepartmentById
+} from '../repositories/departmentRepository.js';
 
-const kafkaController = new KafkaController();
-
-// Create a new Kafka topic
-export const createTopic = async (topicName, noOfPartition) => {
-    await kafkaController.createTopic(topicName, noOfPartition);
+export const createDepartments = async (departmentData) => {
+    return await createDepartment(departmentData);
 };
 
-// Publish a message to a Kafka topic
-export const publishMessage = async (topicName, message) => {
-    const messages = [{ key: message?.key, value: message?.value }];
-    await kafkaController.publishMessageToTopic(topicName, messages);
+export const listDepartments = async () => {
+    return await getListDepartments();
 };
 
-// Consume messages from a Kafka topic
-export const consumeMessages = async (topicName, messageHandler) => {
-    await kafkaController.consumerMessageFromTopic(topicName, messageHandler);
+export const getDepartmentById = async (id) => {
+    const department = await getOneDepartmentById(id);
+    if (!department) throw new Error("Department not found");
+    return department;
+};
+
+export const updateDepartment = async (id, updateData) => {
+    const department = await updateDepartmentById(id, updateData);
+    if (!department) throw new Error("Department not found");
+    return department;
+};
+
+export const deleteDepartment = async (id) => {
+    const department = await deleteDepartmentById(id);
+    if (!department) throw new Error("Department not found");
+    return department;
 };

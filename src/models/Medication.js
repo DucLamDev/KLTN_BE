@@ -11,4 +11,6 @@ const MedicationSchema = new mongoose.Schema({
     stock: { type: Number, required: true }
 });
 
-module.exports = mongoose.model('Medication', MedicationSchema);
+const Medication = mongoose.model('Medication', MedicationSchema);
+
+export default Medication;

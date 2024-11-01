@@ -12,7 +12,7 @@ const labTestSchema = new mongoose.Schema({
 
 function generateUniqueId() {
   const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
-  return `BS-${randomString}`;
+  return `BSXN-${randomString}`;
 }
 
 const laboratoryTechnicianSchema = new mongoose.Schema(
@@ -21,6 +21,7 @@ const laboratoryTechnicianSchema = new mongoose.Schema(
     fullName: { type: String },
     dateOfBirth: { type: Date},
     numberId: { type: String},
+    labTest: {type: String, ref: 'LabTest'},
     role: { type: String, required: true },
     gender: { type: String, enum: ["Male", "Female", "Other"]},
     phone: {

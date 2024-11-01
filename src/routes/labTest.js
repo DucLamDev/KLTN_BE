@@ -1,59 +1,27 @@
-
 import express from 'express';
-import LabTest from '../models/LabTest.js';
-const router = express.Router();
-// Tạo xét nghiệm mới
-router.post('/', async (req, res) => {
-    try {
-        const labTest = new LabTest(req.body);
-        await labTest.save();
-        res.status(201).send(labTest);
-    } catch (error) {
-        res.status(400).send(error);
-    }
-});
+import {
+    createLabTestController,
+    listLabTestsController,
+    getLabTestByIdController,
+    updateLabTestController,
+    deleteLabTestController
+} from '../controllers/labTestController.js';
 
-// Lấy danh sách xét nghiệm
-router.get('/', async (req, res) => {
-    try {
-        const labTests = await LabTest.find().populate('patientId').populate('doctorId');
-        res.status(200).send(labTests);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
+const routerLabTest = express.Router();
 
-// Lấy chi tiết một xét nghiệm
-router.get('/:id', async (req, res) => {
-    try {
-        const labTest = await LabTest.findById(req.params.id).populate('patientId').populate('doctorId');
-        if (!labTest) return res.status(404).send();
-        res.status(200).send(labTest);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
+// Tạo lab test mới
+routerLabTest.post("/", createLabTestController);
 
-// Cập nhật thông tin xét nghiệm
-router.patch('/:id', async (req, res) => {
-    try {
-        const labTest = await LabTest.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        if (!labTest) return res.status(404).send();
-        res.status(200).send(labTest);
-    } catch (error) {
-        res.status(400).send(error);
-    }
-});
+// Lấy danh sách lab tests
+routerLabTest.get("/", listLabTestsController);
 
-// Xóa xét nghiệm
-router.delete('/:id', async (req, res) => {
-    try {
-        const labTest = await LabTest.findByIdAndDelete(req.params.id);
-        if (!labTest) return res.status(404).send();
-        res.status(200).send(labTest);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
+// Lấy chi tiết một lab test
+routerLabTest.get("/:id", getLabTestByIdController);
 
-export default router;
+// Cập nhật thông tin lab test
+routerLabTest.patch("/:id", updateLabTestController);
+
+// Xóa lab test
+routerLabTest.delete("/:id", deleteLabTestController);
+
+export default routerLabTest;

@@ -1,7 +1,7 @@
 // appointmentService.js
-import Patient from "../models/Patient.js";
 import { sendMessage } from "../kafka/producer.js";
 import { createAppointment, getListAppointments, getOneAppointmentById, updateAppointmentById, deleteAppointmentById } from "../repositories/appointmentRepository.js";
+import { getOnePatientById } from "../repositories/patientRepository.js";
 
 // Create a new appointment
 export const createAppointments = async (appointmentData) => {
@@ -11,7 +11,7 @@ export const createAppointments = async (appointmentData) => {
     throw new Error("patientId, appointmentDate và specialization là bắt buộc");
   }
 
-  const patient = await Patient.findById(patientId);
+  const patient = await getOnePatientById(patientId);
   if (!patient) {
     throw new Error("bệnh nhân này chưa tồn tại");
   }

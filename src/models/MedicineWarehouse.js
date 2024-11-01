@@ -15,4 +15,6 @@ const MedicineWarehouseSchema = new mongoose.Schema({
     ]
 });
 
-module.exports = mongoose.model('MedicineWarehouse', MedicineWarehouseSchema);
+const MedicineWarehouse = mongoose.model('MedicineWarehouse', MedicineWarehouseSchema);
+
+export default MedicineWarehouse;

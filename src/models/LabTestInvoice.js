@@ -24,4 +24,6 @@ const LabTestInvoiceSchema = new mongoose.Schema({
     paymentStatus: { type: String, enum: ['Pending', 'Paid'], default: 'Pending' }
 });
 
-module.exports = mongoose.model('LabTestInvoice', LabTestInvoiceSchema);
+const LabTestInvoice = mongoose.model('LabTestInvoice', LabTestInvoiceSchema);
+
+export default LabTestInvoice;

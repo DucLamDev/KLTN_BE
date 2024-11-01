@@ -4,25 +4,24 @@ import bodyParser from "body-parser";
 import patientRoutes from "./routes/patient.js";
 import doctorRoutes from "./routes/doctor.js";
 import pharmacistRoutes from "./routes/pharmacist.js";
-import labTestRoutes from "./routes/labTest.js";
 import receptionistRoutes from "./routes/receptionist.js";
 import appointmentRoutes from "./routes/appointment.js";
 import appointmentByPatientRoutes from "./routes/appointmentByPatient.js";
 import prescriptionRoutes from "./routes/prescription.js";
+import clinicRoutes from './routes/clinic.js';
 import invoiceRoutes from "./routes/invoice.js";
-import kafkaRouter from "./routes/kafkaRoutes.js";
+import departmentRoutes from './routes/department.js';
+// import kafkaRouter from "./routes/kafkaRoutes.js";
 import cashierRoutes from "./routes/cashier.js";
+import labTestRoutes from './routes/labTest.js';
+import laboratoryTechnicianRoutes from './routes/laboratoryTechnician.js';
 import { connectProducer as connectAppointmentProducer } from "./kafka/producer.js";
-// import { connectProducer as connectExamRoomProducer } from "./kafka/roomProducer.js"; // Kết nối producer cho buồng khám
 import { runConsumerDepartment } from "./kafka/departmentConsumer.js";
-// import { connectConsumer } from "./kafka/roomConsumer.js";
-// import examRoomRoutes from "./routes/roomData.js"; // Đường dẫn tới API phòng khám
 import { connectRedis } from "./redis/redisClient.js";
 import queueRoutes from "./routes/redis.js";
 import authRoutes from "./routes/auth.js";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.js";
-// import { runConsumer } from './kafka/roomConsumer.js'; // Kafka Consumer cho phòng khám
 import cors from "cors";
 import { runConsumerPharmacist } from "./kafka/pharmacistConsumer.js";
 const app = express();
@@ -46,25 +45,28 @@ app.use(bodyParser.json());
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-app.use("/patients", patientRoutes);
-app.use("/doctors", doctorRoutes);
-app.use("/pharmacists", pharmacistRoutes);
-app.use("/labTests", labTestRoutes);
-app.use("/receptionists", receptionistRoutes);
-app.use("/appointments", appointmentRoutes);
-app.use("/appointmentsByPatient", appointmentByPatientRoutes);
-app.use("/prescriptions", prescriptionRoutes);
-app.use("/invoices", invoiceRoutes);
-app.use("/kafka", kafkaRouter);
-app.use("/queue", queueRoutes);
-app.use("/auth", authRoutes);
-app.use("/user", userRouter);
-app.use("/cashier", cashierRoutes);
+app.use("/api/patients", patientRoutes);
+app.use("/api/doctors", doctorRoutes);
+app.use("/api/pharmacists", pharmacistRoutes);
+app.use("/api/receptionists", receptionistRoutes);
+app.use("/api/appointments", appointmentRoutes);
+app.use("/api/appointmentsByPatient", appointmentByPatientRoutes);
+app.use("/api/prescriptions", prescriptionRoutes);
+app.use("/api/invoices", invoiceRoutes);
+// app.use("/api/kafka", kafkaRouter);
+app.use("/api/queue", queueRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRouter);
+app.use("/api/cashier", cashierRoutes);
+app.use('/api/clinics', clinicRoutes);
+app.use('/api/departments', departmentRoutes);
+app.use('/api/laboratory-technicians', laboratoryTechnicianRoutes);
+app.use('/api/labTests', labTestRoutes);
 // Hàm khởi động ứng dụng
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  startApp();
+  // startApp();
 });
 const startApp = async () => {
   await connectRedis();

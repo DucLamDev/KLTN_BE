@@ -1,13 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const LabTestSchema = new mongoose.Schema({
     testName: { type: String, required: true },
     description: { type: String },
     price: { type: Number, required: true },
-    technician: { type: mongoose.Schema.Types.ObjectId, ref: 'LaboratoryTechnician', required: true },
-    department: { type: mongoose.Schema.Types.ObjectId, ref: 'Department', required: true },
+    technician: { type: String, ref: 'LaboratoryTechnician', required: true },
     samplesRequired: [{ type: String }],
     normalRange: { type: String }
 });
 
-module.exports = mongoose.model('LabTest', LabTestSchema);
+const LabTest = mongoose.model('LabTest', LabTestSchema);
+export default LabTest;

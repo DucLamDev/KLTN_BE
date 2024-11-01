@@ -4,7 +4,7 @@ import scheduleSchema from '../models/Schedule.js'; // Đảm bảo đường d�
 
 
 const appointmentSchema = new mongoose.Schema({
-  patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
+  patientId: { type: String, ref: 'Patient', required: true },
   appointmentDate: { type: Date, required: true },
   reason: { type: String, required: true },
   status: { type: String, enum: ['Scheduled', 'Completed', 'Cancelled'], default: 'Scheduled' },
@@ -20,6 +20,7 @@ const doctorSchema = new mongoose.Schema(
     _id: { type: String, auto: false },
     fullName: { type: String },
     specialization: { type: String},
+    department: {type: String, ref: 'Department' },
     dateOfBirth: { type: Date},
     numberId: { type: String},
     role: { type: String, required: true },
