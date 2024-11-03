@@ -4,14 +4,11 @@ import mongoose from 'mongoose';
 const ClinicSchema = new mongoose.Schema({
     _id: { type: String, auto: false },
     name: { type: String, required: true },
-    address: { type: String, required: true },
     phone: { type: String, required: true },
     email: { type: String, required: true },
-    departments: [{ type: String, ref: 'Department' }],
+    departments: { type: String, ref: 'Department' },
     doctors: [{ type: String, ref: 'Doctor' }],
     pharmacists: [{ type: String, ref: 'Pharmacist' }],
-    laboratoryTechnicians: [{ type: String, ref: 'LaboratoryTechnician' }],
-    receptionists: [{ type: String, ref: 'Receptionist' }]
 });
 
 const Clinic = mongoose.model('Clinic', ClinicSchema);

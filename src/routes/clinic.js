@@ -8,12 +8,15 @@ import {
 } from '../controllers/clinicController.js';
 
 const routerClinic = express.Router();
+//Admin, lễ tân
 
+
+//doctors chỉ cần set lại roomNumber không cần care tới cái này.
 // Tạo clinic mới
 routerClinic.post("/", createClinicController);
 
 // Lấy danh sách clinics
-routerClinic.get("/", listClinicsController);
+routerClinic.get("/", listClinicsController); //Lễ tân
 
 // Lấy chi tiết một clinic
 routerClinic.get("/:id", getClinicByIdController);

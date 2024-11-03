@@ -5,7 +5,7 @@ import { createPrescriptionBillController, listPrescriptionsController, prescrip
 const routerPharmacist = express.Router();
 
 // Get all prescriptions from the queue
-routerPharmacist.get("/get-list-prescriptions", listPrescriptionsController);
+routerPharmacist.get("/get-list-prescriptions", listPrescriptionsController); // có đụng redis
 
 // Create a new prescription bill
 routerPharmacist.post('/create-prescriptionBill', createPrescriptionBillController);

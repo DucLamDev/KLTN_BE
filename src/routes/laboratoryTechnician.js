@@ -10,10 +10,10 @@ import {
 const routerLaboratoryTechnician = express.Router();
 
 // Tạo laboratory technician mới
-routerLaboratoryTechnician.post("/", createLaboratoryTechnicianController);
+routerLaboratoryTechnician.post("/", createLaboratoryTechnicianController); // Admin
 
 // Lấy danh sách laboratory technicians
-routerLaboratoryTechnician.get("/", listLaboratoryTechniciansController);
+routerLaboratoryTechnician.get("/", listLaboratoryTechniciansController); // ADmin
 
 // Lấy chi tiết một laboratory technician
 routerLaboratoryTechnician.get("/:id", getLaboratoryTechnicianByIdController);

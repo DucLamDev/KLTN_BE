@@ -3,12 +3,13 @@ import mongoose from 'mongoose';
 
 const MedicationSchema = new mongoose.Schema({
     _id: { type: String, auto: false },
-    name: { type: String, required: true },
+    medicationName: { type: String, required: true },
+    quantity: {type: Number},
     dosage: { type: String, required: true },
-    sideEffects: [{ type: String }],
-    contraindications: [{ type: String }],
     price: { type: Number, required: true },
-    stock: { type: Number, required: true }
+    instructions: {type: String},
+    expirationDate: {type: Date},
+
 });
 
 const Medication = mongoose.model('Medication', MedicationSchema);

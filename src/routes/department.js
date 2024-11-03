@@ -8,6 +8,7 @@ import {
 } from '../controllers/departmentController.js';
 
 const routerDepartment = express.Router();
+//Admin
 
 // Tạo department mới
 routerDepartment.post("/", createDepartmentController);

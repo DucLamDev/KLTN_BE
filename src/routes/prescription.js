@@ -9,6 +9,7 @@ import {
 } from '../services/prescriptionServices.js';
 
 const router = express.Router();
+//admin với pharmacist ( dữ liệu test để làm màn hình dược sĩ)
 
 // Create a new prescription
 router.post('/', async (req, res) => {
