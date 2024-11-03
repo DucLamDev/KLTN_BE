@@ -56,25 +56,27 @@ export const completeAppointment =  async (roomNumber, patientId) => {
 
   try {
     const patientsData = await getAppointmentsFromQueue(queueKey);
-
+    console.log(patientsData);
     const patientToDelete = patientsData.find(data => {
       try {
         const parsedData = JSON.parse(data);
+        console.log(parsedData);
         return parsedData && parsedData.id === patientId;
       } catch (error) {
         return false;
       }
     });
 
-    if (!patientToDelete) {
-      throw new Error({ success: false, message: 'Patient not found' });
-    }
+    // if (!patientToDelete) {
+    //   throw new Error('Patient not found' );
+    // }
 
     await removeAppointmentFromQueue(queueKey, patientToDelete);
-
-    res.status(200).json({ success: true, message: 'Patient removed successfully' });
+    return "appointment completed successfully";
+    // res.status(200).json({ success: true, message: 'Patient removed successfully' });
   } catch (err) {
-    throw new Error({ success: false, message: 'Internal Server Error' });
+    console.log("error in", err);
+    throw new Error('Internal Server Error');
   }
 };
 
@@ -124,10 +126,10 @@ export const createRequests = async (requestTest) => {
   if (!patient) {
     throw new Error("bệnh nhân này chưa tồn tại");
   }
-  const requestTest = await createRequestTest(requestTest);
+  const requestTests = await createRequestTest(requestTest);
 
-  await sendMessage(`LabTest-${testType}-queue`, appointment);
-  return appointment;
+  await sendMessage(`LabTest-${testType}-queue`, requestTests);
+  return requestTests;
 };
 
 export const getDepartmentName = async () => {

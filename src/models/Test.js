@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 function generateUniqueId() {
     const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
-    return `BS-${randomString}`;
+    return `T-${randomString}`;
   }
 const TestSchema = new mongoose.Schema({
     _id: { type: String, auto: false },

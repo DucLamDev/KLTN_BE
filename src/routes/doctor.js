@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  completeAppointmentController,
   createPrescriptionController,
   createServiceListController,
   getDepartmentNameController,
@@ -18,4 +19,5 @@ routerDoctor.post("/create-service-list", createServiceListController);
 routerDoctor.get("/:roomNumber", getListAppointment);
 // Tạo request xét nghiệm
 
+routerDoctor.post("/complete", completeAppointmentController);
 export default routerDoctor;

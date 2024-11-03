@@ -8,7 +8,7 @@ export const getAppointmentsFromQueue = async (queueKey) => {
 
 // Xoá 1 cuộc hẹn khỏi queue
 export const removeAppointmentFromQueue = async (queueKey, appointmentToRemove) => {
-   return await redisClient.lRem(queueKey, 1, appointmentToRemove);
+   return await redisClient.lRem(queueKey, 0, appointmentToRemove);
 };
 
 // Thêm chèn đầu

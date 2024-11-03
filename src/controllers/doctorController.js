@@ -1,4 +1,4 @@
-import { createPrescriptions, createServiceList, getAppointmentToQueue, getDepartmentName } from "../services/doctorServices.js";
+import { completeAppointment, createPrescriptions, createServiceList, getAppointmentToQueue, getDepartmentName } from "../services/doctorServices.js";
 
 // Tạo đơn thuốc
 export const createPrescriptionController = async (req, res) => {
@@ -44,3 +44,17 @@ export const getDepartmentNameController = async (req, res) => {
     });
   }
 };
+
+
+export const completeAppointmentController = async (req, res) => {
+  try{
+    const {roomNumber, patientId} = req.body;
+    const completeMessage = await completeAppointment(roomNumber, patientId);
+    res.status(200).json({ success: true, message: completeMessage });
+  }catch(error){
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+}
