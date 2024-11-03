@@ -51,34 +51,40 @@ export const createServiceList = async (doctorId, patientId, services) => {
 
 // Hoàn thành khám
 
-export const completeAppointment =  async (roomNumber, patientId) => {
+export const completeAppointment = async (roomNumber, patientId) => {
   const queueKey = `queue:${roomNumber}`;
 
   try {
     const patientsData = await getAppointmentsFromQueue(queueKey);
-    console.log(patientsData);
+    console.log("All patients data in queue:", patientsData);
+
     const patientToDelete = patientsData.find(data => {
       try {
         const parsedData = JSON.parse(data);
-        console.log(parsedData);
-        return parsedData && parsedData.id === patientId;
+        console.log("Parsed patient data:", parsedData);
+        return parsedData && parsedData.patientId === patientId;
       } catch (error) {
+        console.error("Error parsing data:", error);
         return false;
       }
     });
 
-    // if (!patientToDelete) {
-    //   throw new Error('Patient not found' );
-    // }
+    if (!patientToDelete) {
+      throw new Error('Patient not found');
+    }
 
+    console.log("Found patient to delete:", patientToDelete);
+    
+    // Kiểm tra trước khi gọi hàm xóa
     await removeAppointmentFromQueue(queueKey, patientToDelete);
-    return "appointment completed successfully";
-    // res.status(200).json({ success: true, message: 'Patient removed successfully' });
+
+    return "Appointment completed successfully";
   } catch (err) {
-    console.log("error in", err);
-    throw new Error('Internal Server Error');
+    console.error("Error in completeAppointment:", err);
+    throw err; // Để đảm bảo lỗi được ném ra để controller xử lý
   }
 };
+
 
 // Tạo yêu cầu xét nghiệm
 
@@ -128,7 +134,7 @@ export const createRequests = async (requestTest) => {
   }
   const requestTests = await createRequestTest(requestTest);
 
-  await sendMessage(`LabTest-${testType}-queue`, requestTests);
+  await sendMessage(`LabTest-Queue`, requestTests);
   return requestTests;
 };
 

@@ -8,8 +8,29 @@ export const getAppointmentsFromQueue = async (queueKey) => {
 
 // Xoá 1 cuộc hẹn khỏi queue
 export const removeAppointmentFromQueue = async (queueKey, appointmentToRemove) => {
-   return await redisClient.lRem(queueKey, 0, appointmentToRemove);
+  if (!appointmentToRemove) {
+      throw new Error("appointmentToRemove is undefined or null");
+  }
+
+  // Chuyển đổi appointmentToRemove thành chuỗi JSON nếu nó là một đối tượng
+  const appointmentString = typeof appointmentToRemove === 'string'
+      ? appointmentToRemove
+      : JSON.stringify(appointmentToRemove);
+
+  // Log cho biết dữ liệu trước khi xóa
+  console.log("Attempting to remove:", appointmentString); // Kiểm tra chuỗi trước khi xóa
+
+  try {
+      // Sử dụng chuỗi thay vì Buffer
+      const result = await redisClient.lRem(queueKey, 0, appointmentString);
+      console.log("Number of removed items:", result);
+      return result;
+  } catch (error) {
+      console.error("Error in lRem:", error);
+      throw error;
+  }
 };
+
 
 // Thêm chèn đầu
 export const addFirstAppointmentToQueue = async (queueKey, appointmentData) => {

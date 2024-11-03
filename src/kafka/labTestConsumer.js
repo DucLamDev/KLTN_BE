@@ -11,14 +11,14 @@
     ssl: false,
   });
 
-  const consumer = kafka.consumer({ groupId: process.env.GROUP_ID || 'pharmacist-group' });
+  const consumer = kafka.consumer({ groupId: process.env.GROUP_ID || 'labTest-group' });
 
   // Kết nối với Kafka
   const connectConsumer = async () => {
     try {
       await consumer.connect();
       console.log('Kafka Consumer connected');
-      await consumer.subscribe({ topic: /LabTest-Queue/, fromBeginning: true });
+      await consumer.subscribe({ topic: /LabTest-.*-queue/, fromBeginning: true });
     } catch (err) {
       console.error('Failed to connect Kafka Consumer', err);
       process.exit(1);
@@ -56,4 +56,4 @@
     });
   };s
 
-  export { runConsumerLabTest}; // Xuất hàm để xử lý khi bệnh nhân khám xong
+  export {runConsumerLabTest}; // Xuất hàm để xử lý khi bệnh nhân khám xong
