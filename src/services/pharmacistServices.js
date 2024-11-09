@@ -1,5 +1,6 @@
 // pharmacistService.js
 import PrescriptionBill from "../models/PrescriptionBill.js";
+import { completePrescriptionRepository } from "../repositories/prescriptionRepository.js";
 import { getAppointmentsFromQueue } from "../repositories/queueRepository.js";
 
 // Get all prescriptions from Redis queue
@@ -43,3 +44,37 @@ export const getPrescriptionBillById = async (id) => {
     if (!bill) throw new Error("Prescription bill not found");
     return bill;
 };
+
+export const completePrescriptionService = async (prescriptionId, warehouseId) => {
+  
+    try {
+      const prescriptionsData = await getAppointmentsFromQueue("queue:Pharmacist");
+      console.log("All patients data in queue:", prescriptionsData);
+  
+      const prescriptionsDelete = prescriptionsData.find(data => {
+        try {
+          const parsedData = JSON.parse(data);
+          console.log("Parsed patient data:", parsedData);
+          return parsedData && parsedData._id === prescriptionId;
+        } catch (error) {
+          console.error("Error parsing data:", error);
+          return false;
+        }
+      });
+
+     await completePrescriptionRepository(prescriptionsDelete._id, warehouseId);
+  
+      if (!prescriptionsDelete) {
+        throw new Error('Patient not found');
+      }
+  
+      console.log("Found patient to delete:", prescriptionsDelete);
+      
+      await removeFromQueue("queue:Pharmacist", prescriptionsDelete);
+  
+      return "Appointment completed successfully";
+    } catch (err) {
+      console.error("Error in completeAppointment:", err);
+      throw err;
+    }
+  };

@@ -3,7 +3,7 @@ import { createPrescriptionRepo } from "../repositories/prescriptionRepository.j
 import ServiceList from "../models/ServiceList.js";
 import { getOnePatientById } from "../repositories/patientRepository.js";
 // import { redisClient } from "../redis/redisClient.js";
-import { getAppointmentsFromQueue, removeAppointmentFromQueue } from "../repositories/queueRepository.js";
+import { getAppointmentsFromQueue, removeFromQueue } from "../repositories/queueRepository.js";
 import { findDoctors, getAppointmentsByDateRepository, getListDoctors, getOneDoctorById, getSpecializations } from "../repositories/doctorRepository.js";
 import { createRequestTest } from "../repositories/requestTestRepository.js";
 import { getOneAppointmentById } from "../repositories/appointmentRepository.js";
@@ -90,7 +90,7 @@ export const completeAppointment = async (roomNumber, patientId, doctorId) => {
 
     console.log("Found patient to delete:", patientToDelete);
     
-    await removeAppointmentFromQueue(queueKey, patientToDelete);
+    await removeFromQueue(queueKey, patientToDelete);
 
     return "Appointment completed successfully";
   } catch (err) {

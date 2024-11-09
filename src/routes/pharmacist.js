@@ -1,6 +1,6 @@
 // pharmacistRouter.js
 import express from "express";
-import { createPrescriptionBillController, listPrescriptionsController, prescriptionByIdController } from "../controllers/pharmacistController.js";
+import { completePrescriptionController, createPrescriptionBillController, listPrescriptionsController, prescriptionByIdController } from "../controllers/pharmacistController.js";
 
 const routerPharmacist = express.Router();
 
@@ -12,5 +12,7 @@ routerPharmacist.post('/create-prescriptionBill', createPrescriptionBillControll
 
 // Get a specific prescription bill by ID
 routerPharmacist.get('/prescriptionBill/:id', prescriptionByIdController);
+
+routerPharmacist.patch("/:prescriptionId/complete", completePrescriptionController);
 
 export default routerPharmacist;

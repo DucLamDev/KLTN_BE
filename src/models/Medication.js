@@ -12,6 +12,4 @@ const MedicationSchema = new mongoose.Schema({
 
 });
 
-const Medication = mongoose.model('Medication', MedicationSchema);
-
-export default Medication;
+export default MedicationSchema;

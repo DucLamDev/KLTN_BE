@@ -1,7 +1,8 @@
 import {
     getPrescriptionsFromQueue,
     createPrescriptionBill,
-    getPrescriptionBillById
+    getPrescriptionBillById,
+    completePrescriptionService
 } from '../services/pharmacistServices.js';
 
 // Get all prescriptions from the queue
@@ -40,3 +41,17 @@ export const prescriptionByIdController =  async (req, res) => {
     }
 };
 
+export const completePrescriptionController = async (req, res) => {
+    try {
+        const prescriptionId = req.params.prescriptionId;
+        const { warehouseId} = req.body; // Lấy dữ liệu từ request body
+
+        const completedPrescription = await completePrescriptionService(prescriptionId, warehouseId);
+
+        res.status(200).json(completedPrescription);
+
+    } catch (error) {
+        console.error("Error completing prescription:", error);
+        res.status(error.statusCode || 500).json({ message: error.message });
+    }
+};
