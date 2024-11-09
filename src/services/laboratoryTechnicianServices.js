@@ -34,8 +34,8 @@ export const deleteLaboratoryTechnician = async (id) => {
     return technician;
 };
 
-export const getRequestTestFromQueue = async () => {
-    const queueKey = `queue:LabTest`;
+export const getRequestTestFromQueue = async (specialization) => {
+    const queueKey = `queue:LabTest-${specialization}`;
     const requestTestsData = await getAppointmentsFromQueue(queueKey);
 
     const parsedData = requestTestsData

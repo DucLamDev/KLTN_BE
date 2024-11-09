@@ -2,6 +2,7 @@ import {
   completeAppointment,
   createDoctorService,
   createPrescriptions,
+  createReExamination,
   createServiceList,
   fetchDoctors,
   fetchSpecializations,
@@ -192,5 +193,15 @@ export const updateDoctorOnlineStatusController = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+
+export const createReExaminationController = async (req, res) => {
+  try {
+      const appointment = await createReExamination(req.body);
+      res.status(200).json(appointment);
+  } catch (err) {
+      res.status(400).json({ message: err.message });
   }
 };

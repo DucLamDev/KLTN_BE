@@ -2,6 +2,7 @@
   import { Kafka } from 'kafkajs';
   import dotenv from 'dotenv';
   import {addRequestTestToQueue} from "../redis/queueManager.js"
+import LaboratoryTechnician from '../models/LaboratoryTechnician.js';
 
   dotenv.config();
 
@@ -18,7 +19,7 @@
     try {
       await consumer.connect();
       console.log('Kafka Consumer connected');
-      await consumer.subscribe({ topic: /LabTest-.*-queue/, fromBeginning: true });
+      await consumer.subscribe({ topic: /LabTest-queue/, fromBeginning: true });
     } catch (err) {
       console.error('Failed to connect Kafka Consumer', err);
       process.exit(1);
@@ -37,12 +38,26 @@
   };
 
   // Xử lý tin nhắn từ hàng đợi chuyên khoa
+  // const processLabTestQueueMessage = async (message) => {
+  //   const requestTestData = JSON.parse(message.value);
+  //   try {
+  //     await addRequestTestToQueue(requestTestData);
+  //   } catch (err) {
+  //     console.error('Error processing requestTest queue message', err);
+  //   }
+  // };
+
+
   const processLabTestQueueMessage = async (message) => {
-    const requestTestData = JSON.parse(message.value);
+    console.log(`Received message: ${message.value}`);
+    const requestData = JSON.parse(message.value);
+    const { patientId, testName} = requestData;
+  
     try {
-      await addRequestTestToQueue(requestTestData);
+      await addRequestTestToQueue(testName, requestData);
+      console.log(`Bệnh nhân ${patientId} đã được phân xét nghiệm ${testName}`);
     } catch (err) {
-      console.error('Error processing requestTest queue message', err);
+      console.error('Lỗi khi xử lý tin nhắn từ hàng đợi:', err);
     }
   };
 

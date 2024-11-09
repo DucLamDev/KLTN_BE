@@ -24,6 +24,7 @@ import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.js";
 import cors from "cors";
 import { runConsumerPharmacist } from "./kafka/pharmacistConsumer.js";
+import { runConsumerLabTest } from "./kafka/labTestConsumer.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -74,4 +75,5 @@ const startApp = async () => {
   // // await connectExamRoomProducer(); // Kết nối producer cho buồng khám
   await runConsumerDepartment(); // Chạy consumer
   await runConsumerPharmacist();
+  await runConsumerLabTest();
 };

@@ -18,8 +18,9 @@ import {
   updateDoctorOnlineStatus,
 } from "../repositories/doctorRepository.js";
 import { createRequestTest } from "../repositories/requestTestRepository.js";
-import { getOneAppointmentById } from "../repositories/appointmentRepository.js";
+import { createAppointment, getOneAppointmentById } from "../repositories/appointmentRepository.js";
 import Doctor from "../models/Doctor.js";
+import { createAppointmentByPatient } from "../repositories/appointmentByPatientRepository.js";
 
 export const createPrescriptions = async (
   patientId,
@@ -115,8 +116,6 @@ export const completeAppointment = async (roomNumber, patientId, doctorId) => {
       throw new Error("Patient not found");
     }
 
-    console.log("Found patient to delete:", patientToDelete);
-
     await removeFromQueue(queueKey, patientToDelete);
 
     return "Appointment completed successfully";
@@ -126,7 +125,6 @@ export const completeAppointment = async (roomNumber, patientId, doctorId) => {
   }
 };
 
-// Tạo yêu cầu xét nghiệm
 
 //gọi bệnh nhân từ hàng đợi
 export const getAppointmentToQueue = async (roomNumber) => {
@@ -159,14 +157,15 @@ export const getAppointmentToQueue = async (roomNumber) => {
   }
 };
 
-// yêu cầu xét nghiệm
+
+// Tạo yêu cầu xét nghiệm
 
 export const createRequests = async (requestTest) => {
-  const { patientId, doctorId, testType, reason, requestDate } = requestTest;
+  const { patientId, doctorId, testName, testType, reason, requestDate } = requestTest;
 
-  if (!patientId || !doctorId || !testType || !reason || !requestDate) {
+  if (!patientId || !doctorId || !testType || !reason || !requestDate || !testName) {
     throw new Error(
-      "patientId, doctorId và testType, reason, requestDate là bắt buộc"
+      "patientId, doctorId và testType, reason, testName requestDate là bắt buộc"
     );
   }
 
@@ -176,9 +175,10 @@ export const createRequests = async (requestTest) => {
   }
   const requestTests = await createRequestTest(requestTest);
 
-  await sendMessage(`LabTest-Queue`, requestTests);
+  await sendMessage(`LabTest-queue`, requestTests);
   return requestTests;
 };
+
 
 export const fetchSpecializations = async () => {
   return await getSpecializations();
@@ -256,3 +256,26 @@ export const updateDoctorOnlineStatusService = async (
     throw new Error("Error updating doctor online status: " + error.message);
   }
 };
+
+// tạo lịch tái khám
+
+export const createReExamination = async (appointmentData) => {
+  const { patientId, appointmentDateByPatient, specialization, reason } = appointmentData;
+
+  if (!patientId || !appointmentDateByPatient || !specialization || !reason) {
+    throw new Error("patientId, appointmentDate và specialization là bắt buộc");
+  }
+
+  const patient = await getOnePatientById(patientId);
+  if (!patient) {
+    throw new Error("bệnh nhân này chưa tồn tại");
+  }
+  const appointment = await createAppointmentByPatient(appointmentData);
+  appointment.reExamination == true;
+  await appointment.save();
+
+
+  return appointment;
+}
+
+

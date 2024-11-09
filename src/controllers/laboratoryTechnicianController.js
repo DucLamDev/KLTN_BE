@@ -55,3 +55,13 @@ export const deleteLaboratoryTechnicianController = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 };
+
+
+export const getListTest = async (req, res) => {
+    try {
+      const appointment = await getAppointmentToQueue(req.params.roomNumber);
+      res.status(200).json(appointment);
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
+  };

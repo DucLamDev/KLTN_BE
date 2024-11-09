@@ -28,8 +28,8 @@ const addPrescriptionToQueue = async (prescriptionData) => {
   }
 };
 
-const addRequestTestToQueue = async (requestTestData) => {
-  const queueKey = `queue:LabTest`;
+const addRequestTestToQueue = async (testName, requestTestData) => {
+  const queueKey = `queue:LabTest-${testName}`;
   try {
     await redisClient.rPush(queueKey, JSON.stringify(requestTestData)); // Sử dụng lPush
   } catch (err) {
