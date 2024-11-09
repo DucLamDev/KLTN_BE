@@ -6,7 +6,11 @@ export const createDoctor = async (doctorData) => {
 };
 
 export const getListDoctors = async () => {
-  return await Doctor.find().populate('department');
+  return await Doctor.find();
+};
+
+export const findDoctors = async (query) => {
+  return await Doctor.find(query);
 };
 
 export const getOneDoctorById = async (id) => {
@@ -24,3 +28,27 @@ export const deleteDoctorById = async (id) => {
 export const getSpecializations = async () => {
   return await Doctor.distinct("specialization");
 }
+
+export const getAppointmentsByDateRepository = async (doctorId, date) => {
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  try {
+    const appointments = await Doctor.aggregate([
+      { $match: { _id: doctorId } },
+      { $unwind: "$appointmentList" },
+      {
+        $match: {
+          "appointmentList.appointmentDate": { $gte: startOfDay, $lte: endOfDay },
+        },
+      },
+      { $project: { appointmentList: 1, _id: 0 } },
+    ]);
+
+    return appointments.map((item) => item.appointmentList);
+  } catch (error) {
+    throw error; // Ném lỗi lên service để xử lý
+  }
+};

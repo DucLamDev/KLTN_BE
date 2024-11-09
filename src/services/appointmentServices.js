@@ -5,9 +5,9 @@ import { getOnePatientById } from "../repositories/patientRepository.js";
 
 // Create a new appointment
 export const createAppointments = async (appointmentData) => {
-  const { patientId, appointmentDate, specialization } = appointmentData;
+  const { patientId, appointmentDate, specialization, reason } = appointmentData;
 
-  if (!patientId || !appointmentDate || !specialization) {
+  if (!patientId || !appointmentDate || !specialization || !reason) {
     throw new Error("patientId, appointmentDate và specialization là bắt buộc");
   }
 

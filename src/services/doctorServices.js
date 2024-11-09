@@ -4,8 +4,10 @@ import ServiceList from "../models/ServiceList.js";
 import { getOnePatientById } from "../repositories/patientRepository.js";
 // import { redisClient } from "../redis/redisClient.js";
 import { getAppointmentsFromQueue, removeAppointmentFromQueue } from "../repositories/queueRepository.js";
-import { getSpecializations } from "../repositories/doctorRepository.js";
+import { findDoctors, getAppointmentsByDateRepository, getListDoctors, getOneDoctorById, getSpecializations } from "../repositories/doctorRepository.js";
 import { createRequestTest } from "../repositories/requestTestRepository.js";
+import { getOneAppointmentById } from "../repositories/appointmentRepository.js";
+import Doctor from "../models/Doctor.js";
 
 export const createPrescriptions = async (patientId, doctorId, medications, dateIssued) => {
   if (!patientId || !doctorId || !medications || !dateIssued) {
@@ -51,7 +53,7 @@ export const createServiceList = async (doctorId, patientId, services) => {
 
 // Hoàn thành khám
 
-export const completeAppointment = async (roomNumber, patientId) => {
+export const completeAppointment = async (roomNumber, patientId, doctorId) => {
   const queueKey = `queue:${roomNumber}`;
 
   try {
@@ -68,6 +70,19 @@ export const completeAppointment = async (roomNumber, patientId) => {
         return false;
       }
     });
+    
+    // const appointmentData = await getOneAppointmentById(patientToDelete._id);
+     const appointmentDatas = JSON.parse(patientToDelete);
+    const appointmentData = await getOneAppointmentById(appointmentDatas._id);
+
+    appointmentData.status = "Completed";
+    appointmentData.doctorId = doctorId;
+    await appointmentData.save();
+
+    const doctor = await getOneDoctorById(doctorId);
+    
+    await Doctor.findByIdAndUpdate(doctorId, { $addToSet: { appointmentList: appointmentData } });
+    await doctor.save();
 
     if (!patientToDelete) {
       throw new Error('Patient not found');
@@ -75,15 +90,16 @@ export const completeAppointment = async (roomNumber, patientId) => {
 
     console.log("Found patient to delete:", patientToDelete);
     
-    // Kiểm tra trước khi gọi hàm xóa
     await removeAppointmentFromQueue(queueKey, patientToDelete);
 
     return "Appointment completed successfully";
   } catch (err) {
     console.error("Error in completeAppointment:", err);
-    throw err; // Để đảm bảo lỗi được ném ra để controller xử lý
+    throw err;
   }
 };
+
+
 
 
 // Tạo yêu cầu xét nghiệm
@@ -138,6 +154,52 @@ export const createRequests = async (requestTest) => {
   return requestTests;
 };
 
-export const getDepartmentName = async () => {
+export const fetchSpecializations = async () => {
    return await getSpecializations();
 }
+
+export const getListDoctorsService = async () => {
+  return await getListDoctors();
+}
+
+export const getOneDoctor = async (id) => {
+  return await getOneDoctorById(id);
+}
+
+
+export const fetchDoctors = async (specialization, email) => {
+  let query = {};
+
+  if (specialization) {
+    query.specialization = specialization;
+  }
+  
+  if (email) {
+    query.email = email;
+  }
+
+  return await findDoctors(query);
+};
+
+
+export const getAppointmentsByDateService = async (doctorId, dateString) => {
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date)) {
+      const error = new Error("Invalid date format. Please use YYYY-MM-DD.");
+      error.statusCode = 400; // Gán status code cho error
+      throw error; 
+    }
+
+
+    const appointments = await getAppointmentsByDateRepository(doctorId, date);
+    return appointments;
+
+  } catch (error) {
+     //  Thêm status code vào error nếu cần
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    throw error; // Ném lỗi lên controller để xử lý
+  }
+};

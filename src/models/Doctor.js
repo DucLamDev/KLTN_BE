@@ -4,10 +4,11 @@ import scheduleSchema from '../models/Schedule.js'; // Đảm bảo đường d�
 
 
 const appointmentSchema = new mongoose.Schema({
+  _id: {type: String, aotu: false},
   patientId: { type: String, ref: 'Patient', required: true },
   appointmentDate: { type: Date, required: true },
   reason: { type: String, required: true },
-  status: { type: String, enum: ['Scheduled', 'Completed', 'Cancelled'], default: 'Scheduled' },
+  status: { type: String, enum: ['Scheduled', 'Completed', 'Cancelled'], default: 'Completed' },
 });
 
 function generateUniqueId() {

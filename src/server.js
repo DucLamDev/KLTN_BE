@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import patientRoutes from "./routes/patient.js";
-import doctorRoutes from "./routes/doctor.js";
+import routerDoctor from "./routes/doctor.js";
 import pharmacistRoutes from "./routes/pharmacist.js";
 import receptionistRoutes from "./routes/receptionist.js";
 import appointmentRoutes from "./routes/appointment.js";
@@ -46,7 +46,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.use("/api/patients", patientRoutes);
-app.use("/api/doctors", doctorRoutes);
+app.use("/api/doctors", routerDoctor);
 app.use("/api/pharmacists", pharmacistRoutes);
 app.use("/api/receptionists", receptionistRoutes);
 app.use("/api/appointments", appointmentRoutes);
