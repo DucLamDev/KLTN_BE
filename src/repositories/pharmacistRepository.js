@@ -8,6 +8,9 @@ export const createPharmacist = async (pharmacistData) => {
 export const getListPharmacists = async () => {
   return await Pharmacist.find()
 };
+export const findPharmacists = async (query) => {
+  return await Pharmacist.find(query);
+};
 
 export const getOnePharmacistById = async (id) => {
   return await Pharmacist.findById(id)    

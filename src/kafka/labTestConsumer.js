@@ -69,6 +69,6 @@ import LaboratoryTechnician from '../models/LaboratoryTechnician.js';
         await processLabTestQueueMessage(message);
       },
     });
-  };s
+  };
 
   export {runConsumerLabTest}; // Xuất hàm để xử lý khi bệnh nhân khám xong
