@@ -1,6 +1,7 @@
 import express from "express";
 import {
   completeAppointmentController,
+  createDoctorController,
   createPrescriptionController,
   createServiceListController,
   getAppointmentsByDateController,
@@ -8,6 +9,7 @@ import {
   getListAppointment,
   getOneDoctorController,
   getSpecializationsController,
+  updateDoctorOnlineStatusController,
 } from "../controllers/doctorController.js";
 
 const routerDoctor = express.Router();
@@ -18,24 +20,32 @@ routerDoctor.post("/create-prescription", createPrescriptionController);
 // Tạo danh sách dịch vụ
 routerDoctor.post("/create-service-list", createServiceListController);
 
-
-
 // Tạo request xét nghiệm
 // routerDoctor.post("/create-requestTest", );
 
-routerDoctor.post("/complete", completeAppointmentController);// hoàn thành ca khám
+routerDoctor.post("/complete", completeAppointmentController); // hoàn thành ca khám
 
 routerDoctor.get("/specializations", getSpecializationsController); // không có kafka
 
 // Lấy danh sách các ca khám mà bác sĩ đã hoàn thành trong ngày cụ thể
 // vd: GET http://.../api/doctors/BS-ABCDEF/appointments/2024-11-09
-routerDoctor.get("/:doctorId/appointments/:date", getAppointmentsByDateController);
+routerDoctor.get(
+  "/:doctorId/appointments/:date",
+  getAppointmentsByDateController
+);
 
 routerDoctor.get("/:id", getOneDoctorController);
-routerDoctor.get("/:roomNumber", getListAppointment);// đổi queue/000 thành routes này
+routerDoctor.get("/:roomNumber", getListAppointment); // đổi queue/000 thành routes này
 
 // lấy danh sách bác sĩ thuộc khoa X hoặc theo email nếu không truyền tham số thì sẽ lấy toàn bộ danh sách
 routerDoctor.get("/", getDoctorsController);
+// Tạo 1 bác sĩ
+routerDoctor.post("/", createDoctorController);
 
+// Cập nhật trạng thái Online và số phòng của 1 Bác sĩ
+routerDoctor.patch(
+  "/:doctorId/updateRoomNumber",
+  updateDoctorOnlineStatusController
+);
 
 export default routerDoctor;
