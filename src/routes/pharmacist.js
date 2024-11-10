@@ -1,6 +1,7 @@
 // pharmacistRouter.js
 import express from "express";
-import { completePrescriptionController, createPrescriptionBillController, listPrescriptionsController, prescriptionByIdController } from "../controllers/pharmacistController.js";
+import { completePrescriptionController, createPrescriptionBillController, getPharmacistsController, listPrescriptionsController, prescriptionByIdController } from "../controllers/pharmacistController.js";
+import Pharmacist from "../models/Pharmacist.js";
 
 const routerPharmacist = express.Router();
 
@@ -10,9 +11,21 @@ routerPharmacist.get("/get-list-prescriptions", listPrescriptionsController); //
 // Create a new prescription bill
 routerPharmacist.post('/create-prescriptionBill', createPrescriptionBillController);
 
-// Get a specific prescription bill by ID
+routerPharmacist.get("/:id", async (req, res) => {
+    try {
+        const patient = await Pharmacist.findById(req.params.id);
+        if (!patient) return res.status(404).send();
+        res.status(200).send(patient);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+// routerPharmacist.get("/", getPharmacistsController);
+
 routerPharmacist.get('/prescriptionBill/:id', prescriptionByIdController);
 
 routerPharmacist.patch("/:prescriptionId/complete", completePrescriptionController);
 
+routerPharmacist.get("/", getPharmacistsController);
 export default routerPharmacist;

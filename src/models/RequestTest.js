@@ -9,6 +9,7 @@ function generateUniqueId() {
   }
 const requestTestSchema = new mongoose.Schema({
     _id: { type: String, auto: false },
+    testName: {type: String, required: true},
     testType: [testTypeSchema],
     patientId: { type: String, ref: 'Patient', required: true },
     doctorId: { type: String, ref: 'Doctor', required: true },

@@ -21,6 +21,7 @@ const appointmentByPatientSchema = new mongoose.Schema(
       ref: "Patient",
       required: true,
     },
+    reason: {type: String},
     specialization: {type: String},
     dateOfBirth: { type: Date},
     gender: {type: String},  
@@ -28,7 +29,7 @@ const appointmentByPatientSchema = new mongoose.Schema(
     address:{type: String},
     phone: {type: String},
     medicalHistory: [medicalHistorySchema],
-
+    reExamination: {type: Boolean, default: false}
   },
   { timestamps: true }
 );

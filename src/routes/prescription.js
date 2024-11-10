@@ -12,24 +12,15 @@ const router = express.Router();
 //admin với pharmacist ( dữ liệu test để làm màn hình dược sĩ)
 
 // Create a new prescription
-router.post('/', async (req, res) => {
-    try {
-        const prescription = await createPrescription(req.body);
-        res.status(200).send(prescription);
-    } catch (error) {
-        res.status(400).send({ message: 'Error creating prescription', error });
-    }
-});
+// router.post('/', async (req, res) => {
+//     try {
+//         const prescription = await createPrescription(req.body);
+//         res.status(200).send(prescription);
+//     } catch (error) {
+//         res.status(400).send({ message: 'Error creating prescription', error });
+//     }
+// });
 
-// Get all prescriptions
-router.get('/', async (req, res) => {
-    try {
-        const prescriptions = await getAllPrescriptions();
-        res.status(200).send(prescriptions);
-    } catch (error) {
-        res.status(500).send({ message: 'Error fetching prescriptions', error });
-    }
-});
 
 // Get a specific prescription by ID
 router.get('/:id', async (req, res) => {
@@ -61,4 +52,13 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+// Get all prescriptions
+router.get('/', async (req, res) => {
+    try {
+        const prescriptions = await getAllPrescriptions();
+        res.status(200).send(prescriptions);
+    } catch (error) {
+        res.status(500).send({ message: 'Error fetching prescriptions', error });
+    }
+});
 export default router;

@@ -40,7 +40,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Cập nhật thông tin bệnh nhân
-router.patch("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, {
       new: true,

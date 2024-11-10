@@ -19,6 +19,7 @@ const laboratoryTechnicianSchema = new mongoose.Schema(
   {
     _id: { type: String, auto: false },
     fullName: { type: String },
+    specialization: { type: String},
     dateOfBirth: { type: Date},
     numberId: { type: String},
     labTest: {type: String, ref: 'LabTest'},
@@ -78,5 +79,5 @@ laboratoryTechnicianSchema.methods.comparePassword = async function (candidatePa
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-const LaboratoryTechnicianSchema = mongoose.model('LaboratoryTechnicianSchema', laboratoryTechnicianSchema);
-export default LaboratoryTechnicianSchema;
+const LaboratoryTechnician= mongoose.model('LaboratoryTechnician', laboratoryTechnicianSchema);
+export default LaboratoryTechnician;

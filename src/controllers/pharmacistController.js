@@ -2,7 +2,8 @@ import {
     getPrescriptionsFromQueue,
     createPrescriptionBill,
     getPrescriptionBillById,
-    completePrescriptionService
+    completePrescriptionService,
+    fetchPharmacist
 } from '../services/pharmacistServices.js';
 
 // Get all prescriptions from the queue
@@ -55,3 +56,21 @@ export const completePrescriptionController = async (req, res) => {
         res.status(error.statusCode || 500).json({ message: error.message });
     }
 };
+
+export const getPharmacistsController = async (req, res) => {
+    try {
+      const { email } = req.query;
+      const doctors = await fetchPharmacist(email);
+  
+      if (doctors.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "Không tìm thấy dược sĩ nào với chuyên khoa này" });
+      }
+  
+      res.status(200).json(doctors);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách dược sĩ:", error);
+      res.status(500).json({ message: "Lỗi server nội bộ" });
+    }
+  };

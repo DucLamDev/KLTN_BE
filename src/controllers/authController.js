@@ -166,6 +166,17 @@ export const loginUser = async (req, res) => {
       console.log("Pharmacist logged in");
     }
 
+    if (user.role === "cashier") {
+      // Hành động dành cho dược sĩ
+      console.log("cashier logged in");
+    }
+
+    if (user.role === "laboratory-technician") {
+      // Hành động dành cho dược sĩ
+      console.log("laboratory-technician logged in");
+    }
+
+
     if (user.role === "admin") {
       // Hành động dành cho quản trị viên
       console.log("Admin logged in");

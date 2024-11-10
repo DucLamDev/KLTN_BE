@@ -1,5 +1,6 @@
 // pharmacistService.js
 import PrescriptionBill from "../models/PrescriptionBill.js";
+import { findPharmacists } from "../repositories/pharmacistRepository.js";
 import { completePrescriptionRepository } from "../repositories/prescriptionRepository.js";
 import { getAppointmentsFromQueue } from "../repositories/queueRepository.js";
 
@@ -77,4 +78,16 @@ export const completePrescriptionService = async (prescriptionId, warehouseId) =
       console.error("Error in completeAppointment:", err);
       throw err;
     }
+  };
+
+
+  export const fetchPharmacist = async (email) => {
+    let query = {};
+
+  
+    if (email) {
+      query.email = email;
+    }
+  
+    return await findPharmacists(query);
   };
