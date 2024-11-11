@@ -9,9 +9,9 @@ const medicalHistorySchema = new mongoose.Schema({
 
 const appointmentByPatientSchema = new mongoose.Schema(
   {
-    id: {type: String, auto: false},
-    fullName: {type: String},
-    appointmentDateByPatient: { type: Date},
+    id: { type: String, auto: false },
+    fullName: { type: String },
+    appointmentDateByPatient: { type: Date },
     doctorId: {
       type: String,
       ref: "Doctor",
@@ -21,23 +21,22 @@ const appointmentByPatientSchema = new mongoose.Schema(
       ref: "Patient",
       required: true,
     },
-    reason: {type: String},
-    specialization: {type: String},
-    dateOfBirth: { type: Date},
-    gender: {type: String},  
-    email: {type: String},
-    address:{type: String},
-    phone: {type: String},
+    reason: { type: String },
+    specialization: { type: String },
+    dateOfBirth: { type: Date },
+    gender: { type: String },
+    email: { type: String },
+    address: { type: String },
+    phone: { type: String },
     medicalHistory: [medicalHistorySchema],
-    reExamination: {type: Boolean, default: false}
+    reExamination: { type: Boolean, default: false },
+    doctorName: { type: String },
   },
   { timestamps: true }
 );
-
 
 const AppointmentByPatient = mongoose.model(
   "AppointmentByPatient",
   appointmentByPatientSchema
 );
 export default AppointmentByPatient;
-

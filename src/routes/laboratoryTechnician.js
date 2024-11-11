@@ -1,11 +1,11 @@
-import express from 'express';
+import express from "express";
 import {
-    createLaboratoryTechnicianController,
-    listLaboratoryTechniciansController,
-    getLaboratoryTechnicianByIdController,
-    updateLaboratoryTechnicianController,
-    deleteLaboratoryTechnicianController
-} from '../controllers/laboratoryTechnicianController.js';
+  createLaboratoryTechnicianController,
+  listLaboratoryTechniciansController,
+  getLaboratoryTechnicianByIdController,
+  updateLaboratoryTechnicianController,
+  deleteLaboratoryTechnicianController,
+} from "../controllers/laboratoryTechnicianController.js";
 
 const routerLaboratoryTechnician = express.Router();
 
