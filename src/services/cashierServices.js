@@ -1,9 +1,14 @@
-// services/invoiceService.js
 import Doctor from "../models/Doctor.js";
 import Invoice from "../models/Invoice.js";
 import Patient from "../models/Patient.js";
 import ServiceList from "../models/ServiceList.js";
-
+import {
+  createCashier,
+  getListCashiers,
+  getOneCashierById,
+  updateCashierById,
+  deleteCashierById,
+} from "../repositories/cashierRepository.js";
 export const createInvoice = async (patientId, doctorId) => {
   try {
     const doctor = await Doctor.findById(doctorId);
@@ -72,5 +77,56 @@ export const updateInvoiceStatus = async (invoiceId, paymentStatus) => {
   } catch (error) {
     console.error("Error updating invoice status:", error);
     throw new Error("Internal server error.");
+  }
+};
+
+export const createCashierService = async (cashierData) => {
+  try {
+    return await createCashier(cashierData);
+  } catch (error) {
+    throw new Error("Error creating cashier: " + error.message);
+  }
+};
+
+export const getListCashiersService = async () => {
+  try {
+    return await getListCashiers();
+  } catch (error) {
+    throw new Error("Error fetching cashier list: " + error.message);
+  }
+};
+export const getOneCashierByIdService = async (id) => {
+  try {
+    const cashier = await getOneCashierById(id);
+    if (!cashier) {
+      throw new Error("Cashier not found");
+    }
+    return cashier;
+  } catch (error) {
+    throw new Error("Error fetching cashier: " + error.message);
+  }
+};
+
+export const updateCashierByIdService = async (id, updateData) => {
+  try {
+    const updatedCashier = await updateCashierById(id, updateData);
+    if (!updatedCashier) {
+      throw new Error("Cashier not found");
+    }
+    return updatedCashier;
+  } catch (error) {
+    throw new Error("Error updating cashier: " + error.message);
+  }
+};
+
+export const deleteCashierByIdService = async (id) => {
+  try {
+    const deletedCashier = await deleteCashierById(id);
+    if (!deletedCashier) {
+      throw new Error("Cashier not found");
+    }
+    return deletedCashier;
+  } catch (error) {
+    throw new Error("Error deleting cashier: " + error.message);
   }
 };
