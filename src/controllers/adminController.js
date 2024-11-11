@@ -4,6 +4,7 @@ import {
   getOneAdminByIdService,
   updateAdminByIdService,
   deleteAdminByIdService,
+  getAdminByEmail,
 } from "../services/adminServices.js";
 
 export const createAdminController = async (req, res) => {
@@ -52,6 +53,16 @@ export const getOneAdminByIdController = async (req, res) => {
   }
 };
 
+export const getOneAdminByEmailController = async (req, res) => {
+  try {
+    const { email } = req.query;
+    const admin = await getAdminByEmail(email);
+    res.status(200).json(admin);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server nội bộ" });
+  }
+};
 export const updateAdminByIdController = async (req, res) => {
   try {
     const updatedAdmin = await updateAdminByIdService(req.params.id, req.body);

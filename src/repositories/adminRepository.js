@@ -1,4 +1,4 @@
-import Admin from '../models/Admin.js';
+import Admin from "../models/Admin.js";
 
 export const createAdmin = async (adminData) => {
   const admin = new Admin(adminData);
@@ -6,15 +6,22 @@ export const createAdmin = async (adminData) => {
 };
 
 export const getListAdmins = async () => {
-  return await Admin.find()
+  return await Admin.find();
+};
+
+export const findAdmin = async (query) => {
+  return await Admin.find(query);
 };
 
 export const getOneAdminById = async (id) => {
-  return await Admin.findById(id)    
+  return await Admin.findById(id);
 };
 
 export const updateAdminById = async (id, updateData) => {
-  return await Admin.findByIdAndUpdate(id, updateData, { new: true, runValidators: true, });
+  return await Admin.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
 };
 
 export const deleteAdminById = async (id) => {

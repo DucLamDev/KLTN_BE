@@ -5,12 +5,16 @@ import {
   getOneAdminByIdController,
   updateAdminByIdController,
   deleteAdminByIdController,
+  getOneAdminByEmailController,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
 
 // Tạo 1 admin
 router.post("/", createAdminController);
+
+//Lấy admin theo email
+router.get("/", getOneAdminByEmailController);
 
 // Lấy danh sách tất cả admin
 router.get("/", getListAdminsController);

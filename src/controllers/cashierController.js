@@ -6,7 +6,9 @@ import {
   deleteCashierByIdService,
   createInvoice,
   updateInvoiceStatus,
+  getCashierByEmail,
 } from "../services/cashierServices.js";
+
 // POST: Xuất hóa đơn cho bệnh nhân dựa trên danh sách dịch vụ từ bác sĩ
 export const createInvoiceController = async (req, res) => {
   const { patientId, doctorId } = req.body;
@@ -15,6 +17,17 @@ export const createInvoiceController = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const getOneCashierByEmailController = async (req, res) => {
+  try {
+    const { email } = req.query;
+    const cashier = await getCashierByEmail(email);
+    res.status(200).json(cashier);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server nội bộ" });
   }
 };
 

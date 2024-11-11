@@ -8,6 +8,7 @@ import {
   getOneCashierById,
   updateCashierById,
   deleteCashierById,
+  findCashier,
 } from "../repositories/cashierRepository.js";
 export const createInvoice = async (patientId, doctorId) => {
   try {
@@ -51,6 +52,14 @@ export const createInvoice = async (patientId, doctorId) => {
   }
 };
 
+export const getCashierByEmail = async (email) => {
+  let query = {};
+  if (email) {
+    query.email = email;
+  }
+
+  return await findCashier(query);
+};
 // Cập nhật trạng thái thanh toán của hóa đơn
 export const updateInvoiceStatus = async (invoiceId, paymentStatus) => {
   try {

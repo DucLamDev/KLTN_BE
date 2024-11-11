@@ -2,18 +2,20 @@ import express from "express";
 import {
   createInvoiceController,
   updateInvoiceStatusController,
-} from "../controllers/cashierController.js";
-import {
   createCashierController,
   getListCashiersController,
   getOneCashierByIdController,
   updateCashierByIdController,
   deleteCashierByIdController,
+  getOneCashierByEmailController,
 } from "../controllers/cashierController.js";
 const routerCashier = express.Router();
 
 // Tạo 1 cashier
 routerCashier.post("/", createCashierController);
+
+//Lấy cashier theo email
+routerCashier.get("/", getOneCashierByEmailController);
 
 // Lấy danh sách cashiers
 routerCashier.get("/", getListCashiersController);

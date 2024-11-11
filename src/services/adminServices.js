@@ -4,6 +4,7 @@ import {
   getOneAdminById,
   updateAdminById,
   deleteAdminById,
+  findAdmin,
 } from "../repositories/adminRepository.js";
 
 export const createAdminService = async (adminData) => {
@@ -14,6 +15,14 @@ export const createAdminService = async (adminData) => {
   }
 };
 
+export const getAdminByEmail = async (email) => {
+  let query = {};
+  if (email) {
+    query.email = email;
+  }
+
+  return await findAdmin(query);
+};
 export const getListAdminsService = async () => {
   try {
     return await getListAdmins();
