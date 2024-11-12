@@ -1,30 +1,25 @@
-import Diagnosis from '../models/Diagnosis';
+import Diagnosis from "../models/Diagnosis.js";
 
-class DiagnosisRepository {
-  async createDiagnosis(diagnosisData) {
-    const diagnosis = new Diagnosis(diagnosisData);
-    await diagnosis.save();
-    return diagnosis;
-  }
+export const createDiagnosis = async (diagnosisData) => {
+  const diagnosis = new Diagnosis(diagnosisData);
+  return await diagnosis.save();
+};
 
-  async getDiagnosisById(id) {
-    const diagnosis = await Diagnosis.findById(id);
-    return diagnosis;
-  }
+export const getListDiagnoses = async () => {
+  return await Diagnosis.find();
+};
 
-  async getAllDiagnosis() {
-    const diagnoses = await Diagnosis.find();
-    return diagnoses;
-  }
+export const getOneDiagnosisById = async (id) => {
+  return await Diagnosis.findById(id);
+};
 
-  async updateDiagnosis(id, diagnosisData) {
-    const updatedDiagnosis = await Diagnosis.findByIdAndUpdate(id, diagnosisData, { new: true });
-    return updatedDiagnosis;
-  }
+export const updateDiagnosisById = async (id, updateData) => {
+  return await Diagnosis.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
+};
 
-  async deleteDiagnosis(id) {
-    await Diagnosis.findByIdAndDelete(id);
-  }
-}
-
-export default DiagnosisRepository;
+export const deleteDiagnosisById = async (id) => {
+  return await Diagnosis.findByIdAndDelete(id);
+};
