@@ -2,7 +2,6 @@ import { sendMessage } from "../kafka/producer.js";
 import { createPrescriptionRepo } from "../repositories/prescriptionRepository.js";
 import ServiceList from "../models/ServiceList.js";
 import { getOnePatientById } from "../repositories/patientRepository.js";
-// import { redisClient } from "../redis/redisClient.js";
 import {
   getAppointmentsFromQueue,
   removeFromQueue,
@@ -18,7 +17,10 @@ import {
   updateDoctorOnlineStatus,
 } from "../repositories/doctorRepository.js";
 import { createRequestTest } from "../repositories/requestTestRepository.js";
-import { createAppointment, getOneAppointmentById } from "../repositories/appointmentRepository.js";
+import {
+  createAppointment,
+  getOneAppointmentById,
+} from "../repositories/appointmentRepository.js";
 import Doctor from "../models/Doctor.js";
 import { createAppointmentByPatient } from "../repositories/appointmentByPatientRepository.js";
 
@@ -78,7 +80,6 @@ export const createServiceList = async (doctorId, patientId, services) => {
 // Tạo và sao lưu lịch sử khám bệnh
 
 // Hoàn thành khám
-
 export const completeAppointment = async (roomNumber, patientId, doctorId) => {
   const queueKey = `queue:${roomNumber}`;
 
@@ -125,8 +126,7 @@ export const completeAppointment = async (roomNumber, patientId, doctorId) => {
   }
 };
 
-
-//gọi bệnh nhân từ hàng đợi
+// Gọi bệnh nhân từ hàng đợi
 export const getAppointmentToQueue = async (roomNumber) => {
   const queueKey = `queue:${roomNumber}`;
 
@@ -157,13 +157,11 @@ export const getAppointmentToQueue = async (roomNumber) => {
   }
 };
 
-
 // Tạo yêu cầu xét nghiệm
-
 export const createRequests = async (requestTest) => {
-  const { patientId, doctorId, testName, testType, reason, requestDate } = requestTest;
+  const { patientId, doctorId, testTypes, reason, requestDate } = requestTest;
 
-  if (!patientId || !doctorId || !testType || !reason || !requestDate || !testName) {
+  if (!patientId || !doctorId || !testTypes || !reason || !requestDate) {
     throw new Error(
       "patientId, doctorId và testType, reason, testName requestDate là bắt buộc"
     );
@@ -171,14 +169,13 @@ export const createRequests = async (requestTest) => {
 
   const patient = await getOnePatientById(patientId);
   if (!patient) {
-    throw new Error("bệnh nhân này chưa tồn tại");
+    throw new Error("Bệnh nhân này chưa tồn tại");
   }
   const requestTests = await createRequestTest(requestTest);
 
   await sendMessage(`LabTest-queue`, requestTests);
   return requestTests;
 };
-
 
 export const fetchSpecializations = async () => {
   return await getSpecializations();
@@ -257,10 +254,10 @@ export const updateDoctorOnlineStatusService = async (
   }
 };
 
-// tạo lịch tái khám
-
+// Tạo lịch tái khám
 export const createReExamination = async (appointmentData) => {
-  const { patientId, appointmentDateByPatient, specialization, reason } = appointmentData;
+  const { patientId, appointmentDateByPatient, specialization, reason } =
+    appointmentData;
 
   if (!patientId || !appointmentDateByPatient || !specialization || !reason) {
     throw new Error("patientId, appointmentDate và specialization là bắt buộc");
@@ -274,8 +271,5 @@ export const createReExamination = async (appointmentData) => {
   appointment.reExamination == true;
   await appointment.save();
 
-
   return appointment;
-}
-
-
+};

@@ -3,6 +3,7 @@ import {
   createDoctorService,
   createPrescriptions,
   createReExamination,
+  createRequests,
   createServiceList,
   fetchDoctors,
   fetchSpecializations,
@@ -28,6 +29,24 @@ export const createPrescriptionController = async (req, res) => {
   }
 };
 
+// Tạo yêu cầu xét nghiệm
+export const createRequestTestController = async (req, res) => {
+  try {
+    const requestTestData = req.body;
+    const newRequestTest = await createRequests(requestTestData);
+    res.status(201).json({
+      success: true,
+      message: "Test request created successfully",
+      data: newRequestTest,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // Tạo danh sách dịch vụ
 export const createServiceListController = async (req, res) => {
   const { doctorId, patientId, services } = req.body;
@@ -43,7 +62,7 @@ export const createServiceListController = async (req, res) => {
   }
 };
 
-//Lấy danh sách cuộc hẹn
+// Lấy danh sách cuộc hẹn
 export const getListAppointment = async (req, res) => {
   try {
     const appointment = await getAppointmentToQueue(req.params.roomNumber);
@@ -65,6 +84,7 @@ export const getDepartmentNameController = async (req, res) => {
   }
 };
 
+// Hoàn thành khám
 export const completeAppointmentController = async (req, res) => {
   try {
     const { roomNumber, patientId, doctorId } = req.body;
@@ -196,12 +216,11 @@ export const updateDoctorOnlineStatusController = async (req, res) => {
   }
 };
 
-
 export const createReExaminationController = async (req, res) => {
   try {
-      const appointment = await createReExamination(req.body);
-      res.status(200).json(appointment);
+    const appointment = await createReExamination(req.body);
+    res.status(200).json(appointment);
   } catch (err) {
-      res.status(400).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 };
