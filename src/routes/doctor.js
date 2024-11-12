@@ -48,5 +48,4 @@ routerDoctor.get("/", getDoctorsController);
 // Tạo 1 bác sĩ
 routerDoctor.post("/", createDoctorController);
 
-
 export default routerDoctor;

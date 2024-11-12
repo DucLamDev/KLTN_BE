@@ -1,35 +1,78 @@
-// prescriptionService.js
-import Prescription from '../models/Prescription.js';
-import { deletePrescriptionByIdRepo, getListPrescriptionsRepo, getOnePrescriptionByIdRepo, updatePrescriptionByIdRepo } from '../repositories/prescriptionRepository.js';
+import {
+  createPrescriptionRepo,
+  getListPrescriptionsRepo,
+  getOnePrescriptionByIdRepo,
+  updatePrescriptionByIdRepo,
+  deletePrescriptionByIdRepo,
+  completePrescriptionRepository,
+} from "../repositories/prescriptionRepository.js";
 
-// Create a new prescription
-export const createPrescription = async (prescriptionData) => {
-    const prescription = new Prescription(prescriptionData);
-    return await prescription.save();
+export const createPrescriptionService = async (prescriptionData) => {
+  try {
+    return await createPrescriptionRepo(prescriptionData);
+  } catch (error) {
+    throw new Error("Error creating prescription: " + error.message);
+  }
 };
 
-// Get all prescriptions
-export const getAllPrescriptions = async () => {
-    return await getListPrescriptionsRepo().populate('patientId').populate('doctorId');
+export const getListPrescriptionsService = async () => {
+  try {
+    return await getListPrescriptionsRepo();
+  } catch (error) {
+    throw new Error("Error fetching prescription list: " + error.message);
+  }
 };
 
-// Get a specific prescription by ID
-export const getPrescriptionById = async (id) => {
-    const prescription = await getOnePrescriptionByIdRepo(id).populate('patientId').populate('doctorId');
-    if (!prescription) throw new Error('Prescription not found');
+export const getOnePrescriptionByIdService = async (id) => {
+  try {
+    const prescription = await getOnePrescriptionByIdRepo(id);
+    if (!prescription) {
+      throw new Error("Prescription not found");
+    }
     return prescription;
+  } catch (error) {
+    throw new Error("Error fetching prescription: " + error.message);
+  }
 };
 
-// Update a prescription by ID
-export const updatePrescription = async (id, updateData) => {
-    const prescription = await updatePrescriptionByIdRepo(id, updateData, { new: true, runValidators: true });
-    if (!prescription) throw new Error('Prescription not found');
-    return prescription;
+export const updatePrescriptionByIdService = async (id, updateData) => {
+  try {
+    const updatedPrescription = await updatePrescriptionByIdRepo(
+      id,
+      updateData
+    );
+    if (!updatedPrescription) {
+      throw new Error("Prescription not found");
+    }
+    return updatedPrescription;
+  } catch (error) {
+    throw new Error("Error updating prescription: " + error.message);
+  }
 };
 
-// Delete a prescription by ID
-export const deletePrescription = async (id) => {
-    const prescription = await deletePrescriptionByIdRepo(id);
-    if (!prescription) throw new Error('Prescription not found');
-    return prescription;
+export const deletePrescriptionByIdService = async (id) => {
+  try {
+    const deletedPrescription = await deletePrescriptionByIdRepo(id);
+    if (!deletedPrescription) {
+      throw new Error("Prescription not found");
+    }
+    return deletedPrescription;
+  } catch (error) {
+    throw new Error("Error deleting prescription: " + error.message);
+  }
+};
+
+export const completePrescriptionService = async (
+  prescriptionId,
+  warehouseId
+) => {
+  try {
+    const completedPrescription = await completePrescriptionRepository(
+      prescriptionId,
+      warehouseId
+    );
+    return completedPrescription;
+  } catch (error) {
+    throw new Error("Error completing prescription: " + error.message);
+  }
 };

@@ -1,63 +1,102 @@
-// prescriptionRouter.js
-import express from 'express';
 import {
-    createPrescription,
-    getAllPrescriptions,
-    getPrescriptionById,
-    updatePrescription,
-    deletePrescription
-} from '../services/prescriptionServices.js';
+  createPrescriptionService,
+  getListPrescriptionsService,
+  getOnePrescriptionByIdService,
+  updatePrescriptionByIdService,
+  deletePrescriptionByIdService,
+  completePrescriptionService,
+} from "../services/prescriptionServices.js";
 
-const router = express.Router();
+export const createPrescriptionController = async (req, res) => {
+  try {
+    const newPrescription = await createPrescriptionService(req.body);
+    res.status(201).json({
+      success: true,
+      message: "Prescription created successfully",
+      data: newPrescription,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
-// Create a new prescription
-router.post('/', async (req, res) => {
-    try {
-        const prescription = await createPrescription(req.body);
-        res.status(200).send(prescription);
-    } catch (error) {
-        res.status(400).send({ message: 'Error creating prescription', error });
-    }
-});
+export const getListPrescriptionsController = async (req, res) => {
+  try {
+    const prescriptions = await getListPrescriptionsService();
+    res.status(200).json(prescriptions);
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
-// Get all prescriptions
-router.get('/', async (req, res) => {
-    try {
-        const prescriptions = await getAllPrescriptions();
-        res.status(200).send(prescriptions);
-    } catch (error) {
-        res.status(500).send({ message: 'Error fetching prescriptions', error });
-    }
-});
+export const getOnePrescriptionByIdController = async (req, res) => {
+  try {
+    const prescription = await getOnePrescriptionByIdService(req.params.id);
+    res.status(200).json(prescription);
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
-// Get a specific prescription by ID
-router.get('/:id', async (req, res) => {
-    try {
-        const prescription = await getPrescriptionById(req.params.id);
-        res.status(200).send(prescription);
-    } catch (error) {
-        res.status(404).send({ message: error.message });
-    }
-});
+export const updatePrescriptionByIdController = async (req, res) => {
+  try {
+    const updatedPrescription = await updatePrescriptionByIdService(
+      req.params.id,
+      req.body
+    );
+    res.status(200).json({
+      success: true,
+      message: "Prescription updated successfully",
+      data: updatedPrescription,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
-// Update a prescription by ID
-router.patch('/:id', async (req, res) => {
-    try {
-        const prescription = await updatePrescription(req.params.id, req.body);
-        res.status(200).send(prescription);
-    } catch (error) {
-        res.status(400).send({ message: 'Error updating prescription', error });
-    }
-});
+export const deletePrescriptionByIdController = async (req, res) => {
+  try {
+    await deletePrescriptionByIdService(req.params.id);
+    res.status(200).json({
+      success: true,
+      message: "Prescription deleted successfully",
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
-// Delete a prescription by ID
-router.delete('/:id', async (req, res) => {
-    try {
-        const prescription = await deletePrescription(req.params.id);
-        res.status(200).send(prescription);
-    } catch (error) {
-        res.status(404).send({ message: error.message });
-    }
-});
-
-export default router;
+export const completePrescriptionController = async (req, res) => {
+  try {
+    const { prescriptionId, warehouseId } = req.body;
+    const completedPrescription = await completePrescriptionService(
+      prescriptionId,
+      warehouseId
+    );
+    res.status(200).json({
+      success: true,
+      message: "Prescription completed successfully",
+      data: completedPrescription,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
