@@ -260,15 +260,19 @@ export const createReExamination = async (appointmentData) => {
     appointmentData;
 
   if (!patientId || !appointmentDateByPatient || !specialization || !reason) {
-    throw new Error("patientId, appointmentDate và specialization là bắt buộc");
+    throw new Error(
+      "patientId hoặc appointmentDateByPatient hoặc specialization hoặc reason là bắt buộc"
+    );
   }
 
   const patient = await getOnePatientById(patientId);
   if (!patient) {
     throw new Error("bệnh nhân này chưa tồn tại");
   }
-  const appointment = await createAppointmentByPatient(appointmentData);
-  appointment.reExamination == true;
+  const appointment = await createAppointmentByPatient({
+    ...appointmentData,
+    reExamination: true,
+  });
   await appointment.save();
 
   return appointment;
