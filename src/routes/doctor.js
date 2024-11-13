@@ -4,6 +4,7 @@ import {
   createDoctorController,
   createPrescriptionController,
   createReExaminationController,
+  createRequestTestController,
   createServiceListController,
   getAppointmentsByDateController,
   getDoctorsController,
@@ -22,13 +23,14 @@ routerDoctor.post("/create-prescription", createPrescriptionController);
 routerDoctor.post("/create-service-list", createServiceListController);
 
 // Tạo request xét nghiệm
-// routerDoctor.post("/create-requestTest", );
+routerDoctor.post("/create-request-test", createRequestTestController);
 
 routerDoctor.post("/complete", completeAppointmentController); // hoàn thành ca khám
 
 routerDoctor.get("/specializations", getSpecializationsController); // không có kafka
 // Tạo lịch tái khám cho bệnh nhân
 routerDoctor.post("/reExamination", createReExaminationController);
+
 // Lấy danh sách các ca khám mà bác sĩ đã hoàn thành trong ngày cụ thể
 // vd: GET http://.../api/doctors/BS-ABCDEF/appointments/2024-11-09
 routerDoctor.get(
@@ -47,6 +49,5 @@ routerDoctor.patch(
 routerDoctor.get("/", getDoctorsController);
 // Tạo 1 bác sĩ
 routerDoctor.post("/", createDoctorController);
-
 
 export default routerDoctor;

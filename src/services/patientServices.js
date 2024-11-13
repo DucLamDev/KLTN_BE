@@ -1,28 +1,59 @@
-import { deletePatientById, getListPatients, getOnePatientById, updatePatientById } from "../repositories/patientRepository";
+import {
+  createPatient,
+  getListPatients,
+  getOnePatientById,
+  updatePatientById,
+  deletePatientById,
+} from "../repositories/patientRepository.js";
 
-// List all Patients
-export const listPatients = async () => {
+export const createPatientService = async (patientData) => {
+  try {
+    return await createPatient(patientData);
+  } catch (error) {
+    throw new Error("Error creating patient: " + error.message);
+  }
+};
+
+export const getListPatientsService = async () => {
+  try {
     return await getListPatients();
-  };
-  
-  // Get details of a specific appointment
-  export const getPatientById = async (id) => {
-  const patient = await getOnePatientById(id);
-  if (!patient) throw new Error("Không có bệnh nhân này tồn tại");
+  } catch (error) {
+    throw new Error("Error fetching patient list: " + error.message);
+  }
+};
+
+export const getOnePatientByIdService = async (id) => {
+  try {
+    const patient = await getOnePatientById(id);
+    if (!patient) {
+      throw new Error("Patient not found");
+    }
     return patient;
-  };
-  
-  // Update an appointment
-  export const updatePatient = async (id, updateData) => {
-    const patient = await updatePatientById(id, updateData);
-    if (!patient) throw new Error("Bệnh nhân không tồn tại");
-    return patient;
-  };
-  
-  // Delete an appointment
-  export const deletePatient = async (id) => {
-    const patient = await deletePatientById(id);
-    if (!patient) throw new Error("Bệnh nhân không tồn tại");
-    return patient;
-  };
-  
+  } catch (error) {
+    throw new Error("Error fetching patient: " + error.message);
+  }
+};
+
+export const updatePatientByIdService = async (id, updateData) => {
+  try {
+    const updatedPatient = await updatePatientById(id, updateData);
+    if (!updatedPatient) {
+      throw new Error("Patient not found");
+    }
+    return updatedPatient;
+  } catch (error) {
+    throw new Error("Error updating patient: " + error.message);
+  }
+};
+
+export const deletePatientByIdService = async (id) => {
+  try {
+    const deletedPatient = await deletePatientById(id);
+    if (!deletedPatient) {
+      throw new Error("Patient not found");
+    }
+    return deletedPatient;
+  } catch (error) {
+    throw new Error("Error deleting patient: " + error.message);
+  }
+};

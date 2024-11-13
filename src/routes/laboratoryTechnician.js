@@ -1,11 +1,12 @@
-import express from 'express';
+import express from "express";
 import {
-    createLaboratoryTechnicianController,
-    listLaboratoryTechniciansController,
-    getLaboratoryTechnicianByIdController,
-    updateLaboratoryTechnicianController,
-    deleteLaboratoryTechnicianController
-} from '../controllers/laboratoryTechnicianController.js';
+  createLaboratoryTechnicianController,
+  listLaboratoryTechniciansController,
+  getLaboratoryTechnicianByIdController,
+  updateLaboratoryTechnicianController,
+  deleteLaboratoryTechnicianController,
+  getOneLaboratoryTechnicianByEmailController,
+} from "../controllers/laboratoryTechnicianController.js";
 
 const routerLaboratoryTechnician = express.Router();
 
@@ -14,6 +15,12 @@ routerLaboratoryTechnician.post("/", createLaboratoryTechnicianController); // A
 
 // Lấy danh sách laboratory technicians
 routerLaboratoryTechnician.get("/", listLaboratoryTechniciansController); // ADmin
+
+//Lấy cashier theo email
+routerLaboratoryTechnician.get(
+  "/",
+  getOneLaboratoryTechnicianByEmailController
+);
 
 // Lấy chi tiết một laboratory technician
 routerLaboratoryTechnician.get("/:id", getLaboratoryTechnicianByIdController);

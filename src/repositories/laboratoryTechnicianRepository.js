@@ -1,24 +1,30 @@
-import LaboratoryTechnician from '../models/LaboratoryTechnician.js';
+import LaboratoryTechnician from "../models/LaboratoryTechnician.js";
 
 export const createLaboratoryTechnician = async (technicianData) => {
-    const technician = new LaboratoryTechnician(technicianData);
-    return await technician.save();
+  const technician = new LaboratoryTechnician(technicianData);
+  return await technician.save();
 };
 
 export const getListLaboratoryTechnicians = async () => {
-    return await LaboratoryTechnician.find()
-        .populate('labTestList.patientId');
+  return await LaboratoryTechnician.find().populate("labTestList.patientId");
+};
+
+export const findLaboratoryTechnician = async (query) => {
+  return await LaboratoryTechnician.find(query);
 };
 
 export const getOneLaboratoryTechnicianById = async (id) => {
-    return await LaboratoryTechnician.findById(id)
-        .populate('labTestList.patientId');
+  return await LaboratoryTechnician.findById(id).populate(
+    "labTestList.patientId"
+  );
 };
 
 export const updateLaboratoryTechnicianById = async (id, updateData) => {
-    return await LaboratoryTechnician.findByIdAndUpdate(id, updateData, { new: true });
+  return await LaboratoryTechnician.findByIdAndUpdate(id, updateData, {
+    new: true,
+  });
 };
 
 export const deleteLaboratoryTechnicianById = async (id) => {
-    return await LaboratoryTechnician.findByIdAndDelete(id);
+  return await LaboratoryTechnician.findByIdAndDelete(id);
 };
