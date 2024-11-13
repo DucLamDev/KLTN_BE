@@ -10,7 +10,7 @@ import {
 export const createLabTestController = async (req, res) => {
     try {
         const labTest = await createLabTests(req.body);
-        res.status(201).json(labTest);
+        res.status(200).json(labTest);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }

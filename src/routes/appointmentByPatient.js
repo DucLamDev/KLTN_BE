@@ -2,6 +2,16 @@ import express from "express";
 import AppointmentByPatient from "../models/AppointmentByPatient.js";
 const router = express.Router();
 
+
+
+const pusher = new Pusher({
+  appId: "1879254",
+  key: "671afd8438e48f336089",
+  secret: "70a0c8d744eb44323ecd",
+  cluster: "ap1",
+  useTLS: true,
+});
+
 // Tạo cuộc hẹn mới
 router.post("/", async (req, res) => {
   try {
@@ -54,8 +64,10 @@ router.delete("/", async (req, res) => {
       message: "Appointment deleted successfully",
     });
   } catch (error) {
-    res.status(500).send(error);
+    console.error("Error deleting appointment:", error);
+    res
+      .status(500)
+      .send({ message: "Error deleting appointment", error: error.message });
   }
 });
-
 export default router;

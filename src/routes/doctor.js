@@ -23,7 +23,7 @@ routerDoctor.post("/create-prescription", createPrescriptionController);
 routerDoctor.post("/create-service-list", createServiceListController);
 
 // Tạo request xét nghiệm
-routerDoctor.post("/create-request-test", createRequestTestController);
+// routerDoctor.post("/create-requestTest", );
 
 routerDoctor.post("/complete", completeAppointmentController); // hoàn thành ca khám
 
