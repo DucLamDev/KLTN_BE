@@ -175,7 +175,7 @@ export const createRequests = async (requestTest) => {
   }
   const requestTests = await createRequestTest(requestTest);
 
-  await sendMessage(`LabTest-queue`, requestTests);
+  await sendMessage(`LabTest-Queue`, requestTests);
   return requestTests;
 };
 

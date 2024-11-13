@@ -21,6 +21,7 @@ const appointmentByPatientSchema = new mongoose.Schema(
       ref: "Patient",
       required: true,
     },
+    doctorName: {type: String},
     reason: {type: String},
     specialization: {type: String},
     dateOfBirth: { type: Date},

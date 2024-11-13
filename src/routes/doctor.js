@@ -4,6 +4,7 @@ import {
   createDoctorController,
   createPrescriptionController,
   createReExaminationController,
+  createRequestTestController,
   createServiceListController,
   getAppointmentsByDateController,
   getDoctorsController,
@@ -22,7 +23,7 @@ routerDoctor.post("/create-prescription", createPrescriptionController);
 routerDoctor.post("/create-service-list", createServiceListController);
 
 // Tạo request xét nghiệm
-// routerDoctor.post("/create-requestTest", );
+routerDoctor.post("/create-requestTest", createRequestTestController);
 
 routerDoctor.post("/complete", completeAppointmentController); // hoàn thành ca khám
 

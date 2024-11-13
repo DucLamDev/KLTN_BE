@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 
 function generateUniqueId() {
     const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
-    return `QLHT-${randomString}`;
+    return `QTV-${randomString}`;
   }
 const AdminSchema = new mongoose.Schema({
     _id: { type: String, auto: false },

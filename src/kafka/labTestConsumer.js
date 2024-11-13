@@ -19,7 +19,7 @@ import LaboratoryTechnician from '../models/LaboratoryTechnician.js';
     try {
       await consumer.connect();
       console.log('Kafka Consumer connected');
-      await consumer.subscribe({ topic: /LabTest-queue/, fromBeginning: true });
+      await consumer.subscribe({ topic: /LabTest-Queue/, fromBeginning: true });
     } catch (err) {
       console.error('Failed to connect Kafka Consumer', err);
       process.exit(1);

@@ -66,7 +66,7 @@ app.use("/api/labTests", labTestRoutes);
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  // startApp();
+  startApp();
 });
 const startApp = async () => {
   await connectRedis();

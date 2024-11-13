@@ -143,16 +143,16 @@ export const loginUser = async (req, res) => {
     }
 
     // Nếu người dùng là bác sĩ, đặt trạng thái isOnline = true và xử lý hàng đợi trong Redis
-    // if (user.role === "doctor") { 
-    //   const doctor = await Doctor.findOne({ email });
-    //   doctor.isOnline = true;
-    //   await doctor.save();
+    if (user.role === "doctor") { 
+      const doctor = await Doctor.findOne({ email });
+      doctor.isOnline = true;
+      await doctor.save();
 
-    //   // Tạo queue cho phòng của bác sĩ trong Redis
-    //   // const queueKey = `queue:${doctor.roomNumber}`;
-    //   // await redisClient.del(queueKey); // Xóa queue cũ (nếu có)
-    //   // await redisClient.lPush(queueKey, 'Queue for doctor created');
-    // }
+      // Tạo queue cho phòng của bác sĩ trong Redis
+      // const queueKey = `queue:${doctor.roomNumber}`;
+      // await redisClient.del(queueKey); // Xóa queue cũ (nếu có)
+      // await redisClient.lPush(queueKey, 'Queue for doctor created');
+    }
 
     // Các hành động cụ thể khác tùy thuộc vào role của user
     // Ví dụ: Bạn có thể thêm hành động đặc biệt cho các vai trò khác như receptionist, admin, etc.
