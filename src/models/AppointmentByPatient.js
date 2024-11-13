@@ -1,12 +1,6 @@
 // models/Appointment.js
 import mongoose from "mongoose";
 
-const medicalHistorySchema = new mongoose.Schema({
-  disease: { type: String, required: true },
-  diagnosisDate: { type: Date, required: true },
-  treatment: { type: String, required: true },
-});
-
 const appointmentByPatientSchema = new mongoose.Schema(
   {
     id: { type: String, auto: false },
@@ -28,7 +22,6 @@ const appointmentByPatientSchema = new mongoose.Schema(
     email: { type: String },
     address: { type: String },
     phone: { type: String },
-    medicalHistory: [medicalHistorySchema],
     reExamination: { type: Boolean, default: false },
     doctorName: { type: String },
   },

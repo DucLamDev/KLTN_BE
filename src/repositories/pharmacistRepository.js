@@ -1,4 +1,4 @@
-import Pharmacist from '../models/Pharmacist.js';
+import Pharmacist from "../models/Pharmacist.js";
 
 export const createPharmacist = async (pharmacistData) => {
   const pharmacist = new Pharmacist(pharmacistData);
@@ -6,18 +6,21 @@ export const createPharmacist = async (pharmacistData) => {
 };
 
 export const getListPharmacists = async () => {
-  return await Pharmacist.find()
+  return await Pharmacist.find();
 };
-export const findPharmacists = async (query) => {
-  return await Pharmacist.find(query);
+export const findPharmacist = async (query) => {
+  return await Pharmacist.findOne(query);
 };
 
 export const getOnePharmacistById = async (id) => {
-  return await Pharmacist.findById(id)    
+  return await Pharmacist.findById(id);
 };
 
 export const updatePharmacistById = async (id, updateData) => {
-  return await Pharmacist.findByIdAndUpdate(id, updateData, { new: true, runValidators: true, });
+  return await Pharmacist.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
 };
 
 export const deletePharmacistById = async (id) => {
