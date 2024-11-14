@@ -19,6 +19,8 @@ const prescriptionSchema = new mongoose.Schema({
     default: "Scheduled",
   },
   dateIssued: { type: Date, default: Date.now },
+  visitorName: { type: String, required: false },
+  visitorPhone: { type: String, required: false },
 });
 
 prescriptionSchema.pre('save', async function (next) {

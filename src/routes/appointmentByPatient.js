@@ -54,9 +54,6 @@ router.get("/", async (req, res) => {
 router.delete("/", async (req, res) => {
   try {
     const { _id } = req.query;
-    if (!_id) {
-      return res.status(400).send({ message: "Patient ID is required" });
-    }
     const result = await AppointmentByPatient.findOneAndDelete({ _id });
     if (!result) {
       return res.status(404).send({ message: "Appointment not found" });
