@@ -33,13 +33,13 @@ routerDoctor.post("/reExamination", createReExaminationController);
 
 // Lấy danh sách các ca khám mà bác sĩ đã hoàn thành trong ngày cụ thể
 // vd: GET http://.../api/doctors/BS-ABCDEF/appointments/2024-11-09
+routerDoctor.get("/get-appointments/:roomNumber", getListAppointment); // đổi queue/000 thành routes này
+routerDoctor.get("/:id", getOneDoctorController);
 routerDoctor.get(
   "/:doctorId/appointments/:date",
   getAppointmentsByDateController
 );
 
-routerDoctor.get("/:id", getOneDoctorController);
-routerDoctor.get("/:roomNumber", getListAppointment); // đổi queue/000 thành routes này
 // Cập nhật trạng thái Online và số phòng của 1 Bác sĩ
 routerDoctor.patch(
   "/:doctorId/updateRoomNumber",

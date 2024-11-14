@@ -133,11 +133,11 @@ export const getAppointmentToQueue = async (roomNumber) => {
   try {
     const appointmentsData = await getAppointmentsFromQueue(queueKey);
 
-    if (!appointmentsData.length) {
-      return res
-        .status(404)
-        .json({ success: false, message: "No patients in queue" });
-    }
+    // if (!appointmentsData.length) {
+    //   return res
+    //     .status(404)
+    //     .json({ success: false, message: "No patients in queue" });
+    // }
 
     // Phân tích dữ liệu JSON và bỏ qua các dữ liệu không hợp lệ
     const parsedAppointmentsData = appointmentsData

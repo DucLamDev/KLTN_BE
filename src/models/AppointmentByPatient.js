@@ -1,5 +1,6 @@
 // models/Appointment.js
 import mongoose from "mongoose";
+import medicalHistorySchema from "./MedicalHistory.js";
 
 const appointmentByPatientSchema = new mongoose.Schema(
   {

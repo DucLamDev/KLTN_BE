@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import medicalHistorySchema from "./MedicalHistory.js";
 // Schema lịch sử bệnh
-const medicalHistorySchema = new mongoose.Schema({
-  disease: { type: String, required: true },
-  diagnosisDate: { type: Date, required: true },
-  treatment: { type: String, required: true },
-});
+// const medicalHistorySchema = new mongoose.Schema({
+//   disease: { type: String, required: true },
+//   diagnosisDate: { type: Date, required: true },
+//   treatment: { type: String, required: true },
+// });
 
 // Hàm tạo mã ngẫu nhiên
 function generateUniqueId() {
