@@ -1,6 +1,5 @@
 // models/Appointment.js
 import mongoose from "mongoose";
-import medicalHistorySchema from "./MedicalHistory.js";
 
 const appointmentByPatientSchema = new mongoose.Schema(
   {
@@ -16,15 +15,14 @@ const appointmentByPatientSchema = new mongoose.Schema(
       ref: "Patient",
       required: true,
     },
-    reason: {type: String},
-    specialization: {type: String},
-    dateOfBirth: { type: Date},
-    gender: {type: String},  
-    email: {type: String},
-    address:{type: String},
-    phone: {type: String},
-    medicalHistory: [medicalHistorySchema],
-    reExamination: {type: Boolean, default: false}
+    reason: { type: String },
+    specialization: { type: String },
+    dateOfBirth: { type: Date },
+    gender: { type: String },
+    email: { type: String },
+    address: { type: String },
+    phone: { type: String },
+    reExamination: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

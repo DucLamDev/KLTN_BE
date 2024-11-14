@@ -6,12 +6,10 @@ function generateUniqueId() {
   return `TT-${randomString}`;
 }
 
-
-
 const prescriptionSchema = new mongoose.Schema({
   _id: { type: String, auto: false },
   patientId: { type: String, required: true, ref: "Patient" },
-  doctorId: { type: String, required: true, ref: "Doctor"},
+  doctorId: { type: String, required: true, ref: "Doctor" },
   medications: [MedicationSchema],
   status: {
     type: String,
@@ -19,16 +17,20 @@ const prescriptionSchema = new mongoose.Schema({
     default: "Scheduled",
   },
   dateIssued: { type: Date, default: Date.now },
+  visitorName: { type: String, required: false },
+  visitorPhone: { type: String, required: false },
 });
 
-prescriptionSchema.pre('save', async function (next) {
+prescriptionSchema.pre("save", async function (next) {
   if (this.isNew) {
     let uniqueId;
     let isUnique = false;
 
     do {
       uniqueId = generateUniqueId();
-      const existingPrescription = await mongoose.models.Prescription.findOne({ _id: uniqueId });
+      const existingPrescription = await mongoose.models.Prescription.findOne({
+        _id: uniqueId,
+      });
       isUnique = !existingPrescription;
     } while (!isUnique);
 
