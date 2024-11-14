@@ -43,4 +43,5 @@ routerPharmacist.patch(
 );
 
 routerPharmacist.get("/", getPharmacistsController);
+
 export default routerPharmacist;

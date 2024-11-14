@@ -4,6 +4,7 @@ import {
   getOnePatientById,
   updatePatientById,
   deletePatientById,
+  findPatient,
 } from "../repositories/patientRepository.js";
 
 export const createPatientService = async (patientData) => {
@@ -56,4 +57,13 @@ export const deletePatientByIdService = async (id) => {
   } catch (error) {
     throw new Error("Error deleting patient: " + error.message);
   }
+};
+
+export const getPatientByEmail = async (email) => {
+  let query = {};
+  if (email) {
+    query.email = email;
+  }
+
+  return await findPatient(query);
 };

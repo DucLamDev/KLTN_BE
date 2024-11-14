@@ -4,6 +4,7 @@ import {
   getOnePatientByIdService,
   updatePatientByIdService,
   deletePatientByIdService,
+  getPatientByEmail,
 } from "../services/patientServices.js";
 
 export const createPatientController = async (req, res) => {
@@ -19,6 +20,17 @@ export const createPatientController = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+export const getOnePatientByEmailController = async (req, res) => {
+  try {
+    const { email } = req.query;
+    const patient = await getPatientByEmail(email);
+    res.status(200).json(patient);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server nội bộ" });
   }
 };
 
