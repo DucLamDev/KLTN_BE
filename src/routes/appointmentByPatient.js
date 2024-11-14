@@ -1,17 +1,6 @@
 import express from "express";
 import AppointmentByPatient from "../models/AppointmentByPatient.js";
-import Pusher from "pusher";
 const router = express.Router();
-
-
-
-const pusher = new Pusher({
-  appId: "1879254",
-  key: "671afd8438e48f336089",
-  secret: "70a0c8d744eb44323ecd",
-  cluster: "ap1",
-  useTLS: true,
-});
 
 // Tạo cuộc hẹn mới
 router.post("/", async (req, res) => {

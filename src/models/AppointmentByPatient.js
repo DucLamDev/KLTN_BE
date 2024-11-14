@@ -1,6 +1,5 @@
 // models/Appointment.js
 import mongoose from "mongoose";
-import medicalHistorySchema from "./MedicalHistory.js";
 
 function generateUniqueId() {
   const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
@@ -19,15 +18,14 @@ const appointmentByPatientSchema = new mongoose.Schema(
       type: String,
       ref: "Patient",
     },
-    reason: {type: String},
-    specialization: {type: String},
-    dateOfBirth: { type: Date},
-    gender: {type: String},  
-    email: {type: String},
-    address:{type: String},
-    phone: {type: String},
-    medicalHistory: [medicalHistorySchema],
-    reExamination: {type: Boolean, default: false}
+    reason: { type: String },
+    specialization: { type: String },
+    dateOfBirth: { type: Date },
+    gender: { type: String },
+    email: { type: String },
+    address: { type: String },
+    phone: { type: String },
+    reExamination: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
