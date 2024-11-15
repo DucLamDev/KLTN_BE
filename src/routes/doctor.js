@@ -4,7 +4,6 @@ import {
   createDoctorController,
   createPrescriptionController,
   createReExaminationController,
-  createRequestTestController,
   createServiceListController,
   getAppointmentsByDateController,
   getDoctorsController,

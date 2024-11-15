@@ -1,4 +1,3 @@
-
 import {
   createAdmin,
   getListAdmins,
@@ -21,7 +20,6 @@ export const getAdminByEmail = async (email) => {
   if (email) {
     query.email = email;
   }
-
   return await findAdmin(query);
 };
 export const getListAdminsService = async () => {
@@ -67,4 +65,3 @@ export const deleteAdminByIdService = async (id) => {
     throw new Error("Error deleting admin: " + error.message);
   }
 };
-

@@ -10,7 +10,7 @@ export const getListAdmins = async () => {
 };
 
 export const findAdmin = async (query) => {
-  return await Admin.find(query);
+  return await Admin.findOne(query);
 };
 
 export const getOneAdminById = async (id) => {

@@ -1,6 +1,11 @@
 // pharmacistService.js
 import PrescriptionBill from "../models/PrescriptionBill.js";
-import { findPharmacist } from "../repositories/pharmacistRepository.js";
+import {
+  findPharmacist,
+  createPharmacist,
+  getOnePharmacistById,
+  getListPharmacists,
+} from "../repositories/pharmacistRepository.js";
 import { completePrescriptionRepository } from "../repositories/prescriptionRepository.js";
 import { getAppointmentsFromQueue } from "../repositories/queueRepository.js";
 
@@ -103,4 +108,32 @@ export const fetchPharmacist = async (email) => {
   }
 
   return await findPharmacist(query);
+};
+
+export const createPharmacistService = async (pharmacistData) => {
+  try {
+    return await createPharmacist(pharmacistData);
+  } catch (error) {
+    throw new Error("Error creating: " + error.message);
+  }
+};
+
+export const getOnePharmacistByIdService = async (id) => {
+  try {
+    const pharmacist = await getOnePharmacistById(id);
+    if (!pharmacist) {
+      throw new Error("Not found");
+    }
+    return pharmacist;
+  } catch (error) {
+    throw new Error("Error fetching: " + error.message);
+  }
+};
+
+export const getListPharmacistsService = async () => {
+  try {
+    return await getListPharmacists();
+  } catch (error) {
+    throw new Error("Error fetching list: " + error.message);
+  }
 };

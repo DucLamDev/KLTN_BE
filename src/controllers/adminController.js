@@ -1,4 +1,3 @@
-
 import {
   createAdminService,
   getListAdminsService,
@@ -26,11 +25,14 @@ export const createAdminController = async (req, res) => {
 
 export const getListAdminsController = async (req, res) => {
   try {
-    const admins = await getListAdminsService();
-    res.status(200).json({
-      success: true,
-      data: admins,
-    });
+    const { email } = req.query;
+    if (email) {
+      const admin = await getAdminByEmail(email);
+      res.status(200).json(admin);
+    } else {
+      const admins = await getListAdminsService();
+      res.status(200).json(admins);
+    }
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -42,10 +44,7 @@ export const getListAdminsController = async (req, res) => {
 export const getOneAdminByIdController = async (req, res) => {
   try {
     const admin = await getOneAdminByIdService(req.params.id);
-    res.status(200).json({
-      success: true,
-      data: admin,
-    });
+    res.status(200).json(admin);
   } catch (error) {
     res.status(404).json({
       success: false,
@@ -54,16 +53,6 @@ export const getOneAdminByIdController = async (req, res) => {
   }
 };
 
-export const getOneAdminByEmailController = async (req, res) => {
-  try {
-    const { email } = req.query;
-    const admin = await getAdminByEmail(email);
-    res.status(200).json(admin);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Lỗi server nội bộ" });
-  }
-};
 export const updateAdminByIdController = async (req, res) => {
   try {
     const updatedAdmin = await updateAdminByIdService(req.params.id, req.body);

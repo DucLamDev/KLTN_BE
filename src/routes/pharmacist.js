@@ -3,17 +3,20 @@ import express from "express";
 import {
   completePrescriptionController,
   createPrescriptionBillController,
-  getPharmacistsController,
+  getListPharmacistsController,
   listPrescriptionsController,
   prescriptionByIdController,
   getOnePharmacistByEmailController,
+  createPharmacistController,
+  getOnePharmacistByIdController,
 } from "../controllers/pharmacistController.js";
-import Pharmacist from "../models/Pharmacist.js";
 
 const routerPharmacist = express.Router();
 
 // Get all prescriptions from the queue
 routerPharmacist.get("/get-list-prescriptions", listPrescriptionsController); // có đụng redis
+
+routerPharmacist.post("/", createPharmacistController);
 
 // Create a new prescription bill
 routerPharmacist.post(
@@ -23,17 +26,9 @@ routerPharmacist.post(
 
 routerPharmacist.get("/", getOnePharmacistByEmailController);
 
-routerPharmacist.get("/:id", async (req, res) => {
-  try {
-    const patient = await Pharmacist.findById(req.params.id);
-    if (!patient) return res.status(404).send();
-    res.status(200).send(patient);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+routerPharmacist.get("/", getListPharmacistsController);
 
-// routerPharmacist.get("/", getPharmacistsController);
+routerPharmacist.get("/:id", getOnePharmacistByIdController);
 
 routerPharmacist.get("/prescriptionBill/:id", prescriptionByIdController);
 
@@ -41,7 +36,5 @@ routerPharmacist.patch(
   "/:prescriptionId/complete",
   completePrescriptionController
 );
-
-routerPharmacist.get("/", getPharmacistsController);
 
 export default routerPharmacist;

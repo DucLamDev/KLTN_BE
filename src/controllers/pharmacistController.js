@@ -5,6 +5,9 @@ import {
   completePrescriptionService,
   fetchPharmacist,
   getPharmacistByEmail,
+  createPharmacistService,
+  getOnePharmacistByIdService,
+  getListPharmacistsService,
 } from "../services/pharmacistServices.js";
 
 export const getOnePharmacistByEmailController = async (req, res) => {
@@ -74,20 +77,42 @@ export const completePrescriptionController = async (req, res) => {
   }
 };
 
-export const getPharmacistsController = async (req, res) => {
+export const getListPharmacistsController = async (req, res) => {
   try {
-    const { email } = req.query;
-    const doctors = await fetchPharmacist(email);
-
-    if (doctors.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy dược sĩ nào với chuyên khoa này" });
-    }
-
-    res.status(200).json(doctors);
+    const pharmacists = await getListPharmacistsService();
+    res.status(200).json(pharmacists);
   } catch (error) {
-    console.error("Lỗi khi lấy danh sách dược sĩ:", error);
-    res.status(500).json({ message: "Lỗi server nội bộ" });
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const createPharmacistController = async (req, res) => {
+  try {
+    const newPharmacist = await createPharmacistService(req.body);
+    res.status(201).json({
+      success: true,
+      message: "Pharmacist created successfully",
+      data: newPharmacist,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getOnePharmacistByIdController = async (req, res) => {
+  try {
+    const pharmacist = await getOnePharmacistByIdService(req.params.id);
+    res.status(200).json(pharmacist);
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
