@@ -10,16 +10,6 @@ import {
   getListPharmacistsService,
 } from "../services/pharmacistServices.js";
 
-export const getOnePharmacistByEmailController = async (req, res) => {
-  try {
-    const { email } = req.query;
-    const pharmacist = await getPharmacistByEmail(email);
-    res.status(200).json(pharmacist);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Lỗi server nội bộ" });
-  }
-};
 // Get all prescriptions from the queue
 export const listPrescriptionsController = async (req, res) => {
   try {
@@ -79,8 +69,14 @@ export const completePrescriptionController = async (req, res) => {
 
 export const getListPharmacistsController = async (req, res) => {
   try {
-    const pharmacists = await getListPharmacistsService();
-    res.status(200).json(pharmacists);
+    const { email } = req.query;
+    if (email) {
+      const pharmacist = await getPharmacistByEmail(email);
+      res.status(200).json(pharmacist);
+    } else {
+      const pharmacists = await getListPharmacistsService();
+      res.status(200).json(pharmacists);
+    }
   } catch (error) {
     res.status(400).json({
       success: false,

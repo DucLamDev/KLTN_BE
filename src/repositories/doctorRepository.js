@@ -13,6 +13,10 @@ export const findDoctors = async (query) => {
   return await Doctor.find(query);
 };
 
+export const findDoctor = async (query) => {
+  return await Doctor.findOne(query);
+};
+
 export const getOneDoctorById = async (id) => {
   return await Doctor.findById(id);
 };

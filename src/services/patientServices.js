@@ -64,6 +64,13 @@ export const getPatientByEmail = async (email) => {
   if (email) {
     query.email = email;
   }
+  return await findPatient(query);
+};
 
+export const getPatientByClerkId = async (clerkId) => {
+  let query = {};
+  if (clerkId) {
+    query.clerkId = clerkId;
+  }
   return await findPatient(query);
 };

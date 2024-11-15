@@ -6,7 +6,7 @@ import {
   createReExaminationController,
   createServiceListController,
   getAppointmentsByDateController,
-  getDoctorsController,
+  getListDoctorsController,
   getListAppointment,
   getOneDoctorController,
   getSpecializationsController,
@@ -45,7 +45,8 @@ routerDoctor.patch(
   updateDoctorOnlineStatusController
 );
 // lấy danh sách bác sĩ thuộc khoa X hoặc theo email nếu không truyền tham số thì sẽ lấy toàn bộ danh sách
-routerDoctor.get("/", getDoctorsController);
+routerDoctor.get("/", getListDoctorsController);
+
 // Tạo 1 bác sĩ
 routerDoctor.post("/", createDoctorController);
 

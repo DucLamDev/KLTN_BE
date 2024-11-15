@@ -15,6 +15,7 @@ import {
   getSpecializations,
   updateDoctorById,
   updateDoctorOnlineStatus,
+  findDoctor,
 } from "../repositories/doctorRepository.js";
 import { createRequestTest } from "../repositories/requestTestRepository.js";
 import {
@@ -276,4 +277,22 @@ export const createReExamination = async (appointmentData) => {
   await appointment.save();
 
   return appointment;
+};
+
+export const getDoctorByEmail = async (email) => {
+  let query = {};
+  if (email) {
+    query.email = email;
+  }
+
+  return await findDoctor(query);
+};
+
+export const getDoctorBySpecialization = async (specialization) => {
+  let query = {};
+  if (specialization) {
+    query.specialization = specialization;
+  }
+
+  return await findDoctors(query);
 };

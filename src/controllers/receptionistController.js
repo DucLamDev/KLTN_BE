@@ -27,11 +27,11 @@ export const getListReceptionistsController = async (req, res) => {
   try {
     const { email } = req.query;
     if (email) {
-      const admin = await getReceptionistByEmail(email);
-      res.status(200).json(admin);
+      const receptionist = await getReceptionistByEmail(email);
+      res.status(200).json(receptionist);
     } else {
-      const admins = await getListReceptionistsService();
-      res.status(200).json(admins);
+      const receptionists = await getListReceptionistsService();
+      res.status(200).json(receptionists);
     }
   } catch (error) {
     res.status(400).json({

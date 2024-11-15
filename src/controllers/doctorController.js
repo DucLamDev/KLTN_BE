@@ -5,12 +5,14 @@ import {
   createReExamination,
   createRequests,
   createServiceList,
-  fetchDoctors,
   fetchSpecializations,
   getAppointmentsByDateService,
   getAppointmentToQueue,
+  getListDoctorsService,
   getOneDoctor,
   updateDoctorOnlineStatusService,
+  getDoctorByEmail,
+  getDoctorBySpecialization,
 } from "../services/doctorServices.js";
 
 // Tạo đơn thuốc
@@ -29,7 +31,7 @@ export const createPrescriptionController = async (req, res) => {
   }
 };
 
-// Tạo yêu cầu xét nghiệm
+// []Tạo yêu cầu xét nghiệm
 export const createRequestTestController = async (req, res) => {
   try {
     const requestTestData = req.body;
@@ -124,25 +126,26 @@ export const getOneDoctorController = async (req, res) => {
   }
 };
 
-// lấy danh sách bác sĩ thuộc khoa X hoặc theo email
-export const getDoctorsController = async (req, res) => {
+export const getListDoctorsController = async (req, res) => {
   try {
-    const { specialization, email } = req.query;
-    const doctors = await fetchDoctors(specialization, email);
-
-    if (doctors.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy bác sĩ nào với chuyên khoa này" });
+    const { email, specialization } = req.query;
+    if (email) {
+      const doctor = await getDoctorByEmail(email);
+      res.status(200).json(doctor);
+    } else if (specialization) {
+      const doctor = await getDoctorBySpecialization(specialization);
+      res.status(200).json(doctor);
+    } else {
+      const doctors = await getListDoctorsService();
+      res.status(200).json(doctors);
     }
-
-    res.status(200).json(doctors);
   } catch (error) {
-    console.error("Lỗi khi lấy danh sách bác sĩ:", error);
-    res.status(500).json({ message: "Lỗi server nội bộ" });
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
-
 export const getAppointmentsByDateController = async (req, res) => {
   try {
     const doctorId = req.params.doctorId;
@@ -224,12 +227,3 @@ export const createReExaminationController = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
-
-// export const createRequestTestController = async (req, res) => {
-//   try {
-//     const labTest = await createRequests(req.body);
-//     res.status(200).json(labTest);
-//   } catch (err) {
-//     res.status(404).json({message: err.message});
-//   }
-// }

@@ -5,6 +5,7 @@ import {
   updatePatientByIdService,
   deletePatientByIdService,
   getPatientByEmail,
+  getPatientByClerkId,
 } from "../services/patientServices.js";
 
 export const createPatientController = async (req, res) => {
@@ -36,8 +37,14 @@ export const getOnePatientByEmailController = async (req, res) => {
 
 export const getListPatientsController = async (req, res) => {
   try {
-    const patients = await getListPatientsService();
-    res.status(200).json(patients);
+    const { email } = req.query;
+    if (email) {
+      const patient = await getPatientByEmail(email);
+      res.status(200).json(patient);
+    } else {
+      const patients = await getListPatientsService();
+      res.status(200).json(patients);
+    }
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -49,6 +56,18 @@ export const getListPatientsController = async (req, res) => {
 export const getOnePatientByIdController = async (req, res) => {
   try {
     const patient = await getOnePatientByIdService(req.params.id);
+    res.status(200).json(patient);
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getOnePatientByClerkIdController = async (req, res) => {
+  try {
+    const patient = await getPatientByClerkId(req.params.clerkId);
     res.status(200).json(patient);
   } catch (error) {
     res.status(404).json({
