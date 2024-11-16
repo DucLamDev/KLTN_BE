@@ -1,20 +1,15 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-//DDang fix
 const MedicineWarehouseSchema = new mongoose.Schema({
-    _id: { type: String, auto: false },
-    warehouseName: { type: String, required: true },
-    address: { type: String, required: true },
-    phone: { type: String },
-    medications: [
-        {
-            medication: { type: String, ref: 'Medication' },
-            quantity: { type: Number, required: true },
-            expirationDate: { type: Date, required: true }
-        }
-    ]
+  _id: { type: String, auto: false },
+  name: { type: String, required: true },
+  address: { type: String, required: true },
+  phone: { type: String },
+  email: { type: String },
+  medications: [{ type: String, ref: "Medication" }],
 });
-
-const MedicineWarehouse = mongoose.model('MedicineWarehouse', MedicineWarehouseSchema);
-
+const MedicineWarehouse = mongoose.model(
+  "MedicineWarehouse",
+  MedicineWarehouseSchema
+);
 export default MedicineWarehouse;
