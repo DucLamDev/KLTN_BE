@@ -20,17 +20,6 @@ export const createInvoiceController = async (req, res) => {
   }
 };
 
-export const getOneCashierByEmailController = async (req, res) => {
-  try {
-    const { email } = req.query;
-    const cashier = await getCashierByEmail(email);
-    res.status(200).json(cashier);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Lỗi server nội bộ" });
-  }
-};
-
 export const updateInvoiceStatusController = async (req, res) => {
   const { invoiceId, paymentStatus } = req.body;
   try {
@@ -59,11 +48,14 @@ export const createCashierController = async (req, res) => {
 
 export const getListCashiersController = async (req, res) => {
   try {
-    const cashiers = await getListCashiersService();
-    res.status(200).json({
-      success: true,
-      data: cashiers,
-    });
+    const { email } = req.query;
+    if (email) {
+      const cashier = await getCashierByEmail(email);
+      res.status(200).json(cashier);
+    } else {
+      const cashiers = await getListCashiersService();
+      res.status(200).json(cashiers);
+    }
   } catch (error) {
     res.status(400).json({
       success: false,

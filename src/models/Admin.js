@@ -3,10 +3,9 @@ import scheduleSchema from "./Schedule.js";
 import bcrypt from "bcryptjs";
 
 function generateUniqueId() {
-
-    const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
-    return `QTV-${randomString}`;
-  }
+  const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
+  return `QTV-${randomString}`;
+}
 const AdminSchema = new mongoose.Schema({
   _id: { type: String, auto: false },
   fullName: { type: String, required: true },
@@ -29,6 +28,7 @@ const AdminSchema = new mongoose.Schema({
     unique: true,
   },
   schedule: [scheduleSchema],
+  address: { type: String },
 });
 
 AdminSchema.pre("save", async function (next) {

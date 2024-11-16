@@ -10,7 +10,7 @@ export const getListLaboratoryTechnicians = async () => {
 };
 
 export const findLaboratoryTechnician = async (query) => {
-  return await LaboratoryTechnician.find(query);
+  return await LaboratoryTechnician.findOne(query);
 };
 
 export const getOneLaboratoryTechnicianById = async (id) => {

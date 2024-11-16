@@ -10,7 +10,7 @@ export const getListCashiers = async () => {
 };
 
 export const findCashier = async (query) => {
-  return await Cashier.find(query);
+  return await Cashier.findOne(query);
 };
 
 export const getOneCashierById = async (id) => {

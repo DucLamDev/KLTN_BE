@@ -49,6 +49,7 @@ const doctorSchema = new mongoose.Schema(
     roomNumber: { type: String, default: "000" },
     appointmentList: [appointmentSchema], // danh sách các cuộc hẹn mà bác sĩ đã làm trong ngày
     isDepartmentHead: { type: Boolean, default: false },
+    address: { type: String },
   },
   { timestamps: true }
 );

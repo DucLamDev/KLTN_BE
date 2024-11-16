@@ -7,4 +7,6 @@ const testTypeSchema = new mongoose.Schema({
   description: { type: String },
 });
 
-export default testTypeSchema;
+const TestType = mongoose.model("TestType", testTypeSchema);
+
+export default TestType;

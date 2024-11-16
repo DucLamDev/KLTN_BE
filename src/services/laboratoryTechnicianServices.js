@@ -18,11 +18,10 @@ export const getLaboratoryTechnicianByEmail = async (email) => {
   if (email) {
     query.email = email;
   }
-
   return await findLaboratoryTechnician(query);
 };
 
-export const listLaboratoryTechnicians = async () => {
+export const getListLaboratoryTechniciansService = async () => {
   return await getListLaboratoryTechnicians();
 };
 

@@ -57,7 +57,6 @@ export const getCashierByEmail = async (email) => {
   if (email) {
     query.email = email;
   }
-
   return await findCashier(query);
 };
 // Cập nhật trạng thái thanh toán của hóa đơn

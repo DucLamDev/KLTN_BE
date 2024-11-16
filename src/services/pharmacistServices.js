@@ -14,7 +14,6 @@ export const getPharmacistByEmail = async (email) => {
   if (email) {
     query.email = email;
   }
-
   return await findPharmacist(query);
 };
 // Get all prescriptions from Redis queue

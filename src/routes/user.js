@@ -2,7 +2,6 @@ import express from "express";
 import User from "../models/User.js";
 const router = express.Router();
 
-// // Create a new user
 router.post("/", async (req, res) => {
   const { fullName, gender, phone, email, password, role } = req.body;
   const user = new User({ fullName, gender, phone, email, password, role });
@@ -14,7 +13,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Read all users
 router.get("/", async (req, res) => {
   try {
     const users = await User.find();
@@ -35,7 +33,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Update a user
 router.put("/:id", async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
@@ -48,7 +45,6 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Delete a user
 router.delete("/:id", async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);

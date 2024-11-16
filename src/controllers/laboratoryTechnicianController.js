@@ -1,6 +1,6 @@
 import {
   createLaboratoryTechnicians,
-  listLaboratoryTechnicians,
+  getListLaboratoryTechniciansService,
   getLaboratoryTechnicianById,
   updateLaboratoryTechnician,
   deleteLaboratoryTechnician,
@@ -17,22 +17,17 @@ export const createLaboratoryTechnicianController = async (req, res) => {
   }
 };
 
-export const getOneLaboratoryTechnicianByEmailController = async (req, res) => {
+// Lấy danh sách laboratory technicians
+export const getListLaboratoryTechniciansController = async (req, res) => {
   try {
     const { email } = req.query;
-    const laboratoryTechnician = await getLaboratoryTechnicianByEmail(email);
-    res.status(200).json(laboratoryTechnician);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Lỗi server nội bộ" });
-  }
-};
-
-// Lấy danh sách laboratory technicians
-export const listLaboratoryTechniciansController = async (req, res) => {
-  try {
-    const technicians = await listLaboratoryTechnicians();
-    res.status(200).json(technicians);
+    if (email) {
+      const technicians = await getLaboratoryTechnicianByEmail(email);
+      res.status(200).json(technicians);
+    } else {
+      const technicians = await getListLaboratoryTechniciansService();
+      res.status(200).json(technicians);
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
