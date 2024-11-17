@@ -1,16 +1,23 @@
 import mongoose from "mongoose";
-import testTypeSchema from "./TestType.js";
 
 function generateUniqueId() {
   const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
   return `RT-${randomString}`;
 }
-
+const testTypeSchema = new mongoose.Schema({
+  _id: { type: String, auto: false },
+  testName: { type: String },
+  price: { type: Number },
+  description: { type: String },
+});
 const requestTestSchema = new mongoose.Schema({
   _id: { type: String, auto: false },
-  testTypes: [{ type: String, ref: "TestType", required: true }],
-  patientId: { type: String, ref: "Patient", required: true },
-  doctorId: { type: String, ref: "Doctor", required: true },
+  // testTypes: [
+  //   { type: mongoose.Schema.Types.ObjectId, ref: "TestType", required: true },
+  // ],
+  testTypes: [testTypeSchema],
+  patientId: { type: String, required: true },
+  doctorId: { type: String, required: true },
   requestDate: { type: Date, default: Date.now() },
   reason: { type: String },
 });
@@ -19,17 +26,14 @@ requestTestSchema.pre("save", async function (next) {
   if (this.isNew) {
     let uniqueId;
     let isUnique = false;
-
-    // Kiểm tra tính duy nhất của ID
     while (!isUnique) {
       uniqueId = generateUniqueId();
       const existingDoctor = await mongoose.models.RequestTest.findOne({
         _id: uniqueId,
       });
-      isUnique = !existingDoctor; // Kiểm tra xem ID có tồn tại không
+      isUnique = !existingDoctor;
     }
-
-    this._id = uniqueId; // Gán ID duy nhất
+    this._id = uniqueId;
   }
   next();
 });
