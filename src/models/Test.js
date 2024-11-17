@@ -4,22 +4,26 @@ function generateUniqueId() {
   const randomString = Math.random().toString(36).substr(2, 6).toUpperCase();
   return `TE-${randomString}`;
 }
-const testTypeSchema = new mongoose.Schema({
-  _id: { type: String, auto: false },
+const testResult = new mongoose.Schema({
   testName: { type: String },
+  testResult: { type: String },
   price: { type: Number },
-  description: { type: String },
+  referenceRange: { type: String },
+  measurementUnit: { type: String },
+  equipment: { type: String },
 });
+
 const TestSchema = new mongoose.Schema({
   _id: { type: String, auto: false },
   patientId: { type: String, required: true },
   labTestId: { type: String, required: true },
+  doctorId: { type: String, required: true },
   technicianId: { type: String, required: true },
-  result: { type: String, required: true },
+  results: [testResult],
   reasonByDoctor: { type: String },
+  diagnosticTest: { type: String },
   datePerformed: { type: Date, default: Date.now },
-  requestPerformed: { type: Date, default: Date.now },
-  testsPerformed: [testTypeSchema],
+  dateRequested: { type: Date, default: Date.now },
   status: { type: String, enum: ["Pending", "Completed"], default: "Pending" },
 });
 
