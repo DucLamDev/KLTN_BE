@@ -4,7 +4,7 @@ import {
   getOneMedicationByIdService,
   updateMedicationByIdService,
   deleteMedicationByIdService,
-  getMedicationByEmail,
+  getMedicationByName,
 } from "../services/medicationServices.js";
 
 export const createMedicationController = async (req, res) => {
@@ -25,9 +25,9 @@ export const createMedicationController = async (req, res) => {
 
 export const getListMedicationsController = async (req, res) => {
   try {
-    const { email } = req.query;
-    if (email) {
-      const medication = await getMedicationByEmail(email);
+    const { medicationName } = req.query;
+    if (medicationName) {
+      const medication = await getMedicationByName(medicationName);
       res.status(200).json(medication);
     } else {
       const medications = await getListMedicationsService();

@@ -5,8 +5,10 @@ function generateUniqueId() {
   return `TT-${randomString}`;
 }
 const medicationSchema = new mongoose.Schema({
+  _id: { type: String, required: true },
   medicationName: { type: String, required: true },
   quantity: { type: Number },
+  quantityRemaining: { type: Number },
   dosage: { type: String, required: true },
   price: { type: Number, required: true },
   instructions: { type: String },

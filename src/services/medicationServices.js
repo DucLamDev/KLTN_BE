@@ -15,10 +15,10 @@ export const createMedicationService = async (medicationData) => {
   }
 };
 
-export const getMedicationByEmail = async (email) => {
+export const getMedicationByName = async (medicationName) => {
   let query = {};
-  if (email) {
-    query.email = email;
+  if (medicationName) {
+    query.medicationName = medicationName;
   }
   return await findMedication(query);
 };
