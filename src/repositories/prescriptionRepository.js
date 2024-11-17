@@ -89,6 +89,7 @@ export const getMedicationFluctuationsRepo = async () => {
       medicationMap.get(medication.medicationName).push({
         _id: prescription._id,
         quantity: medication.quantity,
+        dateIssued: prescription.dateIssued,
       });
     });
   });

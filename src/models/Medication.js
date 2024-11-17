@@ -6,7 +6,8 @@ function generateUniqueId() {
 const medicationSchema = new mongoose.Schema({
   _id: { type: String, auto: false },
   medicationName: { type: String, required: true },
-  quantity: { type: Number },
+  quantityImported: { type: Number },
+  quantityRemaining: { type: Number },
   dosage: { type: String, required: true },
   price: { type: Number, required: true },
   instructions: { type: String },
