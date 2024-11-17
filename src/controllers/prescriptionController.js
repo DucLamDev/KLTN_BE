@@ -6,6 +6,7 @@ import {
   deletePrescriptionByIdService,
   completePrescriptionService,
 } from "../services/prescriptionServices.js";
+import { getMedicationFluctuationsService } from "../services/receptionistServices.js";
 
 export const createPrescriptionController = async (req, res) => {
   try {
@@ -93,6 +94,18 @@ export const completePrescriptionController = async (req, res) => {
       message: "Prescription completed successfully",
       data: completedPrescription,
     });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getMedicationFluctuationsController = async (req, res) => {
+  try {
+    const fluctuations = await getMedicationFluctuationsService();
+    res.status(200).json(fluctuations);
   } catch (error) {
     res.status(400).json({
       success: false,

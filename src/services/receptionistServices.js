@@ -1,3 +1,4 @@
+import { getMedicationFluctuationsRepo } from "../repositories/prescriptionRepository.js";
 import {
   createReceptionist,
   getListReceptionists,
@@ -63,5 +64,13 @@ export const deleteReceptionistByIdService = async (id) => {
     return deletedReceptionist;
   } catch (error) {
     throw new Error("Error deleting: " + error.message);
+  }
+};
+
+export const getMedicationFluctuationsService = async () => {
+  try {
+    return await getMedicationFluctuationsRepo();
+  } catch (error) {
+    throw new Error("Error fetching medication fluctuations: " + error.message);
   }
 };

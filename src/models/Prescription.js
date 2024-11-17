@@ -4,12 +4,19 @@ function generateUniqueId() {
   const randomString = Math.random().toString(36).substr(2, 6).toUpperCase();
   return `TT-${randomString}`;
 }
-
+const medicationSchema = new mongoose.Schema({
+  medicationName: { type: String, required: true },
+  quantity: { type: Number },
+  dosage: { type: String, required: true },
+  price: { type: Number, required: true },
+  instructions: { type: String },
+  expirationDate: { type: Date },
+});
 const prescriptionSchema = new mongoose.Schema({
   _id: { type: String, auto: false },
   patientId: { type: String, required: true, ref: "Patient" },
   doctorId: { type: String, required: true, ref: "Doctor" },
-  medications: [{ type: String, ref: "Medication" }],
+  medications: [medicationSchema],
   status: {
     type: String,
     enum: ["Scheduled", "Completed"],

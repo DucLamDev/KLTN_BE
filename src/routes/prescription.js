@@ -6,6 +6,7 @@ import {
   updatePrescriptionByIdController,
   deletePrescriptionByIdController,
   completePrescriptionController,
+  getMedicationFluctuationsController,
 } from "../controllers/prescriptionController.js";
 
 const router = express.Router();
@@ -13,6 +14,8 @@ const router = express.Router();
 router.post("/", createPrescriptionController);
 
 router.get("/", getListPrescriptionsController);
+
+router.get("/medication-fluctuations", getMedicationFluctuationsController);
 
 router.get("/:id", getOnePrescriptionByIdController);
 
