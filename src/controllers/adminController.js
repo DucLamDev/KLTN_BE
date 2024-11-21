@@ -5,6 +5,8 @@ import {
   updateAdminByIdService,
   deleteAdminByIdService,
   getAdminByEmail,
+  getAppointmentsBySpecializationService,
+  getCompletedAppointmentsByMonthService,
 } from "../services/adminServices.js";
 
 export const createAdminController = async (req, res) => {
@@ -83,3 +85,27 @@ export const deleteAdminByIdController = async (req, res) => {
     });
   }
 };
+
+
+export const getSpecializationStats = async (req, res) => {
+  try {
+    const stats = await getAppointmentsBySpecializationService();
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
+
+export const getCompletedAppointmentsByMonthController = async (req, res) => {
+  try {
+    const stats = await getCompletedAppointmentsByMonthService();
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
+// getCompletedAppointmentsByMonthService
