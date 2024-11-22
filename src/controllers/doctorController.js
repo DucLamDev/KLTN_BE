@@ -36,11 +36,7 @@ export const createRequestTestController = async (req, res) => {
   try {
     const requestTestData = req.body;
     const newRequestTest = await createRequests(requestTestData);
-    res.status(201).json({
-      success: true,
-      message: "Test request created successfully",
-      data: newRequestTest,
-    });
+    res.status(201).json(newRequestTest);
   } catch (error) {
     res.status(400).json({
       success: false,

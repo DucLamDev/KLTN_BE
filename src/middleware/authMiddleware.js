@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import Doctor from '../models/Doctor.js';
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import Doctor from "../models/Doctor.js";
 
 export const protect = async (req, res, next) => {
   try {
@@ -8,8 +8,8 @@ export const protect = async (req, res, next) => {
     const token = req.cookies.jwt;
     if (!token) {
       return res.status(401).json({
-        status: 'fail',
-        message: 'Bạn chưa đăng nhập',
+        status: "fail",
+        message: "Bạn chưa đăng nhập",
       });
     }
 
@@ -19,16 +19,16 @@ export const protect = async (req, res, next) => {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
       return res.status(401).json({
-        status: 'fail',
-        message: 'Token không hợp lệ hoặc đã hết hạn',
+        status: "fail",
+        message: "Token không hợp lệ hoặc đã hết hạn",
       });
     }
 
     // Kiểm tra xem token có chứa thông tin id và role hay không
     if (!decoded.id || !decoded.role) {
       return res.status(400).json({
-        status: 'fail',
-        message: 'Token không chứa thông tin hợp lệ',
+        status: "fail",
+        message: "Token không chứa thông tin hợp lệ",
       });
     }
 
@@ -36,19 +36,19 @@ export const protect = async (req, res, next) => {
     let user;
 
     // Kiểm tra role của người dùng, tìm trong bảng Doctor hoặc User
-    if (decoded.role === 'doctor') {
+    if (decoded.role === "doctor") {
       // Nếu role là 'doctor', tìm trong bảng Doctor
-      user = await Doctor.findOne({email: decoded.email});
+      user = await Doctor.findOne({ email: decoded.email });
     } else {
       // Nếu role khác, tìm trong bảng User
-      user = await User.findOne({email: decoded.email});
+      user = await User.findOne({ email: decoded.email });
     }
 
     // Kiểm tra người dùng có tồn tại không
     if (!user) {
       return res.status(401).json({
-        status: 'fail',
-        message: 'Người dùng không tồn tại',
+        status: "fail",
+        message: "Người dùng không tồn tại",
       });
     }
 
@@ -57,8 +57,8 @@ export const protect = async (req, res, next) => {
     next();
   } catch (err) {
     return res.status(500).json({
-      status: 'error',
-      message: 'Có lỗi xảy ra, vui lòng thử lại',
+      status: "error",
+      message: "Có lỗi xảy ra, vui lòng thử lại",
     });
   }
 };

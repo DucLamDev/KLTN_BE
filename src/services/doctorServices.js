@@ -24,6 +24,7 @@ import {
 } from "../repositories/appointmentRepository.js";
 import Doctor from "../models/Doctor.js";
 import { createAppointmentByPatient } from "../repositories/appointmentByPatientRepository.js";
+import { sendNotificationToRole } from "./firebaseServices.js";
 
 export const createPrescriptions = async (
   patientId,
@@ -164,17 +165,22 @@ export const createRequests = async (requestTest) => {
 
   if (!patientId || !doctorId || !testTypes || !reason || !requestDate) {
     throw new Error(
-      "patientId, doctorId và testType, reason, testName requestDate là bắt buộc"
+      "patientId, doctorId và testType, reason, testName requestDate là bắt buộc!"
     );
   }
 
   const patient = await getOnePatientById(patientId);
   if (!patient) {
-    throw new Error("Bệnh nhân này chưa tồn tại");
+    throw new Error("Bệnh nhân này chưa tồn tại!");
   }
+  const noti = await sendNotificationToRole(
+    "laboratory-technician",
+    "New Test Request",
+    "A new test has been requested"
+  );
   const requestTests = await createRequestTest(requestTest);
-
   await sendMessage(`LabTest-Queue`, requestTests);
+
   return requestTests;
 };
 
