@@ -81,9 +81,9 @@ export const getAppointmentsBySpecializationService = async () => {
   }
 }
 
-export const getCompletedAppointmentsByMonthService = async () => {
+export const getCompletedAppointmentsByMonthService = async (year) => {
   try {
-    const result = await getCompletedAppointmentsByMonth();
+    const result = await getCompletedAppointmentsByMonth(year);
     if(!result) {
       throw new Error("Error");
     }

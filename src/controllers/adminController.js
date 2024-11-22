@@ -100,7 +100,7 @@ export const getSpecializationStats = async (req, res) => {
 
 export const getCompletedAppointmentsByMonthController = async (req, res) => {
   try {
-    const stats = await getCompletedAppointmentsByMonthService();
+    const stats = await getCompletedAppointmentsByMonthService(req.params.year);
     res.status(200).json(stats);
   } catch (error) {
     console.error(error);

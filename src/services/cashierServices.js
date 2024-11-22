@@ -1,3 +1,4 @@
+import Cashier from "../models/Cashier.js";
 import Doctor from "../models/Doctor.js";
 import Invoice from "../models/Invoice.js";
 import Patient from "../models/Patient.js";
@@ -10,12 +11,13 @@ import {
   deleteCashierById,
   findCashier,
 } from "../repositories/cashierRepository.js";
-export const createInvoice = async (patientId, doctorId) => {
+export const createInvoice = async (patientId, doctorId, cashierId) => {
   try {
     const doctor = await Doctor.findById(doctorId);
     const patient = await Patient.findById(patientId);
+    const cashier = await Cashier.findById(cashierId);
 
-    if (!doctor || !patient) {
+    if (!doctor || !patient || !cashier) {
       throw new Error("Doctor or patient not found.");
     }
 
@@ -36,9 +38,10 @@ export const createInvoice = async (patientId, doctorId) => {
     const newInvoice = new Invoice({
       doctorId: doctor._id,
       patientId: patient._id,
+      cashierId: cashier._id,
       services: serviceList.services,
       totalAmount,
-      paymentStatus: "Pending", // Hóa đơn ban đầu có trạng thái 'Pending'
+      status: "Pending", // Hóa đơn ban đầu có trạng thái 'Pending'
       invoiceDate: new Date(),
     });
 

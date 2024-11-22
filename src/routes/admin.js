@@ -13,7 +13,8 @@ const router = express.Router();
 
 router.post("/", createAdminController);
 
-router.get("/report/month", getCompletedAppointmentsByMonthController);
+router.get("/report/month/:year", getCompletedAppointmentsByMonthController);
+
 router.get("/report", getSpecializationStats);
 
 router.get("/", getListAdminsController);

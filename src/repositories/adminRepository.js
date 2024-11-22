@@ -86,3 +86,67 @@ export const getAppointmentsBySpecialization = async () => {
     ]);
 }
 
+
+
+
+export const getRevisitedPatients = async () => {
+    return await Appointment.aggregate([
+      {
+        $group: {
+          _id: "$patientId",
+          totalAppointments: { $sum: 1 }, 
+        },
+      },
+ 
+      {
+        $match: {
+          totalAppointments: { $gt: 1 },
+        },
+      },
+
+      {
+        $count: "revisitedPatients",
+      },
+    ]);
+};
+
+
+// Tỉ lệ bệnh nhân quay lại khám tại phòng khám 
+
+export const getRevisitedPatientsRate = async () => {
+  return await Appointment.aggregate([
+      {
+        $group: {
+          _id: "$patientId",
+          totalAppointments: { $sum: 1 },
+        },
+      },
+   
+      {
+        $facet: {
+          totalPatients: [{ $count: "totalPatients" }], 
+          revisitPatients: [
+            { $match: { totalAppointments: { $gt: 1 } } },
+            { $count: "revisitPatients" },
+          ],
+        },
+      },
+ 
+      {
+        $project: {
+          totalPatients: { $arrayElemAt: ["$totalPatients.totalPatients", 0] }, 
+          revisitPatients: { $arrayElemAt: ["$revisitPatients.revisitPatients", 0] }, 
+        },
+      },
+      {
+        $addFields: {
+          revisitRate: {
+            $multiply: [
+              { $divide: ["$revisitPatients", "$totalPatients"] },
+              100,
+            ],
+          },
+        },
+      },
+    ]);    
+}
