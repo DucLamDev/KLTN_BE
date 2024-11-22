@@ -1,7 +1,7 @@
-import ServiceList from '../models/ServiceList';
+import ServiceList from '../models/ServiceList.js';
 
 // Tạo một service list mới
-exports.createServiceList = async (req, res) => {
+export const createServiceList = async (req, res) => {
     try {
         const serviceList = new ServiceList(req.body);
         await serviceList.save();
@@ -12,7 +12,7 @@ exports.createServiceList = async (req, res) => {
 };
 
 // Lấy danh sách tất cả các service list
-exports.getAllServiceLists = async (req, res) => {
+export const getAllServiceLists = async (req, res) => {
     try {
         const serviceLists = await ServiceList.find().populate('doctorId patientId');
         res.status(200).json(serviceLists);
@@ -21,8 +21,8 @@ exports.getAllServiceLists = async (req, res) => {
     }
 };
 
-// Lấy chi tiết một service list
-exports.getServiceListById = async (req, res) => {
+// Lấy chi tiết một service list 
+export const getServiceListById = async (req, res) => {
     try {
         const serviceList = await ServiceList.findById(req.params.id).populate('doctorId patientId');
         if (!serviceList) {
@@ -35,7 +35,7 @@ exports.getServiceListById = async (req, res) => {
 };
 
 // Cập nhật thông tin của một service list
-exports.updateServiceList = async (req, res) => {
+export const updateServiceList = async (req, res) => {
     try {
         const updatedServiceList = await ServiceList.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('doctorId patientId');
         if (!updatedServiceList) {
@@ -48,7 +48,7 @@ exports.updateServiceList = async (req, res) => {
 };
 
 // Xóa một service list
-exports.deleteServiceList = async (req, res) => {
+export const deleteServiceList = async (req, res) => {
     try {
         await ServiceList.findByIdAndDelete(req.params.id);
         res.status(204).send();

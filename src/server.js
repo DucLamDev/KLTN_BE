@@ -17,6 +17,8 @@ import departmentRoutes from "./routes/department.js";
 // import kafkaRouter from "./routes/kafkaRoutes.js";
 import cashierRoutes from "./routes/cashier.js";
 import adminRoutes from "./routes/admin.js";
+import serviceRoutes from "./routes/service.js"
+import serviceListRoutes from "./routes/serviceList.js"
 import testTypeRoutes from "./routes/testType.js";
 import medicationRoutes from "./routes/medication.js";
 import labTestRoutes from "./routes/labTest.js";
@@ -65,6 +67,8 @@ app.use("/api/tests", testRoutes);
 app.use("/api/queue", queueRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRouter);
+app.use("/api/services", serviceRoutes);
+app.use("/api/servicesList", serviceListRoutes);
 app.use("/api/cashiers", cashierRoutes);
 app.use("/api/admins", adminRoutes);
 app.use("/api/test-types", testTypeRoutes);
@@ -78,7 +82,7 @@ app.use("/api/labTests", labTestRoutes);
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  startApp();
+  // startApp();
 });
 const startApp = async () => {
   await connectRedis();

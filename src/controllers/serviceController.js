@@ -1,4 +1,4 @@
-import * as serviceService from "../services/serviceService";
+import * as serviceService from "../services/serviceService.js";
 
 // Tạo dịch vụ mới
 export const createService = async (req, res) => {
