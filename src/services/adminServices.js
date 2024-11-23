@@ -5,6 +5,8 @@ import {
   updateAdminById,
   deleteAdminById,
   findAdmin,
+  getAppointmentsBySpecialization,
+  getCompletedAppointmentsByMonth,
 } from "../repositories/adminRepository.js";
 
 export const createAdminService = async (adminData) => {
@@ -65,3 +67,28 @@ export const deleteAdminByIdService = async (id) => {
     throw new Error("Error deleting admin: " + error.message);
   }
 };
+
+export const getAppointmentsBySpecializationService = async () => {
+    try {
+    const result = await getAppointmentsBySpecialization();
+    if(!result) {
+      throw new Error("Error");
+    }
+    return result;
+  } catch (error) {
+    console.error("Lỗi khi thống kê cuộc hẹn theo chuyên khoa:", error);
+    throw error;
+  }
+}
+
+export const getCompletedAppointmentsByMonthService = async (year) => {
+  try {
+    const result = await getCompletedAppointmentsByMonth(year);
+    if(!result) {
+      throw new Error("Error");
+    }
+    return result;
+  } catch (error) {
+    
+  }
+}

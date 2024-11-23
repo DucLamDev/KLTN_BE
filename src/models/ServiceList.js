@@ -13,12 +13,12 @@ const serviceSchema = new mongoose.Schema({
 
 const serviceListSchema = new mongoose.Schema({
     doctorId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Doctor',
         required: true
     },
     patientId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Patient',
         required: true
     },

@@ -11,9 +11,9 @@ import {
 
 // POST: Xuất hóa đơn cho bệnh nhân dựa trên danh sách dịch vụ từ bác sĩ
 export const createInvoiceController = async (req, res) => {
-  const { patientId, doctorId } = req.body;
+  const { patientId, doctorId, cashierId } = req.body;
   try {
-    const result = await createInvoice(patientId, doctorId);
+    const result = await createInvoice(patientId, doctorId, cashierId);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
