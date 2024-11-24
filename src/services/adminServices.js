@@ -69,9 +69,9 @@ export const deleteAdminByIdService = async (id) => {
 };
 
 export const getAppointmentsBySpecializationService = async () => {
-    try {
+  try {
     const result = await getAppointmentsBySpecialization();
-    if(!result) {
+    if (!result) {
       throw new Error("Error");
     }
     return result;
@@ -79,16 +79,14 @@ export const getAppointmentsBySpecializationService = async () => {
     console.error("Lỗi khi thống kê cuộc hẹn theo chuyên khoa:", error);
     throw error;
   }
-}
+};
 
 export const getCompletedAppointmentsByMonthService = async (year) => {
   try {
     const result = await getCompletedAppointmentsByMonth(year);
-    if(!result) {
+    if (!result) {
       throw new Error("Error");
     }
     return result;
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};

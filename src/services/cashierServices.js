@@ -3,6 +3,7 @@ import Doctor from "../models/Doctor.js";
 import Invoice from "../models/Invoice.js";
 import Patient from "../models/Patient.js";
 import ServiceList from "../models/ServiceList.js";
+import Test from "../models/Test.js";
 import {
   createCashier,
   getListCashiers,
@@ -22,15 +23,28 @@ export const createInvoice = async (patientId, doctorId, cashierId) => {
     }
 
     // Lấy danh sách dịch vụ mà bác sĩ đã tạo cho bệnh nhân
-    const serviceList = await ServiceList.findOne({ doctorId, patientId });
+    const serviceList = await ServiceList.findOne({ doctorId, patientId }).sort(
+      {
+        datePerformed: -1,
+      }
+    );
 
     if (!serviceList) {
       throw new Error("Service list not found.");
     }
 
     // Tính tổng số tiền từ danh sách dịch vụ
-    const totalAmount = serviceList.services.reduce(
+    const totalAmountSv = serviceList.services.reduce(
       (total, service) => total + service.cost,
+      0
+    );
+
+    const testList = await Test.findOne({ doctorId, patientId }).sort({
+      datePerformed: -1,
+    });
+    // Tính tổng số tiền từ xét nghiệm
+    const totalAmountTe = testList.results.reduce(
+      (total, test) => total + test.price,
       0
     );
 
@@ -40,7 +54,7 @@ export const createInvoice = async (patientId, doctorId, cashierId) => {
       patientId: patient._id,
       cashierId: cashier._id,
       services: serviceList.services,
-      totalAmount,
+      totalAmount: totalAmountSv + totalAmountTe,
       status: "Pending", // Hóa đơn ban đầu có trạng thái 'Pending'
       invoiceDate: new Date(),
     });
@@ -80,7 +94,6 @@ export const updateInvoiceStatus = async (invoiceId, paymentStatus) => {
     if (!updatedInvoice) {
       throw new Error("Invoice not found.");
     }
-
     return {
       message: "Invoice status updated successfully.",
       invoice: updatedInvoice,

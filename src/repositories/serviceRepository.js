@@ -1,4 +1,4 @@
-import Services from "../models/serviceModel";
+import Services from "../models/Services.js";
 
 // Tạo dịch vụ mới
 export const createService = async (data) => {

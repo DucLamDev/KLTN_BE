@@ -1,27 +1,29 @@
-import ServiceList from '../models/ServiceList.js';
+import ServiceList from "../models/ServiceList.js";
 
-class ServiceListRepository {
-  async createServiceList(data) {
-    const serviceList = new ServiceList(data);
-    await serviceList.save();
-    return serviceList;
-  }
+// Tạo dịch vụ mới
+export const createServiceList = async (data) => {
+  const service = new ServiceList(data);
+  return await service.save();
+};
 
-  async getServiceListById(id) {
-    return await ServiceList.findById(id).populate('doctorId patientId'); // Populate doctor and patient details
-  }
+// Lấy tất cả dịch vụ
+export const getAllServiceLists = async () => {
+  return await ServiceList.find().populate("doctorId patientId");
+};
 
-  async getAllServiceLists() {
-    return await ServiceList.find().populate('doctorId patientId'); // Populate doctor and patient details
-  }
+// Lấy dịch vụ theo ID
+export const getServiceListById = async (id) => {
+  return await ServiceList.findById(id).populate("doctorId patientId");
+};
 
-  async updateServiceList(id, data) {
-    return await ServiceList.findByIdAndUpdate(id, data, { new: true }).populate('doctorId patientId'); // Populate doctor and patient details after update
-  }
+// Cập nhật dịch vụ
+export const updateServiceList = async (id, data) => {
+  return await ServiceList.findByIdAndUpdate(id, data, {
+    new: true,
+  }).populate("doctorId patientId");
+};
 
-  async deleteServiceList(id) {
-    return await ServiceList.findByIdAndDelete(id);
-  }
-}
-
-export default ServiceListRepository;
+// Xóa dịch vụ
+export const deleteServiceList = async (id) => {
+  return await ServiceList.findByIdAndDelete(id);
+};

@@ -15,6 +15,10 @@ const requestTestSchema = new mongoose.Schema({
   // testTypes: [
   //   { type: mongoose.Schema.Types.ObjectId, ref: "TestType", required: true },
   // ],
+
+  // testTypes: [
+  //   { type: "String", ref: "TestType", required: true },
+  // ],
   testTypes: [testTypeSchema],
   patientId: { type: String, required: true },
   doctorId: { type: String, required: true },
