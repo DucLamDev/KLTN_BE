@@ -29,124 +29,117 @@ export const deleteAdminById = async (id) => {
   return await Admin.findByIdAndDelete(id);
 };
 
-
 //Thống kế các cuộc hẹn đã hoàn thành trong theo từng tháng
 export const getCompletedAppointmentsByMonth = async (year) => {
-    return  await Appointment.aggregate([
-      {
-        $match: {
-          appointmentDate: {
-            $gte: new Date(`${year}-01-01`),
-            $lt: new Date(`${year + 1}-01-01`), // Kết thúc của năm được chỉ định
-          },
+  return await Appointment.aggregate([
+    {
+      $match: {
+        appointmentDate: {
+          $gte: new Date(`${year}-01-01`),
+          $lt: new Date(`${year + 1}-01-01`), // Kết thúc của năm được chỉ định
         },
       },
-      {
-        $group: {
-          _id: {
-            month: { $month: "$appointmentDate" },
-            year: { $year: "$appointmentDate" }
-          },
-          count: { $sum: 1 },
+    },
+    {
+      $group: {
+        _id: {
+          month: { $month: "$appointmentDate" },
+          year: { $year: "$appointmentDate" },
         },
+        count: { $sum: 1 },
       },
-      {
-        $project: {
-          _id: 0, // Loại bỏ trường _id
-          month: "$_id.month",
-          year: "$_id.year",
-          count: 1,
-        },
+    },
+    {
+      $project: {
+        _id: 0, // Loại bỏ trường _id
+        month: "$_id.month",
+        year: "$_id.year",
+        count: 1,
       },
-      {
-        $sort: { year: 1, month: 1} // Sắp xếp theo năm và tháng
-      }
-    ]);
+    },
+    {
+      $sort: { year: 1, month: 1 }, // Sắp xếp theo năm và tháng
+    },
+  ]);
 };
-
 
 export const getAppointmentsBySpecialization = async () => {
-    return await Appointment.aggregate([
-      {
-        $group: {
-          _id: "$specialization", 
-          count: { $sum: 1 },
-        },
+  return await Appointment.aggregate([
+    {
+      $group: {
+        _id: "$specialization",
+        count: { $sum: 1 },
       },
-      {
-        $project: {
-          _id: 0,  
-          specialization: "$_id",
-          count: 1,  
-        },
+    },
+    {
+      $project: {
+        _id: 0,
+        specialization: "$_id",
+        count: 1,
       },
-      {
-        $sort: { count: -1 }
-      }
-    ]);
-}
-
-
-
-
-export const getRevisitedPatients = async () => {
-    return await Appointment.aggregate([
-      {
-        $group: {
-          _id: "$patientId",
-          totalAppointments: { $sum: 1 }, 
-        },
-      },
- 
-      {
-        $match: {
-          totalAppointments: { $gt: 1 },
-        },
-      },
-
-      {
-        $count: "revisitedPatients",
-      },
-    ]);
+    },
+    {
+      $sort: { count: -1 },
+    },
+  ]);
 };
 
+export const getRevisitedPatients = async () => {
+  return await Appointment.aggregate([
+    {
+      $group: {
+        _id: "$patientId",
+        totalAppointments: { $sum: 1 },
+      },
+    },
 
-// Tỉ lệ bệnh nhân quay lại khám tại phòng khám 
+    {
+      $match: {
+        totalAppointments: { $gt: 1 },
+      },
+    },
+
+    {
+      $count: "revisitedPatients",
+    },
+  ]);
+};
+
+// Tỉ lệ bệnh nhân quay lại khám tại phòng khám
 
 export const getRevisitedPatientsRate = async () => {
   return await Appointment.aggregate([
-      {
-        $group: {
-          _id: "$patientId",
-          totalAppointments: { $sum: 1 },
+    {
+      $group: {
+        _id: "$patientId",
+        totalAppointments: { $sum: 1 },
+      },
+    },
+
+    {
+      $facet: {
+        totalPatients: [{ $count: "totalPatients" }],
+        revisitPatients: [
+          { $match: { totalAppointments: { $gt: 1 } } },
+          { $count: "revisitPatients" },
+        ],
+      },
+    },
+
+    {
+      $project: {
+        totalPatients: { $arrayElemAt: ["$totalPatients.totalPatients", 0] },
+        revisitPatients: {
+          $arrayElemAt: ["$revisitPatients.revisitPatients", 0],
         },
       },
-   
-      {
-        $facet: {
-          totalPatients: [{ $count: "totalPatients" }], 
-          revisitPatients: [
-            { $match: { totalAppointments: { $gt: 1 } } },
-            { $count: "revisitPatients" },
-          ],
+    },
+    {
+      $addFields: {
+        revisitRate: {
+          $multiply: [{ $divide: ["$revisitPatients", "$totalPatients"] }, 100],
         },
       },
- 
-      {
-        $project: {
-          totalPatients: { $arrayElemAt: ["$totalPatients.totalPatients", 0] }, 
-          revisitPatients: { $arrayElemAt: ["$revisitPatients.revisitPatients", 0] }, 
-        },
-      },
-      {
-        $addFields: {
-          revisitRate: {
-            $multiply: [
-              { $divide: ["$revisitPatients", "$totalPatients"] },
-              100,
-            ],
-          },
-        },
-      },
-    ]);    
-}
+    },
+  ]);
+};

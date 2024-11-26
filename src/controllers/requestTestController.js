@@ -1,3 +1,4 @@
+import { checkRequestTestExistence } from "../services/receptionistServices.js";
 import {
   createRequestTestService,
   getListRequestTestsService,
@@ -77,5 +78,17 @@ export const deleteRequestTestByIdController = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+export const checkRequestTestController = async (req, res) => {
+  try {
+    const { patientId, doctorId } = req.query;
+    const exists = await checkRequestTestExistence(patientId, doctorId);
+    res.json({ exists });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };

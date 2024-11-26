@@ -7,6 +7,7 @@ import {
   deleteReceptionistById,
   findReceptionist,
 } from "../repositories/receptionistRepository.js";
+import { filterRequestTests } from "../repositories/requestTestRepository.js";
 // Receptionist, receptionist
 export const createReceptionistService = async (receptionistData) => {
   try {
@@ -73,4 +74,9 @@ export const getMedicationFluctuationsService = async () => {
   } catch (error) {
     throw new Error("Error fetching medication fluctuations: " + error.message);
   }
+};
+
+export const checkRequestTestExistence = async (patientId, doctorId) => {
+  const filteredTests = await filterRequestTests(patientId, doctorId);
+  return filteredTests.length > 0;
 };
