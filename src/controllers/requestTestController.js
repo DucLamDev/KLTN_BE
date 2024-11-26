@@ -5,6 +5,7 @@ import {
   getOneRequestTestByIdService,
   updateRequestTestByIdService,
   deleteRequestTestByIdService,
+  getPatientIdsForDoctor,
 } from "../services/requestTestServices.js";
 
 export const createRequestTestController = async (req, res) => {
@@ -83,9 +84,12 @@ export const deleteRequestTestByIdController = async (req, res) => {
 
 export const checkRequestTestController = async (req, res) => {
   try {
-    const { patientId, doctorId } = req.query;
-    const exists = await checkRequestTestExistence(patientId, doctorId);
-    res.json({ exists });
+    const { doctorId } = req.query;
+    if (!doctorId) {
+      return res.status(400).json({ message: "doctorId is required" });
+    }
+    const patientIds = await getPatientIdsForDoctor(doctorId);
+    res.json({ patientIds });
   } catch (error) {
     res
       .status(500)

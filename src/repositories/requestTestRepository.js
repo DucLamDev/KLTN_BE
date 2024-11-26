@@ -29,3 +29,8 @@ export const filterRequestTests = async (patientId, doctorId) => {
   if (doctorId) filter.doctorId = doctorId;
   return await RequestTest.find(filter);
 };
+
+export const getPatientIdsByDoctorId = async (doctorId) => {
+  const requests = await RequestTest.find({ doctorId }).distinct("patientId");
+  return requests;
+};

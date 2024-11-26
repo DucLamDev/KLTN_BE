@@ -4,6 +4,7 @@ import {
   getOneRequestTestById,
   updateRequestTestById,
   deleteRequestTestById,
+  getPatientIdsByDoctorId,
 } from "../repositories/requestTestRepository.js";
 
 export const createRequestTestService = async (requestTestData) => {
@@ -56,4 +57,8 @@ export const deleteRequestTestByIdService = async (id) => {
   } catch (error) {
     throw new Error("Error deleting request test: " + error.message);
   }
+};
+
+export const getPatientIdsForDoctor = async (doctorId) => {
+  return await getPatientIdsByDoctorId(doctorId);
 };
