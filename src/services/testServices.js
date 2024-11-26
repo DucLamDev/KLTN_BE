@@ -4,6 +4,8 @@ import {
   getOneTestByIdRepo,
   updateTestByIdRepo,
   deleteTestByIdRepo,
+  getPatientIdsByDoctorIdRepo,
+  getMostRecentTestRepo,
 } from "../repositories/testRepository.js";
 
 export const createTestService = async (testData) => {
@@ -56,4 +58,13 @@ export const deleteTestByIdService = async (id) => {
   } catch (error) {
     throw new Error("Error deleting test: " + error.message);
   }
+};
+
+export const getPatientIdsForDoctor = async (doctorId) => {
+  return await getPatientIdsByDoctorIdRepo(doctorId);
+};
+
+export const getMostRecentTest = async (patientId, doctorId) => {
+  const test = await getMostRecentTestRepo(patientId, doctorId);
+  return test || null;
 };

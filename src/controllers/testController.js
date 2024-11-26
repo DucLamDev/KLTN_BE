@@ -4,6 +4,8 @@ import {
   getOneTestByIdService,
   updateTestByIdService,
   deleteTestByIdService,
+  getPatientIdsForDoctor,
+  getMostRecentTest,
 } from "../services/testServices.js";
 
 export const createTestController = async (req, res) => {
@@ -24,8 +26,15 @@ export const createTestController = async (req, res) => {
 
 export const getListTestsController = async (req, res) => {
   try {
-    const tests = await getListTestsService();
-    res.status(200).json(tests);
+    const { patientId, doctorId } = req.query;
+    if (!patientId || !doctorId) {
+      const tests = await getListTestsService();
+      res.status(200).json(tests);
+    } else {
+      const test = await getMostRecentTest(patientId, doctorId);
+      if (test) res.json(test);
+      else res.json(null);
+    }
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -74,5 +83,20 @@ export const deleteTestByIdController = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+export const checkTestController = async (req, res) => {
+  try {
+    const { doctorId } = req.query;
+    if (!doctorId) {
+      return res.status(400).json({ message: "doctorId is required" });
+    }
+    const patientIds = await getPatientIdsForDoctor(doctorId);
+    res.json({ patientIds });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
