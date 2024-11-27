@@ -12,18 +12,16 @@ const testTypeSchema = new mongoose.Schema({
 });
 const requestTestSchema = new mongoose.Schema({
   _id: { type: String, auto: false },
-  // testTypes: [
-  //   { type: mongoose.Schema.Types.ObjectId, ref: "TestType", required: true },
-  // ],
-
-  // testTypes: [
-  //   { type: "String", ref: "TestType", required: true },
-  // ],
   testTypes: [testTypeSchema],
-  patientId: { type: String, required: true },
+  patientId: {
+    type: String,
+    ref: "Patient",
+    required: true,
+  },
   doctorId: { type: String, required: true },
   requestDate: { type: Date, default: Date.now() },
   reason: { type: String },
+  isTestInvoiceCreated: { type: Boolean, default: false },
 });
 
 requestTestSchema.pre("save", async function (next) {
