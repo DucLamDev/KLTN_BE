@@ -22,6 +22,11 @@ const invoiceSchema = new mongoose.Schema(
     image: { type: String },
     staffId: { type: String },
     staffRole: { type: String },
+    patientId: {
+      type: String,
+      ref: "Patient",
+      required: true,
+    },
   },
   { timestamps: true }
 );
