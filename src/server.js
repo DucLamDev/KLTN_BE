@@ -87,7 +87,7 @@ app.listen(port, async () => {
   startApp();
 });
 const startApp = async () => {
-  // await connectRedis();
+  await connectRedis();
   await connectAppointmentProducer(); // Kết nối producer cho lịch hẹn
   // await connectConsumer();
   // // await connectExamRoomProducer(); // Kết nối producer cho buồng khám
