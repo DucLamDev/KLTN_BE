@@ -21,7 +21,7 @@ export const getOneDoctorById = async (id) => {
   return await Doctor.findById(id);
 };
 
-export const updateDoctorById = async (id, updateData) => {
+export const updateDoctorByIdRepo = async (id, updateData) => {
   return await Doctor.findByIdAndUpdate(id, updateData, {
     new: true,
     runValidators: true,

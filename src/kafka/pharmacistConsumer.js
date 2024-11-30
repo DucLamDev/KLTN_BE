@@ -1,4 +1,6 @@
   // kafka/departmentConsumer.js
+  import fs from 'fs';
+import path from 'path';
   import { Kafka } from 'kafkajs';
   import dotenv from 'dotenv';
   // import Doctor from '../models/Doctor.js';
@@ -10,9 +12,14 @@
   dotenv.config();
 
   const kafka = new Kafka({
-    clientId: process.env.CLIENT_ID || 'clinic-management',
-    brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
-    ssl: false,
+    clientId:'clinic-management',
+    brokers: ['kafka-1462fd69-hoduclam2408-4b56.c.aivencloud.com:10842'],
+    ssl:
+    {
+      ca: [fs.readFileSync('C:/Users/lam08/Desktop/KLTN/clinic-management-BE/cert/ca.pem', 'utf-8')],  // Đường dẫn đến chứng chỉ CA
+      cert: fs.readFileSync('C:/Users/lam08/Desktop/KLTN/clinic-management-BE/cert/service.cert', 'utf-8'),  // Đường dẫn đến chứng chỉ client (nếu có)
+      key: fs.readFileSync('C:/Users/lam08/Desktop/KLTN/clinic-management-BE/cert/service.key', 'utf-8'),  // Đường dẫn đến khóa client (nếu có)
+    },
   });
 
   const consumer = kafka.consumer({ groupId: process.env.GROUP_ID || 'pharmacist-group' });

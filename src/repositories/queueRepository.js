@@ -2,12 +2,12 @@
 import { redisClient } from "../redis/redisClient.js";
 
 // Lấy danh sách các cuộc hẹn tại queue
-export const getAppointmentsFromQueue = async (queueKey) => {
+export const getAppointmentsFromQueueRepo = async (queueKey) => {
   return await redisClient.lRange(queueKey, 0, -1);
 };
 
 // Xoá 1 cuộc hẹn khỏi queue
-export const removeFromQueue = async (queueKey, dataToRemove) => {
+export const removeFromQueueRepo = async (queueKey, dataToRemove) => {
   if (!dataToRemove) {
       throw new Error("dataToRemove is undefined or null");
   }

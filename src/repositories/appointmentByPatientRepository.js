@@ -1,6 +1,6 @@
 import AppointmentByPatient from '../models/AppointmentByPatient.js';
 
-export const createAppointmentByPatient = async (appointmentData) => {
+export const createAppointmentByPatientRepo = async (appointmentData) => {
   const appointment = new AppointmentByPatient(appointmentData);
   return await appointment.save();
 };

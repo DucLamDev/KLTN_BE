@@ -7,7 +7,7 @@ import {
   getListPharmacists,
 } from "../repositories/pharmacistRepository.js";
 import { completePrescriptionRepository } from "../repositories/prescriptionRepository.js";
-import { getAppointmentsFromQueue } from "../repositories/queueRepository.js";
+import { getAppointmentsFromQueueRepo } from "../repositories/queueRepository.js";
 
 export const getPharmacistByEmail = async (email) => {
   let query = {};
@@ -19,7 +19,7 @@ export const getPharmacistByEmail = async (email) => {
 // Get all prescriptions from Redis queue
 export const getPrescriptionsFromQueue = async () => {
   const queueKey = `queue:Pharmacist`;
-  const prescriptionsData = await getAppointmentsFromQueue(queueKey);
+  const prescriptionsData = await getAppointmentsFromQueueRepo(queueKey);
 
   const parsedData = prescriptionsData
     .map((data) => {
@@ -66,7 +66,7 @@ export const completePrescriptionService = async (
   warehouseId
 ) => {
   try {
-    const prescriptionsData = await getAppointmentsFromQueue(
+    const prescriptionsData = await getAppointmentsFromQueueRepo(
       "queue:Pharmacist"
     );
     console.log("All patients data in queue:", prescriptionsData);

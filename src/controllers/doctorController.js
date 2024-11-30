@@ -1,18 +1,19 @@
+import { getAppointmentsFromQueueRepo } from "../repositories/queueRepository.js";
 import {
-  completeAppointment,
   createDoctorService,
   createPrescriptions,
-  createReExamination,
   createRequests,
   createServiceList,
   fetchSpecializations,
   getAppointmentsByDateService,
-  getAppointmentToQueue,
+  // getAppointmentToQueue,
   getListDoctorsService,
   getOneDoctor,
   updateDoctorOnlineStatusService,
   getDoctorByEmail,
   getDoctorBySpecialization,
+  createReExaminationServices,
+  completeAppointmentServices,
 } from "../services/doctorServices.js";
 
 // Tạo đơn thuốc
@@ -63,7 +64,7 @@ export const createServiceListController = async (req, res) => {
 // Lấy danh sách cuộc hẹn
 export const getListAppointment = async (req, res) => {
   try {
-    const appointment = await getAppointmentToQueue(req.params.roomNumber);
+    const appointment = await getAppointmentsFromQueueRepo(req.params.roomNumber);
     res.status(200).json(appointment);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -86,7 +87,7 @@ export const getDepartmentNameController = async (req, res) => {
 export const completeAppointmentController = async (req, res) => {
   try {
     const { roomNumber, patientId, doctorId } = req.body;
-    const completeMessage = await completeAppointment(
+    const completeMessage = await completeAppointmentServices(
       roomNumber,
       patientId,
       doctorId
@@ -217,7 +218,7 @@ export const updateDoctorOnlineStatusController = async (req, res) => {
 
 export const createReExaminationController = async (req, res) => {
   try {
-    const appointment = await createReExamination(req.body);
+    const appointment = await createReExaminationServices(req.body);
     res.status(200).json(appointment);
   } catch (err) {
     res.status(400).json({ message: err.message });

@@ -7,7 +7,7 @@ import {
   deleteLaboratoryTechnicianById,
   findLaboratoryTechnician,
 } from "../repositories/laboratoryTechnicianRepository.js";
-import { getAppointmentsFromQueue } from "../repositories/queueRepository.js";
+import {getAppointmentsFromQueueRepo } from "../repositories/queueRepository.js";
 
 export const createLaboratoryTechnicians = async (technicianData) => {
   return await createLaboratoryTechnician(technicianData);
@@ -45,7 +45,7 @@ export const deleteLaboratoryTechnician = async (id) => {
 
 export const getRequestTestFromQueue = async (specialization) => {
   const queueKey = `queue:LabTest-${specialization}`;
-  const requestTestsData = await getAppointmentsFromQueue(queueKey);
+  const requestTestsData = await getAppointmentsFromQueueRepo(queueKey);
 
   const parsedData = requestTestsData
     .map((data) => {

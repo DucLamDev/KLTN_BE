@@ -3,8 +3,9 @@ import { createPrescriptionRepo } from "../repositories/prescriptionRepository.j
 import ServiceList from "../models/ServiceList.js";
 import { getOnePatientById } from "../repositories/patientRepository.js";
 import {
-  getAppointmentsFromQueue,
-  removeFromQueue,
+  // getAppointmentsFromQueue,
+  getAppointmentsFromQueueRepo,
+  removeFromQueueRepo,
 } from "../repositories/queueRepository.js";
 import {
   createDoctor,
@@ -13,17 +14,17 @@ import {
   getListDoctors,
   getOneDoctorById,
   getSpecializations,
-  updateDoctorById,
   updateDoctorOnlineStatus,
   findDoctor,
+  updateDoctorByIdRepo,
 } from "../repositories/doctorRepository.js";
 import { createRequestTest } from "../repositories/requestTestRepository.js";
 import {
   createAppointment,
   getOneAppointmentById,
 } from "../repositories/appointmentRepository.js";
-import Doctor from "../models/Doctor.js";
-import { createAppointmentByPatient } from "../repositories/appointmentByPatientRepository.js";
+// import Doctor from "../models/Doctor.js";
+import {createAppointmentByPatientRepo } from "../repositories/appointmentByPatientRepository.js";
 import { sendNotificationToRole } from "./firebaseServices.js";
 
 export const createPrescriptions = async (
@@ -82,13 +83,11 @@ export const createServiceList = async (doctorId, patientId, services) => {
 // Tạo và sao lưu lịch sử khám bệnh
 
 // Hoàn thành khám
-export const completeAppointment = async (roomNumber, patientId, doctorId) => {
+export const completeAppointmentServices = async (roomNumber, patientId, doctorId) => {
   const queueKey = `queue:${roomNumber}`;
 
   try {
-    const patientsData = await getAppointmentsFromQueue(queueKey);
-    console.log("All patients data in queue:", patientsData);
-
+    const patientsData = await getAppointmentsFromQueueRepo(queueKey);
     const patientToDelete = patientsData.find((data) => {
       try {
         const parsedData = JSON.parse(data);
@@ -100,6 +99,11 @@ export const completeAppointment = async (roomNumber, patientId, doctorId) => {
       }
     });
 
+    if (!patientToDelete) {
+      throw new Error("Patient not found");
+    }
+
+    await removeFromQueueRepo(queueKey, patientToDelete);
     // const appointmentData = await getOneAppointmentById(patientToDelete._id);
     const appointmentDatas = JSON.parse(patientToDelete);
     const appointmentData = await getOneAppointmentById(appointmentDatas._id);
@@ -110,16 +114,10 @@ export const completeAppointment = async (roomNumber, patientId, doctorId) => {
 
     const doctor = await getOneDoctorById(doctorId);
 
-    await Doctor.findByIdAndUpdate(doctorId, {
+    await updateDoctorByIdRepo(doctorId, {
       $addToSet: { appointmentList: appointmentData },
     });
     await doctor.save();
-
-    if (!patientToDelete) {
-      throw new Error("Patient not found");
-    }
-
-    await removeFromQueue(queueKey, patientToDelete);
 
     return "Appointment completed successfully";
   } catch (err) {
@@ -129,35 +127,35 @@ export const completeAppointment = async (roomNumber, patientId, doctorId) => {
 };
 
 // Gọi bệnh nhân từ hàng đợi
-export const getAppointmentToQueue = async (roomNumber) => {
-  const queueKey = `queue:${roomNumber}`;
+// export const getAppointmentToQueue = async (roomNumber) => {
+//   const queueKey = `queue:${roomNumber}`;
 
-  try {
-    const appointmentsData = await getAppointmentsFromQueue(queueKey);
+//   try {
+//     const appointmentsData = await getAppointmentsFromQueue(queueKey);
 
-    // if (!appointmentsData.length) {
-    //   return res
-    //     .status(404)
-    //     .json({ success: false, message: "No patients in queue" });
-    // }
+//     // if (!appointmentsData.length) {
+//     //   return res
+//     //     .status(404)
+//     //     .json({ success: false, message: "No patients in queue" });
+//     // }
 
-    // Phân tích dữ liệu JSON và bỏ qua các dữ liệu không hợp lệ
-    const parsedAppointmentsData = appointmentsData
-      .map((data) => {
-        try {
-          return JSON.parse(data);
-        } catch (error) {
-          console.error(`Invalid JSON data: ${data}`);
-          return null; // Trả về null nếu dữ liệu không hợp lệ
-        }
-      })
-      .filter((data) => data !== null); // Lọc bỏ những phần tử không hợp lệ
+//     // Phân tích dữ liệu JSON và bỏ qua các dữ liệu không hợp lệ
+//     const parsedAppointmentsData = appointmentsData
+//       .map((data) => {
+//         try {
+//           return JSON.parse(data);
+//         } catch (error) {
+//           console.error(`Invalid JSON data: ${data}`);
+//           return null; // Trả về null nếu dữ liệu không hợp lệ
+//         }
+//       })
+//       .filter((data) => data !== null); // Lọc bỏ những phần tử không hợp lệ
 
-    return parsedAppointmentsData;
-  } catch (err) {
-    throw new Error({ success: false, message: "Internal Server Error" });
-  }
-};
+//     return parsedAppointmentsData;
+//   } catch (err) {
+//     throw new Error({ success: false, message: "Internal Server Error" });
+//   }
+// };
 
 // Tạo yêu cầu xét nghiệm
 export const createRequests = async (requestTest) => {
@@ -262,7 +260,7 @@ export const updateDoctorOnlineStatusService = async (
 };
 
 // Tạo lịch tái khám
-export const createReExamination = async (appointmentData) => {
+export const createReExaminationServices = async (appointmentData) => {
   const { patientId, appointmentDateByPatient, specialization, reason } =
     appointmentData;
 
@@ -276,7 +274,7 @@ export const createReExamination = async (appointmentData) => {
   if (!patient) {
     throw new Error("bệnh nhân này chưa tồn tại");
   }
-  const appointment = await createAppointmentByPatient({
+  const appointment = await createAppointmentByPatientRepo({
     ...appointmentData,
     reExamination: true,
   });
