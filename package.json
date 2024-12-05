@@ -10,7 +10,9 @@
     "build-babel": "babel ./src -d ./build/src",
     "build": "npm run clean && npm run build-babel",
     "production": "npm run build && cross-env BUILD_MODE=production node ./build/src/server.js",
-    "dev": "cross-env BUILD_MODE =dev nodemon --exec babel-node ./src/server.js"
+    "dev": "cross-env BUILD_MODE =dev nodemon --exec babel-node ./src/server.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +28,7 @@
     "firebase-admin": "^13.0.1",
     "jsonwebtoken": "^9.0.2",
     "kafkajs": "^2.2.4",
+    "lint": "^0.8.19",
     "moment": "^2.30.1",
     "mongoose": "^8.6.0",
     "nodemailer": "^6.9.16",
@@ -34,7 +37,12 @@
     "winston": "^3.14.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.16.0",
     "@types/redis": "^4.0.11",
-    "nodemon": "^3.1.7"
+    "eslint": "^9.16.0",
+    "eslint-plugin-react": "^7.37.2",
+    "globals": "^15.12.0",
+    "nodemon": "^3.1.7",
+    "typescript-eslint": "^8.16.0"
   }
 }
