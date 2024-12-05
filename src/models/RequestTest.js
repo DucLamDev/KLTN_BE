@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
 function generateUniqueId() {
-  const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
+  const randomString = Math.random()
+    .toString(36)
+    .substr(2, 6)
+    .toUpperCase(); // Tạo chuỗi ngẫu nhiên
   return `RT-${randomString}`;
 }
 const testTypeSchema = new mongoose.Schema({
@@ -22,9 +25,10 @@ const requestTestSchema = new mongoose.Schema({
   requestDate: { type: Date, default: Date.now() },
   reason: { type: String },
   isTestInvoiceCreated: { type: Boolean, default: false },
+  appointmentId: { type: String },
 });
 
-requestTestSchema.pre("save", async function (next) {
+requestTestSchema.pre("save", async function(next) {
   if (this.isNew) {
     let uniqueId;
     let isUnique = false;

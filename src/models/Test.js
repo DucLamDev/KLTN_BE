@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
 function generateUniqueId() {
-  const randomString = Math.random().toString(36).substr(2, 6).toUpperCase();
+  const randomString = Math.random()
+    .toString(36)
+    .substr(2, 6)
+    .toUpperCase();
   return `TE-${randomString}`;
 }
 const testResult = new mongoose.Schema({
@@ -25,9 +28,10 @@ const TestSchema = new mongoose.Schema({
   datePerformed: { type: Date, default: Date.now },
   dateRequested: { type: Date, default: Date.now },
   status: { type: String, enum: ["Pending", "Completed"], default: "Pending" },
+  appointmentId: { type: String },
 });
 
-TestSchema.pre("save", async function (next) {
+TestSchema.pre("save", async function(next) {
   if (this.isNew) {
     let uniqueId;
     let isUnique = false;

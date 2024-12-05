@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
 function generateUniqueId() {
-  const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
+  const randomString = Math.random()
+    .toString(36)
+    .substr(2, 6)
+    .toUpperCase(); // Tạo chuỗi ngẫu nhiên
   return `HD-${randomString}`;
 }
 
@@ -24,15 +27,13 @@ const invoiceSchema = new mongoose.Schema(
     staffRole: { type: String },
     patientId: {
       type: String,
-      ref: "Patient",
-      required: true,
     },
   },
   { timestamps: true }
 );
 
 // Middleware để tạo ID hóa đơn trước khi lưu
-invoiceSchema.pre("save", async function (next) {
+invoiceSchema.pre("save", async function(next) {
   if (this.isNew) {
     let uniqueId;
     let isUnique = false;

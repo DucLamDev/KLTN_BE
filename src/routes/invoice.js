@@ -15,7 +15,7 @@ routerInvoice.get("/", getListInvoicesController);
 
 routerInvoice.get("/:id", getInvoiceByIdController);
 
-routerInvoice.patch("/", updateInvoiceController);
+routerInvoice.patch("/:id", updateInvoiceController);
 
 routerInvoice.delete("/:id", deleteInvoiceController);
 

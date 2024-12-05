@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
 function generateUniqueId() {
-  const randomString = Math.random().toString(36).substr(2, 6).toUpperCase();
+  const randomString = Math.random()
+    .toString(36)
+    .substr(2, 6)
+    .toUpperCase();
   return `TT-${randomString}`;
 }
 const medicationSchema = new mongoose.Schema({
@@ -27,9 +30,10 @@ const prescriptionSchema = new mongoose.Schema({
   dateIssued: { type: Date, default: Date.now },
   visitorName: { type: String, required: false },
   visitorPhone: { type: String, required: false },
+  appointmentId: { type: String },
 });
 
-prescriptionSchema.pre("save", async function (next) {
+prescriptionSchema.pre("save", async function(next) {
   if (this.isNew) {
     let uniqueId;
     let isUnique = false;

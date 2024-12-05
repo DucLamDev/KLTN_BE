@@ -42,23 +42,27 @@ routerDoctor.get("/get-appointments/:roomNumber", async (req, res) => {
     const patientsData = await redisClient.lRange(queueKey, 0, -1);
 
     if (!patientsData.length) {
-      return res.status(404).json({ success: false, message: 'No patients in queue' });
+      return res
+        .status(404)
+        .json({ success: false, message: "No patients in queue" });
     }
 
     // Phân tích dữ liệu JSON và bỏ qua các dữ liệu không hợp lệ
-    const parsedPatientsData = patientsData.map(data => {
-      try {
-        return JSON.parse(data);
-      } catch (error) {
-        console.error(`Invalid JSON data: ${data}`);
-        return null; // Trả về null nếu dữ liệu không hợp lệ
-      }
-    }).filter(data => data !== null); // Lọc bỏ những phần tử không hợp lệ
+    const parsedPatientsData = patientsData
+      .map((data) => {
+        try {
+          return JSON.parse(data);
+        } catch (error) {
+          console.error(`Invalid JSON data: ${data}`);
+          return null; // Trả về null nếu dữ liệu không hợp lệ
+        }
+      })
+      .filter((data) => data !== null); // Lọc bỏ những phần tử không hợp lệ
 
     res.status(200).json({ success: true, data: parsedPatientsData });
   } catch (err) {
-    console.error('Error retrieving patients from queue:', err);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    console.error("Error retrieving patients from queue:", err);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 }); // đổi queue/000 thành routes này
 routerDoctor.get("/:id", getOneDoctorController);
