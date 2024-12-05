@@ -2,9 +2,22 @@ import Prescription from "../models/Prescription.js";
 import MedicineWarehouse from "../models/MedicineWarehouse.js";
 import Medication from "../models/Medication.js";
 
+export const getAppointmentIdsByDoctorIdRepo = async (doctorId) => {
+  const prescriptions = await Prescription.find({ doctorId }, "appointmentId");
+  return prescriptions.map((prescription) => prescription.appointmentId);
+};
+
+export const checkPrescriptionByAppointmentIdRepo = async (appointmentId) => {
+  return await Prescription.exists({ appointmentId });
+};
+
 export const createPrescriptionRepo = async (prescriptionData) => {
   const prescription = new Prescription(prescriptionData);
   return await prescription.save();
+};
+
+export const findPrescriptionByAppointmentId = async (query) => {
+  return await Prescription.findOne(query);
 };
 
 export const getListPrescriptionsRepo = async () => {

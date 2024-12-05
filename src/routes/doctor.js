@@ -59,7 +59,7 @@ routerDoctor.get("/get-appointments/:roomNumber", async (req, res) => {
       })
       .filter((data) => data !== null); // Lọc bỏ những phần tử không hợp lệ
 
-    res.status(200).json({ success: true, data: parsedPatientsData });
+    res.status(200).json(parsedPatientsData);
   } catch (err) {
     console.error("Error retrieving patients from queue:", err);
     res.status(500).json({ success: false, message: "Internal Server Error" });

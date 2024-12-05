@@ -5,6 +5,9 @@ import {
   updatePrescriptionByIdService,
   deletePrescriptionByIdService,
   completePrescriptionService,
+  getOnePrescriptionByAppointmentIdService,
+  checkPrescriptionByAppointmentIdService,
+  getAppointmentIdsByDoctorIdService,
 } from "../services/prescriptionServices.js";
 import { getMedicationFluctuationsService } from "../services/receptionistServices.js";
 
@@ -26,13 +29,35 @@ export const createPrescriptionController = async (req, res) => {
 
 export const getListPrescriptionsController = async (req, res) => {
   try {
-    const prescriptions = await getListPrescriptionsService();
-    res.status(200).json(prescriptions);
+    const { appointmentId } = req.query;
+    if (appointmentId) {
+      const prescription = await getOnePrescriptionByAppointmentIdService(
+        appointmentId
+      );
+      res.status(200).json(prescription);
+    } else {
+      const prescriptions = await getListPrescriptionsService();
+      res.status(200).json(prescriptions);
+    }
   } catch (error) {
     res.status(400).json({
       success: false,
       message: error.message,
     });
+  }
+};
+
+export const checkPrescriptionController = async (req, res) => {
+  try {
+    const { appointmentId } = req.query;
+    if (!appointmentId) {
+      return res.status(400).json({ error: "appointmentId is required" });
+    }
+
+    const exists = await checkPrescriptionByAppointmentIdService(appointmentId);
+    res.json({ exists });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -111,5 +136,19 @@ export const getMedicationFluctuationsController = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+export const getAppointmentIdsByDoctorController = async (req, res) => {
+  try {
+    const { doctorId } = req.query;
+    if (!doctorId) {
+      return res.status(400).json({ error: "doctorId is required" });
+    }
+
+    const appointmentIds = await getAppointmentIdsByDoctorIdService(doctorId);
+    res.json(appointmentIds);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
