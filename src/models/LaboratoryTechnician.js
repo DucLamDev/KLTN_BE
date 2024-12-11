@@ -2,9 +2,11 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import scheduleSchema from "../models/Schedule.js"; // Đảm bảo đường dẫn là chính xác
 
-
 function generateUniqueId() {
-  const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
+  const randomString = Math.random()
+    .toString(36)
+    .substr(2, 6)
+    .toUpperCase(); // Tạo chuỗi ngẫu nhiên
   return `YTXN-${randomString}`;
 }
 
@@ -42,7 +44,7 @@ const laboratoryTechnicianSchema = new mongoose.Schema(
 
 laboratoryTechnicianSchema.index({ email: 1 }, { unique: true });
 
-laboratoryTechnicianSchema.pre("save", async function (next) {
+laboratoryTechnicianSchema.pre("save", async function(next) {
   if (!this.isModified("password")) {
     return next();
   }
@@ -50,7 +52,7 @@ laboratoryTechnicianSchema.pre("save", async function (next) {
   next();
 });
 
-laboratoryTechnicianSchema.pre("save", async function (next) {
+laboratoryTechnicianSchema.pre("save", async function(next) {
   if (this.isNew) {
     let uniqueId;
     let isUnique = false;
@@ -58,10 +60,11 @@ laboratoryTechnicianSchema.pre("save", async function (next) {
     // Kiểm tra tính duy nhất của ID
     while (!isUnique) {
       uniqueId = generateUniqueId();
-      const existingDoctor =
-        await mongoose.models.LaboratoryTechnicianSchema.findOne({
+      const existingDoctor = await mongoose.models.LaboratoryTechnicianSchema.findOne(
+        {
           _id: uniqueId,
-        });
+        }
+      );
       isUnique = !existingDoctor; // Kiểm tra xem ID có tồn tại không
     }
 
@@ -71,7 +74,7 @@ laboratoryTechnicianSchema.pre("save", async function (next) {
 });
 
 // Phương thức để so sánh mật khẩu
-laboratoryTechnicianSchema.methods.comparePassword = async function (
+laboratoryTechnicianSchema.methods.comparePassword = async function(
   candidatePassword
 ) {
   return await bcrypt.compare(candidatePassword, this.password);

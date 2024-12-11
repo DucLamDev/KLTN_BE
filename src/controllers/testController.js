@@ -32,7 +32,7 @@ export const getListTestsController = async (req, res) => {
       const test = await getOneTestByAppointmentIdService(appointmentId);
       res.status(200).json(test);
     } else {
-      const test = await getMostRecentTest(patientId, doctorId);
+      const test = await getListTestsService();
       if (test) res.json(test);
       else res.json(null);
     }
