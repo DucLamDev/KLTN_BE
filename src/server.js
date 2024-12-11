@@ -14,14 +14,9 @@ import invoiceRoutes from "./routes/invoice.js";
 import requestTestRoutes from "./routes/requestTest.js";
 import testRoutes from "./routes/test.js";
 import departmentRoutes from "./routes/department.js";
-// import kafkaRouter from "./routes/kafkaRoutes.js";
-import cashierRoutes from "./routes/cashier.js";
 import adminRoutes from "./routes/admin.js";
-import serviceRoutes from "./routes/service.js";
-import serviceListRoutes from "./routes/serviceList.js";
 import testTypeRoutes from "./routes/testType.js";
 import medicationRoutes from "./routes/medication.js";
-import labTestRoutes from "./routes/labTest.js";
 import laboratoryTechnicianRoutes from "./routes/laboratoryTechnician.js";
 import { connectProducer as connectAppointmentProducer } from "./kafka/producer.js";
 import { runConsumerDepartment } from "./kafka/departmentConsumer.js";
@@ -33,8 +28,6 @@ import userRouter from "./routes/user.js";
 import cors from "cors";
 import { runConsumerPharmacist } from "./kafka/pharmacistConsumer.js";
 import { runConsumerLabTest } from "./kafka/labTestConsumer.js";
-import Test from "./models/Test.js";
-import ServiceList from "./models/ServiceList.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -73,9 +66,6 @@ app.use("/api/tests", testRoutes);
 app.use("/api/queue", queueRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRouter);
-app.use("/api/services", serviceRoutes);
-app.use("/api/services-list", serviceListRoutes);
-app.use("/api/cashiers", cashierRoutes);
 app.use("/api/admins", adminRoutes);
 app.use("/api/test-types", testTypeRoutes);
 app.use("/api/medications", medicationRoutes);
@@ -83,7 +73,7 @@ app.use("/api/clinics", clinicRoutes);
 app.use("/api/diagnoses", diagnosisRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/laboratory-technicians", laboratoryTechnicianRoutes);
-app.use("/api/labTests", labTestRoutes);
+// app.use("/api/labTests", labTestRoutes);
 // Hàm khởi động ứng dụng
 
 app.listen(port, async () => {

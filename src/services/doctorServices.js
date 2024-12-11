@@ -1,6 +1,5 @@
 import { sendMessage } from "../kafka/producer.js";
 import { createPrescriptionRepo } from "../repositories/prescriptionRepository.js";
-import ServiceList from "../models/ServiceList.js";
 import { getOnePatientById } from "../repositories/patientRepository.js";
 import {
   // getAppointmentsFromQueue,
