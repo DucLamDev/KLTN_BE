@@ -4,7 +4,7 @@ import {
   getOneRequestTestById,
   updateRequestTestById,
   deleteRequestTestById,
-  getPatientIdsByDoctorId,
+  getAppointmentIdsByDoctorId,
 } from "../repositories/requestTestRepository.js";
 
 export const createRequestTestService = async (requestTestData) => {
@@ -59,6 +59,6 @@ export const deleteRequestTestByIdService = async (id) => {
   }
 };
 
-export const getPatientIdsForDoctor = async (doctorId) => {
-  return await getPatientIdsByDoctorId(doctorId);
+export const getAppointmentIdsForDoctor = async (doctorId) => {
+  return await getAppointmentIdsByDoctorId(doctorId);
 };

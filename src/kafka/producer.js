@@ -10,18 +10,19 @@ const kafka = new Kafka({
   clientId: "clinic-management",
   brokers: [process.env.KAFKA_BROKERS],
   ssl: {
+    // C:\Users\ADMIN\Videos\KLTN_Code\KLTN_BE
     ca: [
       fs.readFileSync(
-        "C:/Users/lam08/Desktop/KLTN/clinic-management-BE/cert/ca.pem",
+        "C:/Users/ADMIN/Videos/KLTN_Code/KLTN_BE/cert/ca.pem",
         "utf-8"
       ),
     ], // Đường dẫn đến chứng chỉ CA
     cert: fs.readFileSync(
-      "C:/Users/lam08/Desktop/KLTN/clinic-management-BE/cert/service.cert",
+      "C:/Users/ADMIN/Videos/KLTN_Code/KLTN_BE/cert/service.cert",
       "utf-8"
     ), // Đường dẫn đến chứng chỉ client (nếu có)
     key: fs.readFileSync(
-      "C:/Users/lam08/Desktop/KLTN/clinic-management-BE/cert/service.key",
+      "C:/Users/ADMIN/Videos/KLTN_Code/KLTN_BE/cert/service.key",
       "utf-8"
     ), // Đường dẫn đến khóa client (nếu có)
   },

@@ -6,7 +6,7 @@ export const createLaboratoryTechnician = async (technicianData) => {
 };
 
 export const getListLaboratoryTechnicians = async () => {
-  return await LaboratoryTechnician.find().populate("labTestList.patientId");
+  return await LaboratoryTechnician.find();
 };
 
 export const findLaboratoryTechnician = async (query) => {
@@ -14,9 +14,7 @@ export const findLaboratoryTechnician = async (query) => {
 };
 
 export const getOneLaboratoryTechnicianById = async (id) => {
-  return await LaboratoryTechnician.findById(id).populate(
-    "labTestList.patientId"
-  );
+  return await LaboratoryTechnician.findById(id);
 };
 
 export const updateLaboratoryTechnicianById = async (id, updateData) => {

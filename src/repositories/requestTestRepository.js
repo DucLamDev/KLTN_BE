@@ -6,7 +6,9 @@ export const createRequestTest = async (requestTestData) => {
 };
 
 export const getListRequestTests = async () => {
-  return await RequestTest.find().populate("patientId").populate("doctorId");
+  return await RequestTest.find()
+    .populate("patientId")
+    .populate("doctorId");
 };
 
 export const getOneRequestTestById = async (id) => {
@@ -30,7 +32,9 @@ export const filterRequestTests = async (patientId, doctorId) => {
   return await RequestTest.find(filter);
 };
 
-export const getPatientIdsByDoctorId = async (doctorId) => {
-  const requests = await RequestTest.find({ doctorId }).distinct("patientId");
+export const getAppointmentIdsByDoctorId = async (doctorId) => {
+  const requests = await RequestTest.find({ doctorId }).distinct(
+    "appointmentId"
+  );
   return requests;
 };

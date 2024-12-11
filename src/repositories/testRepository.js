@@ -27,7 +27,7 @@ export const deleteTestByIdRepo = async (id) => {
 };
 
 export const getPatientIdsByDoctorIdRepo = async (doctorId) => {
-  const tests = await Test.find({ doctorId }).distinct("patientId");
+  const tests = await Test.find({ doctorId }).distinct("appointmentId");
   return tests;
 };
 
@@ -35,4 +35,8 @@ export const getMostRecentTestRepo = async (patientId, doctorId) => {
   return await Test.findOne({ patientId, doctorId })
     .sort({ datePerformed: -1 })
     .lean();
+};
+
+export const findTestByAppointmentId = async (query) => {
+  return await Test.findOne(query);
 };

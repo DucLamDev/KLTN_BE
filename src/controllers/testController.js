@@ -6,6 +6,7 @@ import {
   deleteTestByIdService,
   getPatientIdsForDoctor,
   getMostRecentTest,
+  getOneTestByAppointmentIdService,
 } from "../services/testServices.js";
 
 export const createTestController = async (req, res) => {
@@ -26,10 +27,10 @@ export const createTestController = async (req, res) => {
 
 export const getListTestsController = async (req, res) => {
   try {
-    const { patientId, doctorId } = req.query;
-    if (!patientId || !doctorId) {
-      const tests = await getListTestsService();
-      res.status(200).json(tests);
+    const { appointmentId } = req.query;
+    if (appointmentId) {
+      const test = await getOneTestByAppointmentIdService(appointmentId);
+      res.status(200).json(test);
     } else {
       const test = await getMostRecentTest(patientId, doctorId);
       if (test) res.json(test);
@@ -92,8 +93,8 @@ export const checkTestController = async (req, res) => {
     if (!doctorId) {
       return res.status(400).json({ message: "doctorId is required" });
     }
-    const patientIds = await getPatientIdsForDoctor(doctorId);
-    res.json({ patientIds });
+    const appointmentIds = await getPatientIdsForDoctor(doctorId);
+    res.json({ appointmentIds });
   } catch (error) {
     res
       .status(500)

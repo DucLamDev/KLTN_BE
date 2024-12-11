@@ -6,6 +6,7 @@ import {
   deleteTestByIdRepo,
   getPatientIdsByDoctorIdRepo,
   getMostRecentTestRepo,
+  findTestByAppointmentId,
 } from "../repositories/testRepository.js";
 
 export const createTestService = async (testData) => {
@@ -67,4 +68,12 @@ export const getPatientIdsForDoctor = async (doctorId) => {
 export const getMostRecentTest = async (patientId, doctorId) => {
   const test = await getMostRecentTestRepo(patientId, doctorId);
   return test || null;
+};
+
+export const getOneTestByAppointmentIdService = async (appointmentId) => {
+  let query = {};
+  if (appointmentId) {
+    query.appointmentId = appointmentId;
+  }
+  return await findTestByAppointmentId(query);
 };
