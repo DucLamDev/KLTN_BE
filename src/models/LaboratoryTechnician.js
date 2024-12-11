@@ -2,20 +2,6 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import scheduleSchema from "../models/Schedule.js"; // Đảm bảo đường dẫn là chính xác
 
-const labTestSchema = new mongoose.Schema({
-  patientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Patient",
-    required: true,
-  },
-  appointmentDate: { type: Date, required: true },
-  reason: { type: String, required: true },
-  status: {
-    type: String,
-    enum: ["Scheduled", "Completed", "Cancelled"],
-    default: "Scheduled",
-  },
-});
 
 function generateUniqueId() {
   const randomString = Math.random().toString(36).substr(2, 6).toUpperCase(); // Tạo chuỗi ngẫu nhiên
@@ -50,7 +36,6 @@ const laboratoryTechnicianSchema = new mongoose.Schema(
     schedule: [scheduleSchema], // Sử dụng đúng cách schema cho lịch trình
     isOnline: { type: Boolean, default: false },
     labTestNumber: { type: String, default: "XN-000" },
-    labTestList: [labTestSchema], // danh sách các cuộc xét nghiệm mà y tá đã làm trong ngày
   },
   { timestamps: true }
 );

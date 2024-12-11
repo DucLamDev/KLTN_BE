@@ -1,6 +1,6 @@
 // kafka/producer.js
 import fs from "fs";
-import path from "path";
+// import path from "path";
 import { Kafka, Partitioners } from "kafkajs";
 import dotenv from "dotenv";
 
@@ -8,20 +8,20 @@ dotenv.config();
 
 const kafka = new Kafka({
   clientId: "clinic-management",
-  brokers: ["kafka-1462fd69-hoduclam2408-4b56.c.aivencloud.com:10842"],
+  brokers: [process.env.KAFKA_BROKERS],
   ssl: {
     ca: [
       fs.readFileSync(
-        "C:/Users/ADMIN/Videos/KLTN_Code/KLTN_BE/cert/ca.pem",
+        "C:/Users/lam08/Desktop/KLTN/clinic-management-BE/cert/ca.pem",
         "utf-8"
       ),
     ], // Đường dẫn đến chứng chỉ CA
     cert: fs.readFileSync(
-      "C:/Users/ADMIN/Videos/KLTN_Code/KLTN_BE/cert/service.cert",
+      "C:/Users/lam08/Desktop/KLTN/clinic-management-BE/cert/service.cert",
       "utf-8"
     ), // Đường dẫn đến chứng chỉ client (nếu có)
     key: fs.readFileSync(
-      "C:/Users/ADMIN/Videos/KLTN_Code/KLTN_BE/cert/service.key",
+      "C:/Users/lam08/Desktop/KLTN/clinic-management-BE/cert/service.key",
       "utf-8"
     ), // Đường dẫn đến khóa client (nếu có)
   },

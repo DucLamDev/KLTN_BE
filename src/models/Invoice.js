@@ -28,6 +28,12 @@ const invoiceSchema = new mongoose.Schema(
     patientId: {
       type: String,
     },
+    doctorId: {
+      type: String,
+    },
+    receptionistId: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
