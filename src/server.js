@@ -44,8 +44,12 @@ mongoose
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.log("MongoDB connection error:", err));
 const corsOptions = {
-  origin: ["http://localhost:3001", "http://localhost:8888"], // Allow requests from your client
-
+// Allow requests from your client
+  origin: [
+    "http://localhost:3001",
+    "http://localhost:8888",
+    "https://lamanclinic.vercel.app",
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Allowed HTTP methods
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
