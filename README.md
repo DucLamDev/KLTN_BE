@@ -1,4 +1,3 @@
-docker-compose up -d
-
-npm start
+B1: Giải nén thư mục cert.rar
+B2: npm start
 
