@@ -1,30 +1,28 @@
 // kafka/producer.js
-import fs from "fs";
 // import path from "path";
 import { Kafka, Partitioners } from "kafkajs";
 import dotenv from "dotenv";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
+// Xác định __dirname trong môi trường ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// Tạo đường dẫn động đến thư mục 'cert'
+const certPath = path.join(__dirname, '../../cert');
+console.log(`CA Path: ${path.join(certPath, 'ca.pem')}`);
 const kafka = new Kafka({
   clientId: "clinic-management",
   brokers: [process.env.KAFKA_BROKERS],
   ssl: {
-    // C:\Users\ADMIN\Videos\KLTN_Code\KLTN_BE
     ca: [
-      fs.readFileSync(
-        "C:/Users/ADMIN/Videos/KLTN_Code/KLTN_BE/cert/ca.pem",
-        "utf-8"
-      ),
+      fs.readFileSync(path.join(certPath, 'ca.pem'), 'utf-8'),
     ], // Đường dẫn đến chứng chỉ CA
-    cert: fs.readFileSync(
-      "C:/Users/ADMIN/Videos/KLTN_Code/KLTN_BE/cert/service.cert",
-      "utf-8"
-    ), // Đường dẫn đến chứng chỉ client (nếu có)
-    key: fs.readFileSync(
-      "C:/Users/ADMIN/Videos/KLTN_Code/KLTN_BE/cert/service.key",
-      "utf-8"
-    ), // Đường dẫn đến khóa client (nếu có)
+    cert: fs.readFileSync(path.join(certPath, 'service.cert'), 'utf-8'), // Đường dẫn đến chứng chỉ client
+    key: fs.readFileSync(path.join(certPath, 'service.key'), 'utf-8'), // Đường dẫn đến khóa client // Đường dẫn đến khóa client (nếu có)
   },
 });
 
