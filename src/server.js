@@ -76,7 +76,7 @@ app.use("/api/laboratory-technicians", laboratoryTechnicianRoutes);
 // app.use("/api/labTests", labTestRoutes);
 // Hàm khởi động ứng dụng
 
-app.listen(port, async () => {
+app.listen(3000, async () => {
   console.log(`Server running on port ${port}`);
   startApp();
 });
