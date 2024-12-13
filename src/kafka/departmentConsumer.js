@@ -15,10 +15,10 @@ const __dirname = path.dirname(__filename);
 
 // Tạo đường dẫn động đến thư mục 'cert'
 const certPath = path.join(__dirname, '../../cert');
-console.log(`CA Path: ${path.join(certPath, 'ca.pem')}`);
 const kafka = new Kafka({
   clientId: "clinic-management",
   brokers: [process.env.KAFKA_BROKERS],
+  connectionTimeout: 10000,
   ssl: {
     ca: [
       fs.readFileSync(path.join(certPath, 'ca.pem'), 'utf-8'),

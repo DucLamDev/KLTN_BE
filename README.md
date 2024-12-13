@@ -1,4 +1,5 @@
-docker-compose up -d
+
+chạy source BE
 
 npm start
 
