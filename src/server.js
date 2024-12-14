@@ -40,7 +40,6 @@ const corsOptions = {
 // Allow requests from your client
   origin: [
     "http://localhost:3001",
-    "http://localhost:3000",
     "http://localhost:8888",
     "https://lamanclinic.vercel.app",
   ],
@@ -77,9 +76,8 @@ app.use("/api/laboratory-technicians", laboratoryTechnicianRoutes);
 // app.use("/api/labTests", labTestRoutes);
 // Hàm khởi động ứng dụng
 
-app.listen(3000, async () => {
+app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  console.log("MONGODB_URI:", process.env.MONGODB_URI);
   startApp();
 });
 const startApp = async () => {

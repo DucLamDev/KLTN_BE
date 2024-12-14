@@ -8,7 +8,8 @@ import Receptionist from "../models/Receptionist.js";
 
 import jwt from "jsonwebtoken";
 import { redisClient } from "../redis/redisClient.js";
-
+import dotenv from "dotenv";
+dotenv.config();
 // Tạo token JWT
 const createToken = (user) => {
   return jwt.sign(

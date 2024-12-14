@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import Doctor from "../models/Doctor.js";
-
+import dotenv from "dotenv";
+dotenv.config();
 export const protect = async (req, res, next) => {
   try {
     // Kiểm tra xem token có tồn tại trong cookie không
