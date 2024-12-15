@@ -144,56 +144,18 @@ export const loginUser = async (req, res) => {
     }
 
     // Nếu người dùng là bác sĩ, đặt trạng thái isOnline = true và xử lý hàng đợi trong Redis
-    if (user.role === "doctor") { 
+    if (user.role === "doctor") {
       const doctor = await Doctor.findOne({ email });
       doctor.isOnline = true;
       await doctor.save();
-
-      // Tạo queue cho phòng của bác sĩ trong Redis
-      // const queueKey = `queue:${doctor.roomNumber}`;
-      // await redisClient.del(queueKey); // Xóa queue cũ (nếu có)
-      // await redisClient.lPush(queueKey, 'Queue for doctor created');
     }
 
-    // Các hành động cụ thể khác tùy thuộc vào role của user
-    // Ví dụ: Bạn có thể thêm hành động đặc biệt cho các vai trò khác như receptionist, admin, etc.
-    if (user.role === "receptionist") {
-      // Hành động dành cho lễ tân
-      console.log("Receptionist logged in");
-    }
+    console.log(
+      `${user.role.charAt(0).toUpperCase() +
+        user.role.slice(1).toLowerCase()} logged in`
+    );
 
-    if (user.role === "pharmacist") {
-      // Hành động dành cho dược sĩ
-      console.log("Pharmacist logged in");
-    }
-
-    if (user.role === "cashier") {
-      // Hành động dành cho dược sĩ
-      console.log("cashier logged in");
-    }
-
-    if (user.role === "laboratory-technician") {
-      // Hành động dành cho dược sĩ
-      console.log("laboratory-technician logged in");
-    }
-
-
-    if (user.role === "admin") {
-      // Hành động dành cho quản trị viên
-      console.log("Admin logged in");
-    }
-
-    // Tạo JWT và lưu vào cookie
-    const token = createToken(user);
-
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Chỉ sử dụng cờ secure khi chạy trên production (HTTPS)
-      sameSite: "Lax", // Cài đặt SameSite là 'Lax' để cookie được gửi với các yêu cầu điều hướng liên kết
-      expires: new Date(Date.now() + 600 * 600 * 1000), // Cookie expires in 10 hours
-    });
-
-    // Trả về thông tin người dùng và vai trò của họ
+    // Không cần tạo JWT và lưu vào cookie ở đây nữa
     res.status(200).json({
       status: "success",
       message: "Đăng nhập thành công",

@@ -23,7 +23,7 @@ import {
   getOneAppointmentById,
 } from "../repositories/appointmentRepository.js";
 // import Doctor from "../models/Doctor.js";
-import {createAppointmentByPatientRepo } from "../repositories/appointmentByPatientRepository.js";
+import { createAppointmentByPatientRepo } from "../repositories/appointmentByPatientRepository.js";
 import { sendNotificationToRole } from "./firebaseServices.js";
 
 export const createPrescriptions = async (
@@ -82,7 +82,11 @@ export const createServiceList = async (doctorId, patientId, services) => {
 // Tạo và sao lưu lịch sử khám bệnh
 
 // Hoàn thành khám
-export const completeAppointmentServices = async (roomNumber, patientId, doctorId) => {
+export const completeAppointmentServices = async (
+  roomNumber,
+  patientId,
+  doctorId
+) => {
   const queueKey = `queue:${roomNumber}`;
 
   try {
@@ -159,7 +163,6 @@ export const completeAppointmentServices = async (roomNumber, patientId, doctorI
 // Tạo yêu cầu xét nghiệm
 export const createRequests = async (requestTest) => {
   const { patientId, doctorId, testTypes, reason, requestDate } = requestTest;
-
   if (!patientId || !doctorId || !testTypes || !reason || !requestDate) {
     throw new Error(
       "patientId, doctorId và testType, reason, testName requestDate là bắt buộc!"
@@ -170,14 +173,8 @@ export const createRequests = async (requestTest) => {
   if (!patient) {
     throw new Error("Bệnh nhân này chưa tồn tại!");
   }
-  const noti = await sendNotificationToRole(
-    "laboratory-technician",
-    "New Test Request",
-    "A new test has been requested"
-  );
-  const requestTests = await createRequestTest(requestTest);
-  await sendMessage(`LabTest-Queue`, requestTests);
 
+  const requestTests = await createRequestTest(requestTest);
   return requestTests;
 };
 
@@ -260,8 +257,12 @@ export const updateDoctorOnlineStatusService = async (
 
 // Tạo lịch tái khám
 export const createReExaminationServices = async (appointmentData) => {
-  const { patientId, appointmentDateByPatient, specialization, reason } =
-    appointmentData;
+  const {
+    patientId,
+    appointmentDateByPatient,
+    specialization,
+    reason,
+  } = appointmentData;
 
   if (!patientId || !appointmentDateByPatient || !specialization || !reason) {
     throw new Error(
