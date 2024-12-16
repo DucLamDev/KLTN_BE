@@ -1,0 +1,20 @@
+<< EOF> ecosystem.config.cjs
+  module.exports = {
+  apps: [{
+  name: "server",
+  script: "src/server.js",
+  env: {
+  MONGODB_URI =
+  "mongodb+srv://DucLam:kr7i8EBTmZqwuiRX@clinic-management.hmcis.mongodb.net/?retryWrites=true&w=majority&appName=clinic-management",
+  PORT = "3000",
+  PASSREDIS = "yKeAA93m0hGdOF441t8CTOb1N27hazXR",
+  HOSTREDIS = "redis-18656.c292.ap-southeast-1-1.ec2.redns.redis-cloud.com",
+  PORTREDIS = "18656",
+  KAFKA_BROKERS = "kafka-23c4c573-hoduclam24082002hight-f248.b.aivencloud.com:14165",
+  JWT_SECRET= "mmq1ghKb03dSGjQwl0Ey8A"
+  NODE_ENV= "production",
+  JWT_EXPIRES_IN="1h"
+  }
+  }]
+  }
+  EOF
